@@ -95,4 +95,51 @@ class PublicController extends CommonController {
             $this->error('已经退出！', U('Public/login'));
         }
     }
+
+
+    public function alsTest($url = null) {
+        if ($url) {
+            $params = $this->getKeyValue($url);
+
+            if(empty($params)) {
+                $info   =   parse_url($url);
+                $path = $info['path'];
+                $paramStr = str_replace('/door/api.php/', '', $path);
+                $params = explode('/', $paramStr);
+                $paramsArray = array();
+                $count = count($params)/2;
+                for ($i=1; $i < $count; $i++) {
+                    $paramsArray[$params[$i*2]] = $params[$i*2+1];
+                }
+                $params = $paramsArray;
+            }
+
+            ksort($params);
+            $paramsStr = implode("", $params);
+            strrev($paramsStr);
+            $paramsStr = $paramsStr . '8djUK*014kJ';
+            $paramsMd5 = md5($paramsStr);
+            $signurl = $url. ('/sign/'. $paramsMd5);
+
+        }
+
+
+
+        if ($url) {
+            $this->assign('url',$url);
+            $this->assign('signurl',$signurl);
+        }
+        $this->display();
+    }
+
+    private function getKeyValue($url) {
+        $result = array();
+        $mr = preg_match_all('/(\?|&)(.+?)=([^&?]*)/i', $url, $matchs);
+        if ($mr !== FALSE) {
+            for ($i = 0; $i < $mr; $i++) {
+                $result[$matchs[2][$i]] = $matchs[3][$i];
+            }
+        }
+        return $result;
+    }
 }
