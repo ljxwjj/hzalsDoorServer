@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{$title}</title>
+<script language="JavaScript">
+<!--
+//指定当前组模块URL地址 
+var URL = '__URL__';
+var APP	 =	 '__APP__';
+var PUBLIC = '__PUBLIC__';
+//-->
+</script>
+<load href='__PUBLIC__/New/css.css' />
+<load href="__PUBLIC__/Js/Jquery.js" />
+<load href="__PUBLIC__/Js/common.js" />
+<load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
+<load href="__PUBLIC__/Js/layer/layer.min.js" />
+<script>
+	$(function(){
+		    
+			//$.layer({
+				//type : 1,
+				//offset : ['100px',''],
+			  	//shade: ['','',false],
+				//area : ['300px','auto'],
+				//page : {dom : '#about_hide'}
+			//});
+			
+			setInterval("selectTaskCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟
+			setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟
+			
+			$('.tab').find('a').click(function() {
+				var _index = $(this).index();
+				$(this).addClass('on').siblings('a').removeClass('on');
+				$('.content').find('div.hidden').eq(_index).show().siblings('div').hide();
+			});
+	 });
+    function toUrl(){
+        location.href = APP+'/Index/index';
+    }
+    function toMessageUrl(){
+        location.href = APP+'/Index/mymessage';
+    }
+    function selectTaskCount(){	
+        postUrl= APP+'/Public/taskCount';
+        $.post(postUrl,function(data){
+            var count = data.count;
+            $('#taskCount').html(count);
+            
+        },'JSON');
+    }
+    
+    function selectMessageCount(){	
+        postUrl= APP+'/Public/messageCount';
+        $.post(postUrl,function(data){
+            var count = data.count;
+            $('#messageCount').html(count);            
+        },'JSON');
+    }	
+</script>
+</head>
+
+<body>
+<!--START 头部-->
+<div class="header">
+    <div class="logo">P-UP利润管理系统</div> 
+	<div class="nav">
+	   <ul>
+	     	 <php> if(checkAuth('Index/index')){</php>
+			 <li><a href="{:U('Index/index')}">首页</a></li>
+			 <php>}</php>
+			 <php> if(checkAuth('CustomerGroup/index')){</php>
+			 <li><a href="{:U('CustomerGroup/index')}">集团管理</a></li>
+			 <php>}</php>
+			 <php> if(checkAuth('Customer/index')){</php>
+			 <li><a href="{:U('Customer/index')}">客户管理</a></li>	
+			 <php>}</php>	 
+			 <php> if(checkAuth('Project/index')){</php>
+			 <li><a href="{:U('Project/index')}">项目管理</a></li>	
+			 <php>}</php>
+			 <php> if(checkAuth('Department/index')){</php>
+			 <li><a href="{:U('Department/index')}">部门管理</a></li>
+			 <php>}</php>
+			 <php> if(checkAuth('Salelog/index')){</php>
+			 <li><a href="{:U('Salelog/index')}">销售日志</a></li>
+			 <php>}</php>
+			 <php> if(checkAuth('Role/index')){</php>
+			 <li><a href="{:U('Role/index')}">岗位管理</a></li>
+			 <php>}</php>
+			 <php> if(checkAuth('User/index')){</php>
+			 <li><a href="{:U('User/index')}">员工管理</a></li>
+			 <php>}</php>
+			 <php> if(checkAuth('Node/index')){</php>
+			 <li><a href="{:U('Node/index')}">权限管理</a></li>
+			 <php>}</php>
+			 <li><a href="{:U('Public/logout')}">退出</a></li>
+		
+	   </ul>
+	</div> 
+	<if condition="$_SESSION[C('USER_AUTH_KEY')]">
+		<div class="ucenter"><a href="{:U('Ucenter/index')}"><span style="color:#00FFFF;">个人中心</span></a></div>
+	</if>
+	<div class="notice">	   
+	</div>  
+</div>
+<!--END	头部-->

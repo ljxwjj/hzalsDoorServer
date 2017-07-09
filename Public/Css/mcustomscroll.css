@@ -1,0 +1,11 @@
+@charset "utf-8";
+/*
+Template Name: 
+Description: 默认升级版.
+Version: 1.0
+data:1014-0725
+Author: KEVEN
+*/
+
+table.fixed{ table-layout:auto;}/*方法1*/
+

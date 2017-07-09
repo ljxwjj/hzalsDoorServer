@@ -1,0 +1,60 @@
+<form method="post" action="__ACTION__">
+
+<div class="wrap">
+<h2>修改密码</h2>
+<div class="tablenav top">
+	<div class="alignleft actions">
+	    <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>    
+	</div>
+	<br class="clear">
+</div>
+</div>
+<br class="clear">
+
+<div class="formarea">	
+<table class="form-table">
+    <assign name="var" value="pwd" />
+	<tr>
+		<th width="100" style="text-align:right;"><label for="">请输入原密码：</label></th>
+		<td>
+		<input type="password" name="{$var}" value="" class="pwd">	
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+		</td>
+	</tr>
+	<assign name="var" value="new" />
+	<tr>
+		<th width="100" style="text-align:right;"><label for="">请设置新密码：</label></th>
+		<td>
+		<input type="password" name="new" value="" class="newpwd">
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+		</td>
+	</tr>
+	<assign name="var" value="renew" />
+	<tr>
+		<th width="100" style="text-align:right;"><label for="">请再重输一次：</label></th>
+		<td>
+		<input type="password" name="{$var}" value="" class="renewpwd">
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+		</td>	
+	</tr>
+</table>
+<div class="line2"></div>
+</div>
+
+<div class="wrap">
+	<div class="tablenav top">					
+		<div class="alignleft actions">	
+			<a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+			<assign name="key" value="id" />
+			<input type="hidden" name="{$key}" value="{$vo.$key}" >
+			<input type="hidden" name="submit" value="1" >
+			<input name="btn_submit" class="button button-primary button-hero" value="保 存" type="submit">
+		</div>
+		<br class="clear">
+	</div>
+</div>
+
+</form>
+
+<div id="ajax-response"></div>
+<br class="clear">

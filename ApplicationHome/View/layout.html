@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html xmlns="http://www.w3.org/1999/xhtml" class="ie8 wp-toolbar"  lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 8) ]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" class="wp-toolbar"  lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>{$pagetitle}</title>
+<script type="text/javascript">
+addLoadEvent = function(func){if(typeof jQuery!="undefined")jQuery(document).ready(func);else if(typeof wpOnload!='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
+var 
+	//ajaxurl = '/zachary/blog/wp-admin/admin-ajax.php',
+	pagenow = 'edit-post',
+	typenow = 'post',
+	adminpage = 'edit-php',
+	thousandsSeparator = ',',
+	decimalPoint = '.',
+	isRtl = 0;
+</script>
+
+<script language="JavaScript">
+<!--
+//指定当前组模块URL地址 
+var URL = '__URL__';
+var APP	 =	 '__APP__';
+var PUBLIC = '__PUBLIC__';
+//-->
+</script>
+
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel='stylesheet' href='__PUBLIC__/Css/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='zh-cn-l10n-administration-screens-css'  href='__PUBLIC__/Css/zh_CN-administration-screens.dev.css' type='text/css' media='all' />
+<link rel='stylesheet' href='__PUBLIC__/Css/style2.css' type='text/css' media='all' />
+<link rel='stylesheet' href='__PUBLIC__/Css/colors.css' type='text/css' media='all' />
+<link rel='stylesheet' href='__PUBLIC__/Css/mcustomscroll.css' type='text/css' media='all' />
+
+<!--[if lte IE 7]>
+<link rel='stylesheet' id='ie-css'  href='css/ie.css' type='text/css' media='all' />
+<![endif]-->
+
+<script type='text/javascript'>
+/* <![CDATA[ */
+var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* ]]> */
+</script>
+<load href="__PUBLIC__/Js/jquery.js"/>
+
+<load href="__PUBLIC__/Js/common.js" />
+<load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
+<load href="__PUBLIC__/Js/uploadify/jquery.uploadify.min.js" />
+<load href="__PUBLIC__/Js/uploadify/uploadify.css" />
+<load href="__PUBLIC__/Css/jquery.mCustomScrollbar.min.css" />
+<load href="__PUBLIC__/Js/jquery.mCustomScrollbar.concat.min.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/i18n/jquery.ui.datepicker-zh-CN.js" />
+
+<load href="__PUBLIC__/Js/modernizr.custom.js" />
+<load href="__PUBLIC__/Js/setup.js" />
+<load href="__PUBLIC__/Js/tooltip.js" />
+<script type="text/javascript">var _wpColorScheme = {"icons":{"base":"#999","focus":"#2ea2cc","current":"#fff"}};</script>
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+</head>
+<body class="wp-admin wp-core-ui no-js  edit-php auto-fold admin-bar post-type-post branch-3-9 version-3-9-1 admin-color-fresh locale-zh-cn no-customize-support no-svg">
+<script type="text/javascript">
+	document.body.className = document.body.className.replace('no-js','js');
+</script>
+
+<script type="text/javascript">
+	(function() {
+		var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+		request = true;
+		b[c] = b[c].replace( rcs, ' ' );
+		b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+	}());
+	
+
+    (function($){
+    	$(window).load(function(){
+    		$(".content-8").mCustomScrollbar({
+    			axis:"x",
+    			scrollButtons:{enable:true},
+    			theme:"3d",
+    			//scrollbarPosition:"outside"//暂时不选用
+    		});
+    	});
+    })(jQuery);
+
+	(function(){			
+			setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟			
+			$('.tab').find('a').click(function() {
+				var _index = $(this).index();
+				$(this).addClass('on').siblings('a').removeClass('on');
+				$('.content').find('div.hidden').eq(_index).show().siblings('div').hide();
+			});
+	 });
+
+    function selectMessageCount(){
+        postUrl= APP+'/Public/messageCount';
+        $.post(postUrl,function(data){
+            var count = data.count;
+            $('#messageCount').html(count);            
+        },'JSON');
+    }
+    
+</script>
+	
+<div id="wpwrap">
+
+
+	<div id="adminmenuback"></div>
+	
+	<!--左侧菜单-->
+	<include file="Public:lefter" />
+	<!--左侧菜单结束-->
+	
+	<div id="wpcontent">
+		<div id="wpadminbar" class="nojq nojs" role="navigation">
+			<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="顶部导航工具栏。" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+					<li id="wp-admin-bar-menu-toggle"><a class="ab-item"  href="#"><span class="ab-icon"></span><span class="screen-reader-text">菜单</span></a></li>
+					<li id="wp-admin-bar-wp-logo" class="menupop">
+						<a class="ab-item"  aria-haspopup="true" href="#" title="关于">
+							<span class="ab-icon"></span>
+						</a>
+						<div class="ab-sub-wrapper">
+							<ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
+								<li id="wp-admin-bar-about">
+									<a class="ab-item"  href="#">关于PUP</a>
+								</li>
+							</ul>
+							<!--<ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+								<li id="wp-admin-bar-wporg"><a class="ab-item"  href="">官网</a></li>
+								<li id="wp-admin-bar-documentation"><a class="ab-item"  href="#">文档</a></li>
+								<li id="wp-admin-bar-support-forums"><a class="ab-item"  href="#">支持论坛</a></li>
+								<li id="wp-admin-bar-feedback"><a class="ab-item"  href="#">反馈</a></li>
+							</ul>-->
+						</div>		
+					</li>
+					<li id="wp-admin-bar-comments"><a class="ab-item"  href="__APP__/Index/index" title="消息通知"><span class="ab-icon"></span><span id="ab-awaiting-mod" class="ab-label awaiting-mod pending-count count-0">你有<span id="messageCount">{$_SESSION['messageCount']}</span>条消息通知，点击这里查看</span></a></li>
+				</ul>
+					
+				<ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+					<li id="wp-admin-bar-my-account" class="menupop with-avatar">
+						<a class="ab-item"  aria-haspopup="true" href="#" title="我的帐户">您好，{$_SESSION['account']}
+						<img alt='' src='__PUBLIC__/images/smalldefaultuserimg.png' class='avatar avatar-26 photo' height='26' width='26' />
+						</a>
+						<div class="ab-sub-wrapper">
+							<!--<ul id="wp-admin-bar-user-actions" class="ab-submenu">-->
+							<ul  class="ab-submenu">
+								<li id="wp-admin-bar-user-info">
+									<a class="ab-item" tabindex="-1" href="__APP__/Ucenter/index">
+										<!--<img alt='' src='images/middledefaultuserimg.png' class='avatar avatar-64 photo' height='64' width='64' />-->
+										<span class='display-name'>{$_SESSION['account']}</span>
+									</a>
+								</li>
+								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifyProfile/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">编辑我的个人资料</a></li>
+								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifyPwd/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">修改密码</a></li>
+								<li id="wp-admin-bar-logout"><a class="ab-item"  href="__APP__/Public/logout.html">登出</a></li>
+							</ul>
+						</div>		
+					</li>
+				</ul>			
+			</div>
+			<a class="screen-reader-shortcut" href="__APP__/Public/logout.html">登出</a>
+		</div>
+
+			
+		<div id="wpbody">
+
+			<div id="wpbody-content" aria-label="主内容" tabindex="0">
+
+			
+				<!--<div class="wrap">
+					
+				<h2>销售计划 <a href="creatplan.html" class="add-new-h2">新建销售计划</a></h2>
+
+					<form id="" action="" method="get">
+
+						<div class="tablenav top">
+
+							<div class="alignleft actions">
+								<select name='m'>
+									<option selected='selected' value='0'>全部日期</option>
+									<option  value='201407'>2014年七月</option>
+								</select>
+								<select name='cat' id='cat' class='postform' >
+									<option value='0'>查看所有分类目录</option>
+									<option class="level-0" value="1">未分类</option>
+								</select>	
+							</div>
+							<div class="alignleft actions" >
+								<label >计划名称</label><input  type="text" id="" name="s" value="" />
+							</div>
+							<div class="alignleft actions" >
+								<label >计划名称</label><input  type="text" id="" name="s" value="" />
+							</div>
+							<div class="alignleft actions" >
+								<label >计划名称</label><input  type="text" id="" name="s" value="" />
+							</div>	
+							<div class="alignleft actions" >
+								<label >计划名称</label><input  type="text" id="" name="s" value="" />
+							</div>
+							<div class="alignleft actions" >
+								<label >计划名称</label><input type="text" id="" name="s" value="" />
+							</div>
+							<div class="alignleft actions" >
+								<label>多选1</label>
+								<input  type="checkbox" id="" name="s" value="" />
+								<label>多选2</label>
+								<input  type="checkbox" id="" name="s" value="" />
+
+							</div>							
+							<div class="alignleft actions" >
+								<label >计划名称</label><input  type="text" id="" name="s" value="" />
+							</div>	
+							<div class="alignleft actions" >
+								<label>多选框</label>
+								<input  type="checkbox" id="" name="s" value="" />
+								<input  type="checkbox" id="" name="s" value="" />
+								<input  type="checkbox" id="" name="s" value="" />
+							</div>	
+							<div class="alignleft actions" >
+								<label >单选框</label>
+								<input  type="radio" id="" name="s" value="" />
+								<input  type="radio" id="" name="s" value="" />
+								<input  type="radio" id="" name="s" value="" />
+							</div>						
+							<div class="alignleft actions" >
+								<input type="submit" name="" id="post-query-submit" class="button" value="筛选"  />	
+							</div>
+							
+							
+							<div class='tablenav-pages'><span class="displaying-num">2个项目</span>
+								<span class='pagination-links'><a class='first-page disabled' title='前往第一页' href='http://192.168.1.3/zachary/blog/wp-admin/edit.php'>&laquo;</a>
+								<a class='prev-page disabled' title='前往上一页' href='http://192.168.1.3/zachary/blog/wp-admin/edit.php?paged=1'>&lsaquo;</a>
+								<span class="paging-input">第<input class='current-page' title='当前页面' type='text' name='paged' value='1' size='1' />页，共<span class='total-pages'>1</span>页</span>
+								<a class='next-page disabled' title='前往下一页' href='http://192.168.1.3/zachary/blog/wp-admin/edit.php?paged=1'>&rsaquo;</a>
+								<a class='last-page disabled' title='前往最后一页' href='http://192.168.1.3/zachary/blog/wp-admin/edit.php?paged=1'>&raquo;</a></span>
+							</div>
+
+							<br class="clear" />
+								
+						</div>
+						
+						<table class="wp-list-table widefat fixed posts">
+							<thead>
+								<tr>
+									<th style="width:12%" scope='col' id="title"  class='manage-column column-numbers sortable desc' rowspan="2" style="">
+										<a href="asc">
+											<span>编号</span>
+											<span class="sorting-indicator"></span>
+										</a>
+									</th>
+									<th scope='col'  rowspan="2" class='manage-column column-customercode' style="">客户编码</th>
+									<th scope='col' rowspan="2" class='manage-column column-customername'   style="">客户名称</th>
+									<th scope='col'  rowspan="2" class='manage-column column-productcode'   style="">产品编码</th>
+									<th scope='col'  rowspan="2" class='manage-column column-productname'   style="">产品名称</th>
+									<th scope='col' rowspan="2" class='manage-column column-planmonth sortable desc'   style="">
+										<a href="asc">
+											<span>
+												<span class="vers">
+													<span title="计划年月" class="">计划年月</span>
+												</span>
+											</span>
+											<span class="sorting-indicator"></span>
+										</a>
+									</th>
+									<th scope='col'  class='manage-column column-sell'   style="" colspan="6">销售数量</th>
+									<th scope='col'  class='manage-column column-total' id="totol"  style="" rowspan="2">合计</th>
+									<th scope='col'  class='manage-column column-state' id="status"  style="" rowspan="2">状态</th>
+									<th scope='col' class='manage-column column-date sortable asc' id="date" rowspan="2" style="">
+										<a href="desc">
+											<span>创建日期</span>
+											<span class="sorting-indicator"></span>
+										</a>
+									</th>			
+								</tr>
+							</thead>
+
+							<tfoot>
+								<tr>
+									<th scope='col' id="title"  class='manage-column column-numbers sortable desc' rowspan="2" style="">
+										<a href="asc">
+											<span>编号</span>
+											<span class="sorting-indicator"></span>
+										</a>
+									</th>
+									<th scope='col'  rowspan="2" class='manage-column column-customercode' style="">客户编码</th>
+									<th scope='col' rowspan="2" class='manage-column column-customername'   style="">客户名称</th>
+									<th scope='col'  rowspan="2" class='manage-column column-productcode'   style="">产品编码</th>
+									<th scope='col'  rowspan="2" class='manage-column column-productname'   style="">产品名称</th>
+									<th scope='col' rowspan="2" class='manage-column column-planmonth sortable desc'   style="">
+										<a href="asc">
+											<span>
+												<span class="vers">
+													<span title="计划年月" class="">计划年月</span>
+												</span>
+											</span>
+											<span class="sorting-indicator"></span>
+										</a>
+									</th>
+									<th scope='col'  class='manage-column column-sell'   style="" colspan="6">销售数量</th>
+									<th scope='col'  class='manage-column column-total' id="totol"  style="" rowspan="2">合计</th>
+									<th scope='col'  class='manage-column column-state' id="status"  style="" rowspan="2">状态</th>
+									<th scope='col' class='manage-column column-date sortable asc' id="date" rowspan="2" style="">
+										<a href="desc">
+											<span>创建日期</span>
+											<span class="sorting-indicator"></span>
+										</a>
+									</th>			
+								</tr>					
+							</tfoot>
+
+							<tbody id="the-list">
+								<tr class="alternate">
+									<td class="post-title page-title column-numbers" rowspan="2>
+										<strong><a class="row-title" href="edit" title="编辑“编号为2的销售计划”">2</a></strong>
+										<div class="locked-info">
+											<span class="locked-avatar"></span> 
+											<span class="locked-text"></span>
+										</div>
+										<div class="row-actions">
+											<span class='edit'>
+												<a href="edit" title="编辑此项目">编辑</a> | 
+											</span>
+											<span class='inline hide-if-no-js'>
+												<a href="#" class="editinline" title="查看相关的流转历史">流转历史</a> | 
+											</span>
+											<span class='view'>
+												<a href="#" title="查看“世界，你好！”" rel="permalink">查看</a>
+											</span>
+										</div>
+										
+									</td>			
+									<td class='manage-column column-customercode' rowspan="2><a href="review">1201</a></td>
+									<td class='manage-column column-customername' rowspan="2><a href="review">global exports</a></td>
+									<td class='manage-column column-productcode' ><a href="review">ZPDES-012.0058</a></td>
+									<td class='manage-column column-productname'><a href="review">小客电动转向器（12V)</a></td>
+									<td class='manage-column column-planmonth' rowspan="2">2014-06</td>
+									<td class='manage-column column-sell'>1000</td>		
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-total'>1000</td>
+									<td class='manage-column column-state' rowspan="2">待提交</td>
+									<td class='manage-column column-date' rowspan="2"><abbr title="2014年7月1日上午3:25:22">2014-07-01</abbr><br />创建</td>
+								</tr>
+								<tr class="alternate">
+									<td class='manage-column column-productcode'><a href="review">ZPDES-014.0025</a></td>
+									<td class='manage-column column-productname'><a href="review">小客电动转向器（12V)</a></td>
+									<td class='manage-column column-sell'>2000</td>		
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-total'>2000</td>
+								</tr>	
+								<tr class="">
+									<td class="post-title page-title column-numbers" rowspan="2>
+										<strong><a class="row-title" href="edit" title="编辑“编号为1的销售计划”">1</a></strong>
+										<div class="locked-info">
+											<span class="locked-avatar"></span> 
+											<span class="locked-text"></span>
+										</div>
+										<div class="row-actions">
+											<span class='edit'>
+												<a href="edit" title="编辑此项目">编辑</a> | 
+											</span>
+											<span class='inline hide-if-no-js'>
+												<a href="#" class="editinline" title="查看相关的流转历史">流转历史</a> | 
+											</span>
+											<span class='view'>
+												<a href="#" title="查看“世界，你好！”" rel="permalink">查看</a>
+											</span>
+										</div>
+										
+									</td>			
+									<td class='manage-column column-customercode' rowspan="2><a href="review">1201</a></td>
+									<td class='manage-column column-customername' rowspan="2><a href="review">global exports</a></td>
+									<td class='manage-column column-productcode' ><a href="review">ZPDES-012.0058</a></td>
+									<td class='manage-column column-productname'><a href="review">小客电动转向器（12V)</a></td>
+									<td class='manage-column column-planmonth' rowspan="2">2014-06</td>
+									<td class='manage-column column-sell'>1000</td>		
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-total'>1000</td>
+									<td class='manage-column column-state' rowspan="2">待提交</td>
+									<td class='manage-column column-date' rowspan="2"><abbr title="2014年7月1日上午3:25:22">2014-07-01</abbr><br />创建</td>
+								</tr>
+								<tr class="">
+									<td class='manage-column column-productcode'><a href="review">ZPDES-014.0025</a></td>
+									<td class='manage-column column-productname'><a href="review">小客电动转向器（12V)</a></td>
+									<td class='manage-column column-sell'>2000</td>		
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-sell'>0</td>
+									<td class='manage-column column-total'>2000</td>
+								</tr>								
+							</tbody>
+						</table>
+						<div class="tablenav bottom">
+						<div class="alignleft actions"></div>
+						<div class='tablenav-pages'><span class="displaying-num">2个项目</span>
+							<span class='pagination-links'>
+								<a class='first-page disabled' title='前往第一页' href='#'>&laquo;</a>
+								<a class='prev-page disabled' title='前往上一页' href='#'>&lsaquo;</a>
+								<span class="paging-input">第1页，共<span class='total-pages'>1</span>页</span>
+								<a class='next-page disabled' title='前往下一页' href='#'>&rsaquo;</a>
+								<a class='last-page disabled' title='前往最后一页' href='#'>&raquo;</a>
+							</span>
+						</div>
+						<br class="clear" />
+					</div>
+
+					</form>
+					<div id="ajax-response"></div>
+					<br class="clear" />
+				  
+				
+				</div>-->
+				<!-- wrap 结束-->
+				{__CONTENT__}
+				<div class="clear"></div> 				
+			</div><!-- wpbody-content -->
+			<div class="clear"></div>
+		</div><!-- wpbody -->
+		<div class="clear"></div>
+	</div><!-- wpcontent -->
+
+	<div id="wpfooter">
+			<p id="footer-left" class="aligncenter" style="text-align:center;">
+				<!--<span id="footer-thankyou">copyright@<a href="http://www.runlan.net" target="_blank">上海润蓝企业管理咨询有限公司</a>。</span>-->
+			</p>
+			<!--<p id="footer-upgrade" class="alignright">1.0.0版本	</p>-->
+			<div class="clear"></div>
+	</div>
+	
+<script type='text/javascript'>
+/* <![CDATA[ */
+var commonL10n = {"warnDelete":"\u60a8\u5c06\u6c38\u4e45\u5220\u9664\u6240\u9009\u9879\u76ee\u3002\n\u70b9\u51fb\u201c\u53d6\u6d88\u201d\u505c\u6b62\uff0c\u70b9\u51fb\u201c\u786e\u5b9a\u201d\u5220\u9664\u3002"};var heartbeatSettings = {"nonce":"cd3b57b146"};var inlineEditL10n = {"error":"\u4fdd\u5b58\u66f4\u6539\u65f6\u53d1\u751f\u9519\u8bef\u3002","ntdeltitle":"\u4ece\u6279\u91cf\u7f16\u8f91\u4e2d\u79fb\u9664","notitle":"(\u65e0\u6807\u9898)","comma":"\u3001"};var authcheckL10n = {"beforeunload":"\u60a8\u7684\u767b\u5f55\u4f1a\u8bdd\u5df2\u8fc7\u671f\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002","interval":"180"};/* ]]> */
+</script>
+
+
+<div class="clear"></div></div><!-- wpwrap -->
+<script type="text/javascript">if(typeof wpOnload=='function')wpOnload();</script>
+</body>
+
+</html>

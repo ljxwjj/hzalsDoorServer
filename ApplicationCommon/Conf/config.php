@@ -5,7 +5,7 @@ return array(
     'DB_HOST'      =>   'localhost',
     'DB_NAME'      =>   'hzals_door',
     'DB_USER'      =>   'root',
-    'DB_PWD'       =>   '0123456789',
+    'DB_PWD'       =>   'root',
     'DB_PORT'      =>    '',
     'DB_PREFIX'    =>    '',           // 数据库表前缀
 
@@ -17,4 +17,8 @@ return array(
         'AUTH_RULE'         => 'auth_rule',         // 权限规则表
         'AUTH_USER'         => 'user'             // 用户信息表
     ),
+    //***********************************URL设置**************************************
+    'MODULE_ALLOW_LIST'      => array('Home','Admin','Api','User','App'), //允许访问列表
+    'URL_HTML_SUFFIX'        => '',  // URL伪静态后缀设置
+    'URL_MODEL'              => 1,  //启用rewrite
 );

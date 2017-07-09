@@ -1,0 +1,59 @@
+<!--第一个wrap开始-->
+<div class="wrap">
+<h2>个人中心</h2>
+<!--第一个wrap结束-->
+
+<!-- formarea -->
+<div class="formarea">	
+<table class="form-table">
+<tr class="row">
+	<th width="100" style="text-align:right;"><label for="">账号：</label></th>
+	<td>
+	{$vo.account}
+	</td>
+</tr>
+<tr>
+	<th width="100" style="text-align:right;"><label for="">性别：</label></th>
+	<td>
+	<if condition="$vo.sex eq 0 ">女
+	<elseif condition="$vo.sex eq 1"/>男
+	</if>
+	</td>
+</tr>
+<tr>
+	<th width="100" style="text-align:right;"><label for="">姓名：</label></th>
+	<td >{$vo.nickname}
+	</td>
+</tr>
+
+<tr>
+	<th width="100" style="text-align:right;"><label for="">移动电话：</label></th>
+	<td >{$vo.mobile}
+	</td>
+</tr>
+
+<tr>
+	<th width="100" style="text-align:right;"><label for="">电子邮件：</label></th>
+	<td >{$vo.email}
+	</td>
+</tr>
+</table>
+<div class="line2"></div>
+</div>
+<!--formarea 结束-->
+
+<!--第二个wrap开始-->
+<div class="wrap">
+	<div class="tablenav top">					
+		<div class="alignleft actions">		
+			<a href="__URL__/modifyProfile/id/{$vo.id}/" class="button button-primary button-hero">修改资料</a>
+			<a href="__URL__/modifyPwd/id/{$vo.id}" class="button button-primary button-hero">修改密码</a>
+		</div>
+		<br class="clear">
+	</div>
+</div>
+<!--第二个wrap结束-->
+
+
+<div id="ajax-response"></div>
+<br class="clear">

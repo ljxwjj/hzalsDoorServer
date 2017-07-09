@@ -1,23 +1,15 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
-class IndexController extends Controller {
-    public $user;
+
+class IndexController extends CommonController {
 
     public function _initialize() {
-        $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
-        if (empty($user)) {
-            $actionName = strtolower(ACTION_NAME);
-            if (!in_array($actionName, array())) {
-                echo U("user/login");
-//                header("location: ". U("user/login"));
-                exit;
-            }
-        }
-        $this->user = $user;
+        parent::_initialize();
+        $this->assign('pagetitle',"首页");
     }
 
     public function index(){
+        //echo MODULE_PATH;echo "\n";echo APP_PATH;exit;
         $this->display();
     }
 }

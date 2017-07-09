@@ -1,0 +1,98 @@
+<?php
+
+namespace Home\Controller;
+
+
+use Lib\ORG\Util\RBAC;
+
+class PublicController extends CommonController {
+
+
+    public function login() {
+
+        $vo['account'] = cookie("account");
+        $vo['password'] = cookie("password");
+        if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
+            $this->assign("vo",$vo);
+            $this->display();
+        }else{
+            $this->redirect('Index/index');
+        }
+    }
+
+    public function checkLogin() {
+
+        if(empty($_POST['account'])) {
+            $error['account']='账号不能为空！';
+        }
+        if (empty($_POST['password'])){
+            $error['password']='密码不能为空！';
+        }
+
+        //生成认证条件
+        $map   =   array();
+        // 支持使用绑定帐号登录
+        $map['account']	= $_POST['account'];
+//        $map["status"]	=	array('gt',0);
+//        $map["is_admin"]	=	array('eq',1);
+
+        import('Lib.ORG.Util.RBAC');
+        $authInfo = RBAC::authenticate($map);
+        //使用用户名、密码和状态的方式进行认证
+        if(!$error['account'] && !$authInfo) {
+            $error['account']='账号不存在或已禁用！';
+        }
+        if(!$error['password'] && $authInfo['password'] != md5($_POST['password'])) {
+            $error['password']='密码错误！';
+        }
+
+
+        if($error){
+            $this->assign('error',$error);
+            $this->assign('vo',$_POST);
+            $this->display('login');
+            exit;
+        }else{
+            $_SESSION[C('USER_AUTH_KEY')]	=	$authInfo['id'];
+            $_SESSION['email']	=	$authInfo['email'];
+            $_SESSION['loginUserName']		=	$authInfo['nickname'];
+            $_SESSION['lastLoginTime']		=	$authInfo['last_login_time'];
+            $_SESSION['login_count']	=	$authInfo['login_count'];
+            $_SESSION['account']	=	$authInfo['account'];
+            if($authInfo['is_admin']==1) {
+                $_SESSION[C('ADMIN_AUTH_KEY')] = true;
+            }
+
+            //保存登录信息
+            $Admin	=	M('User');
+            $ip		=	get_client_ip();
+            $time	=	time();
+            $data = array();
+            $data['id']	=	$authInfo['id'];
+            $data['last_login_time']	=	$time;
+            $data['login_count']	=	array('exp','login_count+1');
+            $data['last_login_ip']	=	$ip;
+            $Admin->save($data);
+
+            if($_POST['remember_password'] == 1){
+                Cookie::set('account',$authInfo['account'],86400);
+                Cookie::set('password',$_POST['password'],86400);
+            }
+
+            // 缓存访问权限
+            RBAC::saveAccessList();
+            $this->redirect('Index/index');
+            //$this->success('登录成功！',__APP__.'/Index/index');
+        }
+    }
+
+    public function logout() {
+        if(session(C('USER_AUTH_KEY'))) {
+            session(null);
+            session('[destroy]');
+            $this->success('你已经安全退出系统！',U('Public/login'));
+        }else {
+            $this->error('已经退出！', U('Public/login'));
+        }
+    }
+}

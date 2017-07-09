@@ -1,1 +1,129 @@
-request use add
+<!--
+<html>
+<body>
+<div>
+    <form action="__CONTROLLER__/checkLogin" method="post">
+        用户名：<input name="mobile"/>
+        密码：<input type="password" name="password"/>
+        <input type="submit" value="登录"/>
+    </form>
+</div>
+</body>
+</html>-->
+
+
+
+{__NOLAYOUT__}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>P-UP方案管理系统</title>
+
+    <load href='__PUBLIC__/Css/login2.css' />
+    <load href='__PUBLIC__/Css/login2base.css' />
+    <load href="__PUBLIC__/Js/jquery.js" />
+    <load href="__PUBLIC__/Js/common.js" />
+
+
+    <script language="JavaScript">
+        <!--
+        function fleshVerify(){
+            //重载验证码
+            var timenow = new Date().getTime();
+            $('#verifyImg').attr('src','__URL__/verify/'+timenow);
+        }
+        $(document).keyup(function(event){
+            if(event.keyCode ==13){
+                document.login.submit();
+            }
+        });
+        //-->
+    </script>
+</head>
+
+<body>
+<body>
+<div class="top w-p-100">
+    <div class="logo"><img height="34" src="__ROOT__/Public/Images/logo.png"></div>
+    <div class="top_txt"></div>
+
+    <div class="logo_r">
+        <a href="#"></a>
+    </div>
+
+</div>
+
+<form method='post' name="login" id="login" ACTION="__CONTROLLER__/save">
+    <div class="login_box">
+        <div class="login_tit">
+            <span class="login_tit_txt f-l">用户审请</span>
+            <span class="login_tit_txt2 p-l-10 f-l"></span>
+            <span class="login_tit_txt2 p-r-10 f-r f-c-h"></span>
+        </div>
+
+        <div class="login_main">
+            <assign name="key" value="company" />
+            <if condition="$error[$key]">
+                <div style="height: 21px;width: 49px;float:left;">&nbsp;</div>
+                <div style="float: left;"><span class="tips">{$error[$key]}</div>
+                <div style="clear:both;"></div>
+            </if>
+            <div class="login_main_1">
+                <div class="login_main_1_la"></div>
+                <div class="login_main_1_r">
+                    <input check="Require" warning="请输入购机单位" name="{$key}" type="text" value="{$vo.$key}" placeholder='输入购机单位' />
+                </div>
+            </div>
+
+            <assign name="key" value="contacts" />
+            <if condition="$error[$key]">
+                <div style="height: 21px;width: 49px;float:left;">&nbsp;</div>
+                <div style="float: left;"><span class="tips">{$error[$key]}</div>
+                <div style="clear:both;"></div>
+            </if>
+            <div class="login_main_1">
+                <div class="login_main_1_lb"></div>
+                <div class="login_main_1_r">
+                    <input check="Require" warning="请输入联系人姓名" name="{$key}"  value="{$vo.$key}" placeholder="输入联系人姓名"/>
+                </div>
+            </div>
+
+            <assign name="key" value="telphone" />
+            <if condition="$error[$key]">
+                <div style="height: 21px;width: 49px;float:left;">&nbsp;</div>
+                <div style="float: left;"><span class="tips">{$error[$key]}</div>
+                <div style="clear:both;"></div>
+            </if>
+            <div class="login_main_1">
+                <div class="login_main_1_lb"></div>
+                <div class="login_main_1_r">
+                    <input check="Require" warning="请输入联系人电话" name="{$key}"  value="{$vo.$key}" placeholder="输入联系人电话"/>
+                </div>
+            </div>
+
+            <assign name="key" value="order_number" />
+            <if condition="$error[$key]">
+                <div style="height: 21px;width: 49px;float:left;">&nbsp;</div>
+                <div style="float: left;"><span class="tips">{$error[$key]}</div>
+                <div style="clear:both;"></div>
+            </if>
+            <div class="login_main_1">
+                <div class="login_main_1_lb"></div>
+                <div class="login_main_1_r">
+                    <input check="Require" warning="请输入订单号" name="{$key}"  value="{$vo.$key}" placeholder="输入订单号"/>
+                </div>
+            </div>
+
+            <div class="login_main_1">
+                <div class="login_btn"><a class="button_kv" onclick="document.login.submit();">提交</a></div>
+            </div>
+            <div style="height:auto;width:448px;text-align:center;position:absolute;bottom:20px;font-size:11pt;">
+                <!--开发单位:<a href="http://www.runlan.net" target="_blank">上海润蓝企业管理咨询有限公司</a>-->
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</HTML>
+

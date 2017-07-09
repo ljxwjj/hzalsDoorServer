@@ -1,0 +1,23 @@
+{__NOLAYOUT__}
+<table>
+<thead>
+<tr>
+<th></th><th style="width:100px;">姓名</th><th style="width:30px;">性别</th><th style="width:180px;">部门</th>
+</tr>
+</thead>
+<tbody>
+<volist name="vo" id="user">
+<tr>
+<td><input type="checkbox" name="user_id" value="{$user.id}" nickname='{$user.nickname}'/></td>
+<td>{$user.nickname}</td>
+<td>
+<switch name="user.sex" >
+	<case value="1">男</case>
+	<case value="0">女</case>
+</switch>
+</td>
+<td>{$user.department}</td>
+</tr>
+</volist>
+</tbody>
+</table>

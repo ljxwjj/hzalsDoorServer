@@ -1,0 +1,52 @@
+/* Compact button */
+.button.compact, .compact .button {
+	padding: 0 8px;
+	line-height: 22px;
+	height: 22px;
+   *line-height: 20px;
+   *height: 20px;
+}
+.ie7 button.button.compact, .ie7 .compact button.button {
+	line-height: 18px;
+	height: 22px;
+}
+.button.compact.absolute-left, .compact .button.absolute-left, .button.compact.absolute-right, .compact .button.absolute-right {
+	margin-top: -12px;
+}
+.input .button.compact {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.input .button.compact:first-child,  .input.compact .button:first-child {
+	margin-left: -6px;
+}
+.input .button.compact:last-child,  .input.compact .button:last-child {
+	margin-right: -6px;
+}
+/* IE7 */
+.input .button.compact.last-child,  .input.compact .button.last-child {
+	margin-right: -6px;
+}
+.button.compact:active, .compact .button:active, .button.compact.active, .compact .button.active {
+	padding: 1px 9px;
+}
+.button.compact:disabled, .button.compact.disabled,  .compact .button:disabled, .compact .button.disabled,  .compact.disabled .button, .disabled .compact .button {
+	padding: 0 8px;
+}
+.button-group.compact, .compact .button-group {
+	line-height: 24px;
+	height: 24px;
+	margin-top: -5px;
+	margin-bottom: -3px;
+}
+.button-group.compact.absolute-left, .compact .button-group.absolute-left,  .button-group.compact.absolute-right, .compact .button-group.absolute-right {
+	margin-top: -12px;
+}
+.compact > .button-icon {
+	margin: -1px 4px -1px -9px;
+	padding: 0 6px;
+}
+.compact > .button-icon.right-side {
+	margin: -1px -9px -1px 4px;
+}

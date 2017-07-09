@@ -1,0 +1,134 @@
+@charset "utf-8";
+/* CSS Document */
+.top{
+	height:64px;
+	background:#373737;}
+.w-p{
+	width:960px;}
+.logo{
+	padding-left:20px;
+	padding-top:14px;
+	width:140px;
+	float:left;}
+.top_txt{
+	height:64px;
+	width:225px;
+	background:url(../Images/top.jpg);
+	float:left;
+	}
+.logo_r{
+	height:64px;
+	line-height:64px;
+	font-size:14px;
+	padding-right:20px;
+	float:right;
+	padding-right:20px;}
+
+.logo_r a{
+	color:#fff;}
+.logo_r a:hover{
+	color: #FF0;}
+body{
+	background:#eee;}
+.login_box{
+	width:488px;
+	padding-top:100px;}
+	
+.login_tit{
+	height:50px;
+	background:#1a446e;
+	margin-bottom:20px;}
+.login_tit_txt{
+	padding-left:20px;
+	font-size:16px;
+	color:#fff;
+	line-height:50px;}
+.login_tit_txt2{
+	font-size:12px;
+	color:#fff;
+	line-height:50px;
+	font-family:Arial;}
+.login_main{
+	width:446px;
+	background:#fff;
+	border:1px #ddd solid;
+	padding:50px 20px 20px 20px;}
+.login_main_1{
+	width:354px;
+	margin:0 auto;
+	height:41px;
+	margin-bottom:36px;}
+.login_main_12{
+	width:354px;
+	margin:0 auto;
+	height:20px;
+	line-height:20px;
+	margin-bottom:36px;
+	font-size:12px;}
+.login_main_1_la{
+	height:41px;
+	width:49px;
+	background:url(../Images/user.jpg);
+	float:left;
+	}
+.login_main_1_lb{
+	height:41px;
+	width:49px;
+	background:url(../Images/lock.jpg);
+	float:left;
+	}
+.login_main_1_r{
+	width:305px;
+	height:41px;
+	float:left;}
+.login_main_1_r input{
+	width:280px;
+	height:19px;
+	line-height:19px;
+	padding:10px 5px 10px 20px;
+	background:none;
+	border:1px #ddd solid;
+	border-left:none;}
+.kv_box{
+	height:40px;
+	line-height:40px;}
+.kv_box input{
+	line-height:40px;
+	height:40px;
+	}
+.login_main_1_txt{
+	height:40px;
+	line-height:40px;
+	font-size:12px;}
+.login_btn{
+	width:154px;
+	height:39px;
+	float:right;}
+.f-c-h{
+	color:#f0f0f0;}
+
+.login_btn a.button_kv{
+	width:154px;
+	height:39px;
+	font-size:14px;
+	color:#fff;
+	display:block;
+	text-align:center;
+	line-height:39px;
+	background:#1a446e;
+	border-radius:3px;
+	border:1px #000 solid;}
+
+.login_btn a.button_kv:hover{
+	width:154px;
+	height:39px;
+	font-size:14px;
+	color:#fff;
+	display:block;
+	text-align:center;
+	line-height:39px;
+	background:#17589a;
+	border-radius:3px;
+	border:1px #000 solid;}
+	
+	

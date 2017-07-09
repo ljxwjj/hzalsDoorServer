@@ -1,0 +1,93 @@
+﻿<form method='post' id="form1" action="__URL__/save">
+<!--第一个wrap开始-->
+<div class="wrap">
+<h2>修改资料</h2>
+<div class="tablenav top">
+	<div class="alignleft actions">
+	    <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>    
+	</div>
+	<br class="clear">
+</div>
+</div>
+<br class="clear">
+<!--第一个wrap结束-->
+
+<!-- formarea -->
+<div class="formarea">	
+<table class="form-table">
+<assign name="var" value="account" />
+<tr class="row">
+	<th width="100" style="text-align:right;"><label for="">账号：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="nickname" />
+<tr class="row">
+	<th width="100" style="text-align:right;"><label for="">姓名：</label></th>
+	<td>
+	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+	<span style="color:red;">*</span>
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+<assign name="var" value="sex" />
+<tr>
+	<th width="100" style="text-align:right;"><label for="">性别：</label></th>
+	<td>
+	<select name="{$var}">
+	<option value="1" <eq name="vo[$var]" value="1">selected</eq> >男</option>
+	<option value="0" <eq name="vo[$var]" value="0">selected</eq> >女</option>
+	</select>
+	<span style="color:red;">*</span>
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+
+
+<assign name="var" value="mobile" />
+<tr>
+	<th width="100" style="text-align:right;"><label for="">移动电话：</label></th>
+	<td ><input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+
+<assign name="var" value="email" />
+<tr>
+	<th width="100" style="text-align:right;"><label for="">邮箱：</label></th>
+	<td>
+	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+	<span style="color:red;">*</span>
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+
+
+
+</table>
+<div class="line2"></div>
+</div>
+<!--formarea 结束-->
+
+<!--第二个wrap开始-->
+<div class="wrap">
+	<div class="tablenav top">					
+		<div class="alignleft actions">	
+			<a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+			<assign name="var" value="id" />
+			<input type="hidden" name="{$var}" value="{$vo.$var}" >
+			<input name="" id="" class="button button-primary button-hero" value="保 存" type="submit">
+		</div>
+		<br class="clear">
+	</div>
+</div>
+<!--第二个wrap结束-->
+</form>
+<!--form结束-->
+
+
+<div id="ajax-response"></div>
+<br class="clear">
+
+	

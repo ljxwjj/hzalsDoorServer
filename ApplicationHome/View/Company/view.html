@@ -1,0 +1,133 @@
+<div class="wrap">
+<h2>查看用户</h2>
+<div class="tablenav top">
+	<div class="alignleft actions">
+	    <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>    
+	</div>
+	<br class="clear">
+</div>
+</div>
+<br class="clear">
+
+<div class="formarea">	
+<table class="form-table">
+<assign name="var" value="account" />
+<tr>
+	<th><label for="">账号：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="nickname" />
+<tr>
+	<th><label for="">用户名称：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="zhiwu" />
+<tr>
+	<th><label for="">职务：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="sex" />		
+<tr>
+	<th><label for="">性别：</label></th>
+	<td>
+	<eq name="vo[$var]" value="1">男</eq>
+	<eq name="vo[$var]" value="0">女</eq> 
+	</td>		
+</tr>
+<assign name="var" value="email" />
+<tr>
+	<th><label for="">邮箱：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="mobile" />
+<tr>
+	<th><label for="">移动电话：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="birthday" />
+<tr>
+	<th><label for="">生日：</label></th>
+	<td>
+	<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d"}</if>		
+	</td>
+</tr>
+<assign name="var" value="address" />
+<tr>
+	<th><label for="">家庭住址：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="status" />		
+<tr>
+	<th><label for="">状态：</label></th>
+	<td>
+	<eq name="vo[$var]" value="1">启用</eq>
+	<eq name="vo[$var]" value="0">禁用</eq>
+	</td>
+</tr>
+<assign name="var" value="last_login_time" />		
+<tr>
+	<th><label for="">上次登录时间：</label></th>
+	<td>
+	<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
+	</td>
+</tr>
+<assign name="var" value="login_count" />		
+<tr>
+	<th><label for="">登录次数：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="remark" />
+<tr>
+	<th><label for="">备注：</label></th>
+	<td >
+	{$vo.$var}
+	</td>
+</tr>
+<tr>
+	<td></td>
+	<td class="center">
+	<!--保持搜索部分-->
+	<php>
+	foreach($search as $k=>$v){
+		echo '<input type="hidden" name="'.$k.'" value="'.$v.'" id="'.$k.'" usefor="search">';
+	} 
+	</php>
+	<!--保持搜索部分结束-->	
+	<!--pk-->
+	<assign name="var" value="id" />
+	<input type="hidden" name="{$var}" value="{$vo.$var}" >
+	</td>
+</tr>
+</table>
+</div>
+
+<div class="wrap">
+	<div class="tablenav top">					
+		<div class="alignleft actions">	
+			<a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+		</div>
+		<br class="clear">
+	</div>
+</div>
+
+
+
+
+
+
+
+

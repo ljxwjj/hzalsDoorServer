@@ -1,0 +1,188 @@
+<!--左侧菜单-->
+<div id="adminmenuwrap">
+	<ul id="adminmenu" role="navigation">	
+		<li class="menu-top menu-top-first menu-top-last <if condition='MODULE_NAME eq Index'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+			<a href='__APP__/Index/index' class="menu-top menu-top-first menu-top-last <if condition='MODULE_NAME eq Index'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-admin-home'><br /></div>
+				<div class='wp-menu-name'>首页</div>
+			</a>		
+		</li>
+		
+		<li class="wp-not-current-submenu wp-menu-separator">
+			<div class="separator"></div>
+		</li>
+	    
+		
+		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='MODULE_NAME eq Customer'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+			<a href='__APP__/User/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='MODULE_NAME eq Customer'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" aria-haspopup="true">
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-groups'><br /></div>
+				<div class='wp-menu-name'>用户管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>用户管理</li>
+				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+					<a href="__APP__/User/index" class="wp-first-item current">用户列表</a>
+				</li>
+				<li class="<if condition='MODULE_NAME eq Node'>current</if>">
+					<a href="__APP__/User/add" class="current">添加用户</a>
+				</li>
+			</ul>
+		</li>
+
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/DoorController/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-list-view'><br /></div>
+				<div class='wp-menu-name'>门禁管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>门禁管理</li>
+				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+					<a href="__APP__/DoorController/index" class="wp-first-item current">控制器列表</a>
+				</li>
+				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+					<a href="__APP__/DoorController/add" class="wp-first-item current">添加控制器</a>
+				</li>
+
+			</ul>
+		</li>
+
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/OpenRecord/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-portfolio'><br /></div>
+				<div class='wp-menu-name'>出入记录</div>
+			</a>
+		</li>
+		
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/RequestUse/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-id'><br /></div>
+				<div class='wp-menu-name'>申请审核</div>
+			</a>			
+		</li>
+
+
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(MODULE_NAME,array(Department,Role,User,Node,MessageSendRole,BrandReportWarning,FlowPassing))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/Department/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(MODULE_NAME,array(Department,Role,User,Node,MessageSendRole,BrandReportWarning,FlowPassing))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-admin-settings'><br /></div>
+				<div class='wp-menu-name'>系统管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>系统管理</li>
+				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+					<a href="__APP__/Company/index" class="wp-first-item current">客户管理</a>
+				</li>
+				<li class="<if condition='MODULE_NAME eq Node'>current</if>">
+					<a href="__APP__/Node/index" class="current">权限管理</a>
+				</li>
+				<li class="<if condition='MODULE_NAME eq Node'>current</if>">
+					<a href="__APP__/Role/index" class="current">角色管理</a>
+				</li>
+			</ul>
+		</li>
+
+		
+		<!--<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
+			<a href='' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" aria-haspopup="true">
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons-storeadmin'><br /></div>
+				<div class='wp-menu-name'>库存管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>库存管理</li>
+				<li class="wp-first-item">
+					<a href='' class="wp-first-item">材料出库</a>
+					<a href='' class="">成品出库</a>
+					<a href='' class="">材料入库</a>
+				</li>
+			</ul>
+		</li>
+
+		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
+			<a href='' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" aria-haspopup="true">
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons-produce'><br /></div>
+				<div class='wp-menu-name'>生产管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>生产管理</li>
+				<li class="wp-first-item">
+					<a href='' class="wp-first-item">领料管理</a>
+					<a href='' class="">生产计划</a>
+				</li>
+			</ul>
+		</li>			
+		
+		<li class="menu-top menu-top-first menu-top-last" >
+			<a href='' class="menu-top menu-top-first menu-top-last" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons-networking'><br /></div>
+				<div class='wp-menu-name'>岗位管理</div>
+			</a>
+		</li>
+		<li class="menu-top menu-top-first menu-top-last" >
+			<a href='' class="menu-top menu-top-first menu-top-last" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons-groups'><br /></div>
+				<div class='wp-menu-name'>员工管理</div>
+			</a>
+		</li>
+		<li class="menu-top menu-top-first menu-top-last" >
+			<a href='' class="menu-top menu-top-first menu-top-last" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons-admin-network'><br /></div>
+				<div class='wp-menu-name'>权限管理</div>
+			</a>
+		</li>			
+		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
+			<a href='' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" aria-haspopup="true">
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons-media-spreadsheet'><br /></div>
+				<div class='wp-menu-name'>基础数据管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>基础数据管理</li>
+				<li class="wp-first-item">
+					<a href='' class="wp-first-item">分类管理</a>
+					<a href='' class="">客户管理</a>
+				</li>
+			</ul>
+		</li>-->			
+				
+		<li class="wp-not-current-submenu wp-menu-separator">
+			<div class="separator"></div>
+		</li>	
+
+		<li id="collapse-menu" class="hide-if-no-js"><div id="collapse-button"><div></div></div><span>收起菜单</span></li>
+	</ul>
+</div>
+<!--左侧菜单结束-->
