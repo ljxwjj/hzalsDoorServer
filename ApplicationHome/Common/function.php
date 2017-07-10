@@ -52,6 +52,26 @@ function getStatus($status, $imageShow = true) {
     return ($imageShow === true) ?  $showImg  : $showText;
 }
 
+function getUserStatus($status, $imageShow = true) {
+    $__PUBLIC__ = __ROOT__.'/Public';
+    switch ($status) {
+        case 0 :
+            $showText = '未激活';
+            $showImg = "<IMG SRC='$__PUBLIC__/Images/disable.png' WIDTH='15' HEIGHT='15' BORDER='0' ALT='禁用'>";
+            break;
+        case - 1 :
+            $showText = '删除';
+            $showImg = "<IMG SRC='$__PUBLIC__/Images/delete.png' WIDTH='15' HEIGHT='15' BORDER='0' ALT='删除'>";
+            break;
+        case 1 :
+        default :
+            $showText = '正常';
+            $showImg = "<IMG SRC='$__PUBLIC__/Images/ok.png' WIDTH='15' HEIGHT='15' BORDER='0' ALT='正常'>";
+
+    }
+    return ($imageShow === true) ?  $showImg  : $showText;
+}
+
 function showStatus($status, $id) {
     switch ($status) {
         case 0 :
@@ -109,7 +129,6 @@ function showStatus2($status, $id) {
     }
     return $info;
 }
-
 
 function getMesProcessStatus($status){
     $info = "";

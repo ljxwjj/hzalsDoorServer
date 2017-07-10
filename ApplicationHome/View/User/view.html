@@ -1,0 +1,114 @@
+<div class="wrap">
+<h2>查看用户</h2>
+<div class="tablenav top">
+	<div class="alignleft actions">
+	    <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>    
+	</div>
+	<br class="clear">
+</div>
+</div>
+<br class="clear">
+
+<div class="formarea">	
+<table class="form-table">
+<tr>
+	<assign name="var" value="nickname" />
+	<th><label for="">姓名：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+	<assign name="var" value="sex" />
+
+	<th><label for="">性别：</label></th>
+	<td>
+		{$vo.$var|showSex}
+	</td>
+</tr>
+<tr>
+	<assign name="var" value="account" />
+	<th><label for="">手机号：</label></th>
+	<td>
+	{$vo.$var}
+	</td>
+
+	<assign name="var" value="email" />
+	<th><label for="">Email：</label></th>
+	<td>
+		{$vo.$var}
+	</td>
+</tr>
+	<tr>
+		<assign name="var" value="company_name" />
+		<th><label for="">公司：</label></th>
+		<td>
+			{$vo.$var}
+		</td>
+
+		<assign name="var" value="role_name" />
+
+		<th><label for="">角色：</label></th>
+		<td>
+			{$vo.$var}
+		</td>
+	</tr>
+<assign name="var" value="status" />		
+<tr>
+	<th><label for="">状态：</label></th>
+	<td>
+	<eq name="vo[$var]" value="1">正常</eq>
+	<eq name="vo[$var]" value="0">未激活</eq>
+	<eq name="vo[$var]" value="-1">禁用</eq>
+	</td>
+</tr>
+
+<tr>
+	<assign name="var" value="create_time" />
+	<th><label for="">登记时间：</label></th>
+	<td>
+	<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
+	</td>
+	<assign name="var" value="last_login_time" />
+	<th><label for="">最后登录时间：</label></th>
+	<td>
+		<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
+	</td>
+</tr>
+<tr>
+	<td></td>
+	<td class="center">
+	<!--保持搜索部分-->
+	<php>
+	foreach($search as $k=>$v){
+		echo '<input type="hidden" name="'.$k.'" value="'.$v.'" id="'.$k.'" usefor="search">';
+	} 
+	</php>
+	<!--保持搜索部分结束-->	
+	<!--pk-->
+	<assign name="var" value="id" />
+	<input type="hidden" name="{$var}" value="{$vo.$var}" >
+
+
+	</td>
+</tr>
+</table>
+
+
+</div>
+
+<div class="wrap">
+	<div class="tablenav top">					
+		<div class="alignleft actions">	
+			<a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+			<input name="btn_submit" class="button button-primary button-hero" value="编 辑" type="button" onclick="edit('id','{$vo.id}');">
+		</div>
+		<br class="clear">
+	</div>
+</div>
+
+
+
+
+
+
+
+

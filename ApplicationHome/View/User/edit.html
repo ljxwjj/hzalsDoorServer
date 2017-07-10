@@ -1,0 +1,136 @@
+<tagLib name="html" />
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.menu.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.autocomplete.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<script language="JavaScript">
+<!--
+function resetPwd(){
+	//var pass	 =	 $F('resetPwd');
+	var pass = $("#resetPwd").val();
+	$.post('__URL__/resetPwd/','ajax=1&id={$vo.id}&password='+encodeURIComponent(pass), function(data) {
+	    alert(data.info);
+	});
+}
+function checkName(){
+	var v = $("#account").val();
+	$.post('__URL__/checkAccount/','ajax=1&account='+v, function(data) {
+	    alert(data.info);
+	});
+}
+$(function(){
+	$("#birthday").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+})
+//-->
+</script>
+<div class="wrap">
+<h2>编辑用户</h2>
+<div class="tablenav top">
+	<div class="alignleft actions">
+	    <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>    
+	</div>
+	<br class="clear">
+</div>
+</div>
+<br class="clear">
+
+
+<form method='POST' id="form1" action="{:U('User/save')}">
+<div class="formarea">	
+<table class="form-table">
+<assign name="var" value="account" />
+<tr>
+	<th><label for="">账号：</label></th>
+	<td>
+		<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+		<span style="color:red;">*</span>
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+<assign name="var" value="nickname" />
+<tr>
+	<th><label for="">昵称：</label></th>
+	<td>
+	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+	<span style="color:red;">*</span>	
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+	</td>
+</tr>
+<assign name="var" value="sex" />		
+<tr>
+	<th><label for="">性别：</label></th>
+	<td>
+	<select name="{$var}">
+	<option value="1" <eq name="vo[$var]" value="1">selected</eq> >男</option>
+	<option value="0" <eq name="vo[$var]" value="0">selected</eq> >女</option>
+	</select>
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+	</td>		
+</tr>
+<assign name="var" value="email" />
+<tr>
+	<th><label for="">邮箱：</label></th>
+	<td>
+	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+	<span style="color:red;">*</span>	
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+	</td>
+</tr>
+<assign name="var" value="mobile" />
+<tr>
+	<th><label for="">移动电话：</label></th>
+	<td>
+	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+	</td>
+</tr>
+<assign name="var" value="role" />
+<tr>
+	<th><label for="">角色：</label></th>
+	<td>
+		<select name="{$var}">
+			<foreach name="roleList" item="v" key="k">
+			<option value="{$k}" <eq name="k" value="$vo['role_id']">selected</eq> >{$v}</option>
+			</foreach>
+		</select>
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+
+<tr>
+	<td></td>
+	<td class="center">
+	<!--保持搜索部分-->
+	<php>
+	foreach($search as $k=>$v){
+		echo '<input type="hidden" name="'.$k.'" value="'.$v.'" id="'.$k.'" usefor="search">';
+	} 
+	</php>
+	<!--保持搜索部分结束-->	
+	<!--pk-->
+	<assign name="var" value="id" />
+	<input type="hidden" name="{$var}" value="{$vo.$var}" >
+	</td>
+</tr>
+</table>
+</div>
+<div class="wrap">
+	<div class="tablenav top">					
+		<div class="alignleft actions">	
+			<a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>		
+			<input name="btn_submit" class="button button-primary button-hero" value="保 存" type="button" onclick="save('form1','save');">
+		</div>
+		<br class="clear">
+	</div>
+</div>
+</form>
+
+
+
+
+
+
+

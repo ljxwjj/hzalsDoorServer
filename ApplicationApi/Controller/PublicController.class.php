@@ -56,6 +56,8 @@ class PublicController extends CommonRestController {
             $result = createResult(1, '非系统用户');
         } else if (!empty($user['password'])) {
             $result = createResult(2, '该手机号已注册');
+        } else if ($user['status'] === -1) {
+            $result = createResult(3, '用户被禁用');
         } else {
             // 核实验证码
             $smsCode = M('SmsCode');
@@ -63,6 +65,7 @@ class PublicController extends CommonRestController {
             $sms = $smsCode->where($map)->find();
             if ($sms && ($sms["send_time"] + $sms["delay"] * 1000) > time() && $sms["code"] === $smsCode) {
                 $data['password'] = $password;
+                $data['status'] = 1;
                 $saveFlag = $User->save($data);
 
                 if ($saveFlag) {
@@ -71,7 +74,7 @@ class PublicController extends CommonRestController {
                     $result = createResult(0, '注册失败');
                 }
             } else {
-                $result = createResult(3, '验证码错误');
+                $result = createResult(4, '验证码错误');
             }
         }
 
