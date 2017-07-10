@@ -1,0 +1,226 @@
+<script>
+function selectModuleAction(obj){
+    var module_name = $(obj).find("option:selected").val();
+	$("#action_name").html('<option value="">请选择模块节点</option>');	
+	if(module_name !=""){
+		var postUrl = APP+"/Public/ajaxModuleNode/module_name/"+module_name;		
+		$.post(postUrl,function(data){		    
+			if(data.data != null){				
+				$("#action_name").html(data.data);
+			}		
+		},'JSON');
+	}
+}
+</script>
+<div class="wrap">
+<h2>岗位管理</h2>
+
+<div id="welcome-panel" class="welcome-panel">
+	<div class="welcome-panel-content">
+		<div class="welcome-panel-column-container">
+			<div style="float:left;width:20%;">			
+			<div id="products-category-left">
+		        <a href="__URL__/index"><img src="__PUBLIC__/Images/folder_close.gif" alt="Home">&nbsp;绿城电商岗位管理</a><br />
+		        <volist name="arrTree" id="data">
+		                <if condition="$data.display eq 1">
+		                <div>
+		                <else />
+		                <div style="display:none">
+		                </if>
+		        	    &nbsp;&nbsp;&nbsp;{$data.cate_namepre}
+		                <a href="__URL__/index/pid/{$data.id}" >
+		                <if condition="$data.id eq $pid">
+		                    <img src="__PUBLIC__/Images/folder_open.gif" alt="打开">
+		                <else />
+		                    <img src="__PUBLIC__/Images/folder_close.gif" alt="关闭">
+		                </if>
+		                <span <if condition="$data.id eq $id">style="color:red;"</if> >
+		                {$data.title}{$data.name}
+		                </span></a>
+		                </div>
+				</volist>
+		      </div>
+		      
+			</div>
+				
+			<div style="float:left;width:80%;">
+			<form method='post' action="__URL__/index" name="form1">
+			<input type="hidden" name="pid" value="{$pid}">
+			<input type="hidden" name="id" value="">
+			<input type="hidden" name="user_id" value="">
+			<input type="hidden" name="data_access_id" value="{$data_access_id}">
+			<input type="hidden" name="mode" value="{$mode}">
+			{$setnode}{$getuser}			
+			<!-- 查询区域 -->
+			
+			<div class="tablenav top">
+				<if condition="$displaytype eq 2">
+					<div class="alignleft actions">								
+					<assign name="var" value="users" />					
+						<label>用户名（账号或名称或邮箱）：</label><br />
+						<textarea type="text" name="{$var}" title="用户名（账号或名称或邮箱）" class="medium" >{$users}</textarea><br />
+						支持批量登录，多个用户之间用逗号分隔。<br />
+						<if condition="$success[$var]"><span class="description">{$success[$var]}</span><br/></if>					
+						<if condition="$error[$var]"><span class="description">{$error[$var]}</span><br/></if>
+					</div>
+					<div class="alignleft actions">
+						<input type="button" class="button" href="javascript:;" onclick="fnFormModeSubmit('form1', 'saveusers', 'id', '{$id}'); return false;" value="保存">
+					</div>
+				<elseif condition="$displaytype eq 1" />		
+					<div class="alignleft actions">
+					<assign name="var" value="code" />
+					<label>岗位编码：</label>					
+					<input type="text" name="{$var}" title="岗位编号" value="{$vo.$var}" />
+					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if> 
+					</div>
+					<div class="alignleft actions">
+					<assign name="var" value="name" />
+					<label>岗位名称：</label>									
+					<input type="text" name="{$var}" title="岗位名称" value="{$vo.$var}" /> 
+					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+					</div>
+					<div class="alignleft actions">
+						<input type="button" name="btn_search" href="javascript:;" onclick="fnFormModeSubmit('form1', 'save', 'id', '{$vo.id}'); return false;" class="button" value="<empty name="vo.id">新增<else/>保存</empty>"/>&nbsp;					  	
+					</div>
+				<elseif condition="$displaytype eq 3"/>
+				<h3>分配权限</h3>	
+				<elseif condition="$displaytype eq 4"/>
+				<h3>分配数据</h3>	
+				    <div class="alignleft actions">
+    					<assign name="var" value="module_name" />
+    					<label></label>					
+    					<select name="{$var}" onchange="selectModuleAction(this)">
+    					<option value="">请选择模块</option>
+    					<volist name="arrModule" id="module" >
+    					<option value="{$module.module_name}" <if condition="$vo[$var] eq $module[module_name]">selected</if> >{$module.module_title}</option>
+    					</volist>
+    					</select>
+					    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if> 
+					</div>
+					<div class="alignleft actions">
+    					<assign name="var" value="action_name" />
+    					<label></label>				
+    					<select name="{$var}" id="{$var}">
+    					<option value="">请选择模块节点</option>
+    					<volist name="arrAction" id="action" >
+    					<option value="{$action.action_name}" <if condition="$vo[$var] eq $action[action_name]">selected</if>>{$action.action_title}</option>
+    					</volist>
+    					</select>
+    					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+					</div>
+					<div class="alignleft actions">
+    					<assign name="var" value="range_type" />
+    					<label></label>	
+    					<select name="{$var}">
+    					<option value="">请选择范围类型</option>
+    					<volist name="arrRangeType" id="rangeType" >
+    					<option value="{$key}" <if condition="$vo[$var] eq $key">selected</if> >{$rangeType}</option>
+    					</volist>
+    					</select>    					
+    					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
+					</div>
+					<assign name="var" value="info" />
+					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+					<div class="alignleft actions">
+						<input type="button" name="btn_search" href="javascript:;" onclick="fnModeSubmit('savedataaccess','id',{$id}); return false;" class="button" value="<empty name="vo.id">新增<else/>保存</empty>"/>&nbsp;					  	
+					</div>			
+				</if>
+				<br class="clear">
+			</div>
+			<br class="clear">
+			<!-- 查询区域结束 -->	
+					
+			<table class="wp-list-table widefat fixed posts">			
+			<if condition="$displaytype eq 2">
+			<thead>	
+				<tr>				
+				<th class="manage-column" scope="col">编号</th>
+				<th class="manage-column" scope="col">账号</th>
+				<th class="manage-column" scope="col">名称</th>
+				<th class="manage-column" scope="col">部门</th>
+				<th class="manage-column" scope="col">邮箱</th>				
+				<th class="manage-column" scope="col">状态</th>
+				<th class="manage-column" scope="col">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<volist name="arrList" id="vo" mod="2">
+			<assign name="user_id" value="$vo.id" />
+			<tr <eq name="mod" value="0">class="alternate"</eq>>			
+			<td class="manage-column" scope="col">{$vo.id}</td>
+			<td class="manage-column" scope="col">{$vo.account}</td>
+			<td class="manage-column" scope="col">{$vo.nickname}</td>
+			<td class="manage-column" scope="col">{$vo.department}</td>
+			<td class="manage-column" scope="col">{$vo.email}</td>
+			<td class="manage-column" scope="col">{$vo.status|getStatus}</td>
+			<td> 
+			<a href="javascript:deleteusers('id','{$id}','user_id','{$user_id}')">从岗位中移除</a>&nbsp; 
+			</td>
+			</tr>
+			</volist>
+			</tbody>			
+			<elseif condition="$displaytype eq 1"/>		
+			<thead>
+				<tr>				
+				<th class="manage-column" scope="col" width="5%">编号</th>
+				<th class="manage-column" scope="col" width="10%">岗位编码</th>
+				<th class="manage-column" scope="col" width="20%">岗位名</th>
+				<th class="manage-column" scope="col" width="5%">状态</th>
+				<th class="manage-column" scope="col">操作</th>			
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="arrList" id="vo" mod="2">
+				<assign name="id" value="$vo.id" />
+				<tr <eq name="mod" value="0">class="alternate"</eq> >						
+				<td class="manage-column" scope="col">{$vo.id}</td>
+				<td class="manage-column" scope="col">{$vo.code}</td>		
+				<td class="manage-column" scope="col"><a href="javascript:pre_edit('id','{$id}')">{$vo.name}</a></td>
+				<td class="manage-column" scope="col">{$vo.status|getStatus}</td>
+				<td class="manage-column" scope="col"> 
+				<a href="javascript:assignuser('id','{$id}')">管理岗位用户</a>&nbsp; 
+				<a href="javascript:assignnode('id','{$id}')">分配权限</a>&nbsp;
+				<!--<a href="javascript:assigndata('id','{$id}')">分配数据</a> -->
+				<a href="javascript:pre_edit('id','{$id}')">编辑</a>&nbsp; 
+				<a href="javascript:treedelete('id','{$id}')">删除</a>&nbsp; 
+				<a href="javascript:up('id','{$id}')">向上へ</a>&nbsp; 
+				<a href="javascript:down('id','{$id}')">向下へ</a>&nbsp;
+				</td>
+				</tr>
+				</volist>
+			</tbody>	
+			<elseif condition="$displaytype eq 3"/>
+			<tbody>
+			<volist name="arrList" id="data">
+			<div>
+			{$data.cate_namepre}
+			<input type="checkbox" name="node_id[]" value="{$data.id}"  <if condition="$data.checked eq 1">checked</if> >
+			{$data.title}[{$data.name}] 
+			</div>
+			</volist>
+			<input type="button" name="btn_search" class="button" onclick="fnModeSubmit('savenodes','id',{$id});"  value="保存">
+			</tbody>
+			</if>
+			</table>
+			<div class="tablenav bottom">
+                <div class="alignleft actions"></div>
+                <div class="tablenav-pages">               
+                    <div class="page">{$page}</div>
+                </div>
+                <br class="clear">
+            </div>
+			</form>
+			
+			</div>
+			<!-- 列表显示区域  -->
+		</div>
+	</div>
+</div>
+
+
+
+
+<!--保持搜索部分-->
+<input type="hidden" name="search_pid" value="{$pid}" id="search_pid" usefor="search">
+<!--保持搜索部分结束-->
+

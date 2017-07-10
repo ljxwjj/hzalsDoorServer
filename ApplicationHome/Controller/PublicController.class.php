@@ -4,6 +4,7 @@ namespace Home\Controller;
 
 
 use Lib\ORG\Util\RBAC;
+use Michelf\Markdown;
 
 class PublicController extends CommonController {
 
@@ -97,7 +98,7 @@ class PublicController extends CommonController {
     }
 
 
-    public function alsTest($url = null) {
+    public function alsTest($url = null) {//echo APP_PATH;exit;
         if ($url) {
             $params = $this->getKeyValue($url);
 
@@ -123,7 +124,11 @@ class PublicController extends CommonController {
 
         }
 
-
+        Vendor('Michelf/Markdown', MODULE_PATH . 'Vendor/', '.inc.php');
+        $obj = new Markdown();
+        $my_text = file_get_contents(APP_PATH.'/API.md');
+        $api_doc_html = Markdown::defaultTransform($my_text);
+        $this->assign('api_doc_html',$api_doc_html);
 
         if ($url) {
             $this->assign('url',$url);
@@ -140,6 +145,7 @@ class PublicController extends CommonController {
                 $result[$matchs[2][$i]] = $matchs[3][$i];
             }
         }
+
         return $result;
     }
 }

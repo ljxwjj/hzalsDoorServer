@@ -1,7 +1,6 @@
 <?php
 namespace Api\Controller;
-use Think\Controller\RestController;
-class UserProfileController extends RestController {
+class UcenterController extends CommonRestController {
     // 显示二维码
     public function userQrCode() {
 

@@ -1,9 +1,7 @@
 <?php
 namespace Api\Controller;
-use Think\Controller\RestController;
 
-
-class DoorController extends RestController {
+class DoorControllerController extends CommonRestController {
     // 公司门禁清单
     public function doorControllerList() {
 

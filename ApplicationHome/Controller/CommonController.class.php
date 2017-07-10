@@ -262,9 +262,9 @@ class CommonController extends Controller {
             $params.= 'p/'.$_REQUEST['p'];
         }
         if(!$action){
-            return __URL__ . '/' . C('DEFAULT_ACTION') . '/'.$params;
+            return __CONTROLLER__  . '/' . C('DEFAULT_ACTION') . '/'.$params;
         } else {
-            return __URL__ . '/' . $action . '/'.$params;
+            return __CONTROLLER__  . '/' . $action . '/'.$params;
         }
 
         //return __URL__ . '?' . C('VAR_MODULE') . '=' . MODULE_NAME . '&' . C('VAR_ACTION') . '=' . C('DEFAULT_ACTION');

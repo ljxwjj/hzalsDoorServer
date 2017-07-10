@@ -1,8 +1,8 @@
 <!--左侧菜单-->
 <div id="adminmenuwrap">
 	<ul id="adminmenu" role="navigation">	
-		<li class="menu-top menu-top-first menu-top-last <if condition='MODULE_NAME eq Index'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
-			<a href='__APP__/Index/index' class="menu-top menu-top-first menu-top-last <if condition='MODULE_NAME eq Index'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+		<li class="menu-top menu-top-first menu-top-last <if condition='CONTROLLER_NAME eq Index'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+			<a href='__APP__/Index/index' class="menu-top menu-top-first menu-top-last <if condition='CONTROLLER_NAME eq Index'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -16,8 +16,8 @@
 		</li>
 	    
 		
-		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='MODULE_NAME eq Customer'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
-			<a href='__APP__/User/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='MODULE_NAME eq Customer'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" aria-haspopup="true">
+		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='CONTROLLER_NAME eq User'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+			<a href='__APP__/User/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='CONTROLLER_NAME eq User'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" aria-haspopup="true">
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -26,17 +26,17 @@
 			</a>
 			<ul class='wp-submenu wp-submenu-wrap'>
 				<li class='wp-submenu-head'>用户管理</li>
-				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+				<li class="wp-first-item <if condition='(CONTROLLER_NAME eq User) and (ACTION_NAME eq index)'>current</if>">
 					<a href="__APP__/User/index" class="wp-first-item current">用户列表</a>
 				</li>
-				<li class="<if condition='MODULE_NAME eq Node'>current</if>">
+				<li class="<if condition='(CONTROLLER_NAME eq User) and (ACTION_NAME eq add)'>current</if>">
 					<a href="__APP__/User/add" class="current">添加用户</a>
 				</li>
 			</ul>
 		</li>
 
-		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
-			<a href='__APP__/DoorController/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq DoorController'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/DoorController/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq DoorController'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -45,18 +45,18 @@
 			</a>
 			<ul class='wp-submenu wp-submenu-wrap'>
 				<li class='wp-submenu-head'>门禁管理</li>
-				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+				<li class="wp-first-item <if condition='(CONTROLLER_NAME eq DoorController) and (ACTION_NAME eq index)'>current</if>">
 					<a href="__APP__/DoorController/index" class="wp-first-item current">控制器列表</a>
 				</li>
-				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+				<li class="wp-first-item <if condition='(CONTROLLER_NAME eq DoorController) and (ACTION_NAME eq add)'>current</if>">
 					<a href="__APP__/DoorController/add" class="wp-first-item current">添加控制器</a>
 				</li>
 
 			</ul>
 		</li>
 
-		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
-			<a href='__APP__/OpenRecord/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq OpenRecord'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/OpenRecord/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq OpenRecord'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -65,8 +65,8 @@
 			</a>
 		</li>
 		
-		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
-			<a href='__APP__/RequestUse/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='MODULE_NAME eq CustomerUser'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq RequestUse'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/RequestUse/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq RequestUse'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -76,8 +76,8 @@
 		</li>
 
 
-		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(MODULE_NAME,array(Department,Role,User,Node,MessageSendRole,BrandReportWarning,FlowPassing))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
-			<a href='__APP__/Department/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(MODULE_NAME,array(Department,Role,User,Node,MessageSendRole,BrandReportWarning,FlowPassing))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/Company/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -86,14 +86,14 @@
 			</a>
 			<ul class='wp-submenu wp-submenu-wrap'>
 				<li class='wp-submenu-head'>系统管理</li>
-				<li class="wp-first-item <if condition='MODULE_NAME eq Company'>current</if>">
+				<li class="wp-first-item <if condition='CONTROLLER_NAME eq Company'>current</if>">
 					<a href="__APP__/Company/index" class="wp-first-item current">客户管理</a>
 				</li>
-				<li class="<if condition='MODULE_NAME eq Node'>current</if>">
-					<a href="__APP__/Node/index" class="current">权限管理</a>
+				<li class="<if condition='CONTROLLER_NAME eq AuthNode'>current</if>">
+					<a href="__APP__/AuthNode/index" class="current">权限管理</a>
 				</li>
-				<li class="<if condition='MODULE_NAME eq Node'>current</if>">
-					<a href="__APP__/Role/index" class="current">角色管理</a>
+				<li class="<if condition='CONTROLLER_NAME eq AuthRole'>current</if>">
+					<a href="__APP__/AuthRole/index" class="current">角色管理</a>
 				</li>
 			</ul>
 		</li>

@@ -11,59 +11,16 @@
 
 <div class="formarea">	
 <table class="form-table">
-<assign name="var" value="account" />
+<assign name="var" value="name" />
 <tr>
-	<th><label for="">账号：</label></th>
+	<th><label for="">公司名称：</label></th>
 	<td>
 	{$vo.$var}
 	</td>
 </tr>
-<assign name="var" value="nickname" />
+<assign name="var" value="admin_mobile" />
 <tr>
-	<th><label for="">用户名称：</label></th>
-	<td>
-	{$vo.$var}
-	</td>
-</tr>
-<assign name="var" value="zhiwu" />
-<tr>
-	<th><label for="">职务：</label></th>
-	<td>
-	{$vo.$var}
-	</td>
-</tr>
-<assign name="var" value="sex" />		
-<tr>
-	<th><label for="">性别：</label></th>
-	<td>
-	<eq name="vo[$var]" value="1">男</eq>
-	<eq name="vo[$var]" value="0">女</eq> 
-	</td>		
-</tr>
-<assign name="var" value="email" />
-<tr>
-	<th><label for="">邮箱：</label></th>
-	<td>
-	{$vo.$var}
-	</td>
-</tr>
-<assign name="var" value="mobile" />
-<tr>
-	<th><label for="">移动电话：</label></th>
-	<td>
-	{$vo.$var}
-	</td>
-</tr>
-<assign name="var" value="birthday" />
-<tr>
-	<th><label for="">生日：</label></th>
-	<td>
-	<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d"}</if>		
-	</td>
-</tr>
-<assign name="var" value="address" />
-<tr>
-	<th><label for="">家庭住址：</label></th>
+	<th><label for="">管理员名称：</label></th>
 	<td>
 	{$vo.$var}
 	</td>
@@ -72,29 +29,15 @@
 <tr>
 	<th><label for="">状态：</label></th>
 	<td>
-	<eq name="vo[$var]" value="1">启用</eq>
-	<eq name="vo[$var]" value="0">禁用</eq>
+	<eq name="vo[$var]" value="0">启用</eq>
+	<eq name="vo[$var]" value="-1">禁用</eq>
 	</td>
 </tr>
-<assign name="var" value="last_login_time" />		
+<assign name="var" value="create_time" />
 <tr>
-	<th><label for="">上次登录时间：</label></th>
+	<th><label for="">登记时间：</label></th>
 	<td>
 	<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
-	</td>
-</tr>
-<assign name="var" value="login_count" />		
-<tr>
-	<th><label for="">登录次数：</label></th>
-	<td>
-	{$vo.$var}
-	</td>
-</tr>
-<assign name="var" value="remark" />
-<tr>
-	<th><label for="">备注：</label></th>
-	<td >
-	{$vo.$var}
 	</td>
 </tr>
 <tr>
@@ -113,6 +56,41 @@
 	</td>
 </tr>
 </table>
+
+
+<p>公司用户：</p>
+	<table class="wp-list-table widefat fixed posts">
+		<thead>
+		<tr>
+			<th class="manage-column" scope="col" width="5%">编号</th>
+			<th class="manage-column" scope="col" width="10%">姓名</th>
+			<th class="manage-column" scope="col" width="10%">姓别</th>
+			<th class="manage-column" scope="col" width="10%">帐号</th>
+			<th class="manage-column" scope="col" width="10%">角色</th>
+			<th class="manage-column" scope="col" width="5%">状态</th>
+			<th class="manage-column" scope="col" width="50%">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		<volist name="arrList" id="vo" mod="2">
+			<assign name="id" value="$vo.id" />
+			<tr <eq name="mod" value="0">class="alternate"</eq> >
+			<td class="manage-column" scope="col" >{$vo.id}</td>
+			<td class="manage-column" scope="col">{$vo.nickname}</td>
+			<td class="manage-column" scope="col">{$vo.sex|showSex}</td>
+			<td class="manage-column" scope="col">{$vo.account}</td>
+			<td class="manage-column" scope="col">{$vo.role_name}</td>
+			<td class="manage-column" scope="col">{$vo.status|getStatus}</td>
+			<td class="manage-column" scope="col">
+				{$vo.status|showStatus=$id}&nbsp;
+				<a href="javascript:view('id','{$vo.id}')">查看</a>&nbsp;
+				<a href="javascript:edit('id','{$id}')">编辑</a>&nbsp;
+				<a href="javascript:del('id','{$id}')">离职</a>&nbsp;
+			</td>
+			</tr>
+		</volist>
+		</tbody>
+	</table>
 </div>
 
 <div class="wrap">

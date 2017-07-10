@@ -1,1 +1,107 @@
-index
+<div class="wrap">
+    <h2>客户审请 &nbsp;<a class="add-new-h2" href="#" onclick="add()">新增</a>
+    </h2>
+
+    <form name="form1" method='POST' action="{:U('RequestUse/index')}">
+        <!-- 查询区域 -->
+        <div class="tablenav top">
+            <!--单个查询条件-->
+            <assign name="var" value="search_company" />
+            <div class="alignleft actions">
+                <label>公司名称</label>
+                <input type="text" usefor="search" name="{$var}" title="公司查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_contacts" />
+            <div class="alignleft actions">
+                <label>联系人</label>
+                <input type="text" usefor="search" name="{$var}" title="联系人查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_telphone" />
+            <div class="alignleft actions">
+                <label>联系电话</label>
+                <input type="text" usefor="search" name="{$var}" title="电话查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_order_number" />
+            <div class="alignleft actions">
+                <label>订单号</label>
+                <input type="text" usefor="search" name="{$var}" title="订单查询" value="{$search.$var}" />
+            </div>
+            <td>
+                <assign name="var" value="search_status" />
+                <div class="alignleft actions">
+                    <select usefor="search" name="{$var}" id="{$var}" title="状态">
+                        <option value="">选择所有状态</option>
+                        <option value="0" <if condition="'0' eq $search[$var]">selected </if> >待审核</option>
+                        <option value="1" <if condition="'1' eq $search[$var]">selected </if> >通过</option>
+                        <option value="-1" <if condition="-1  eq $search[$var]">selected </if> >拒绝</option>
+                    </select>
+                </div>
+            </td>
+            <!--单个查询条件结束-->
+            <div class="alignleft actions">
+                <input class="button" type="submit" value="查询" name="btn_search">
+            </div>
+        </div>
+        <br class="clear">
+        <!-- 查询区域结束 -->
+
+        <!-- 列表显示区域  -->
+        <table class="wp-list-table widefat fixed posts">
+            <thead>
+            <tr>
+                <th scope='col'  class='manage-column ' width="5%">编号</th>
+                <th scope='col'  class='manage-column ' width="10%">公司名称</th>
+                <th scope='col'  class='manage-column ' width="10%">联系人</th>
+                <th scope='col'  class='manage-column ' width="10%">联系电话</th>
+                <th scope='col'  class='manage-column ' width="10%">订单号</th>
+                <th scope='col'  class='manage-column ' width="15%">添加时间</th>
+                <th scope='col'  class='manage-column ' width="5%">状态</th>
+                <th scope='col'  class='manage-column ' width="35%">操作</th>
+            </tr>
+            </thead>
+            <volist name="list" id="vo" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> >
+                <td class="manage-column">{$vo.id}</td>
+                <td class="manage-column">{$vo.company}</td>
+                <td class="manage-column">{$vo.contacts}</td>
+                <td class="manage-column">{$vo.telphone}</td>
+                <td class="manage-column">{$vo.order_number}</td>
+                <td class="manage-column">{$vo.create_time|toDate='Y-m-d H#i#s'}</td>
+                <td class="manage-column">{$vo.status|getStatus}</td>
+                <td class="manage-column">
+                    {$vo.status|showRequestUseStatus=$vo[id]}
+                    <a href="javascript:edit('id','{$vo.id}')">编辑</a>&nbsp;
+                    <a href="javascript:del('id','{$vo.id}')">删除</a>&nbsp;
+                </td>
+                </tr>
+            </volist>
+        </table>
+        <!-- 列表显示区域结束  -->
+
+
+        <!--  分页显示区域 -->
+        <div class="tablenav bottom">
+            <div class="alignleft actions"></div>
+            <div class="tablenav-pages">
+                <!--
+                <span class="displaying-num">2个项目</span>
+                <span class="pagination-links">
+                    <a class="first-page disabled" title="前往第一页" href="#">«</a>
+                    <a class="prev-page disabled" title="前往上一页" href="#">‹</a>
+                    <span class="paging-input">第1页，共<span class="total-pages">1</span>页</span>
+                    <a class="next-page disabled" title="前往下一页" href="#">›</a>
+                    <a class="last-page disabled" title="前往最后一页" href="#">»</a>
+                </span>-->
+                <div class="page">{$page}</div>
+                <input type="hidden" usefor="search" name="search_p" value="{$nowpage}"  >
+            </div>
+            <br class="clear">
+        </div>
+        <!--  分页显示区域结束 -->
+        <!-- 列表显示区域结束 -->
+    </form>
+
+    <div id="ajax-response"></div>
+    <br class="clear">
+</div>
+<!--wrap-->

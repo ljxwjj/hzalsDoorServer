@@ -285,7 +285,7 @@ function num2rmb($number = 0, $int_unit = '元', $is_round = TRUE, $is_extra_zer
  */
 function getUserRoles($userId){
     load("@.Array");  
-    $Mrole = D("Role");
+    $Mrole = D("AuthRole");
     $roleTb = $Mrole->getTableName();
     $MroleUser = M("RoleUser");
     $roleUserTb = $MroleUser->getTableName();
@@ -305,7 +305,7 @@ function getUserRoles($userId){
  */
 function getUserRoleCodes($userId){
     load("@.Array");  
-    $Mrole = D("Role");
+    $Mrole = D("AuthRole");
     $roleTb = $Mrole->getTableName();
     $MroleUser = M("RoleUser");
     $roleUserTb = $MroleUser->getTableName();
@@ -456,7 +456,7 @@ function getDepartmentUserId($arrDepartmentsId){
     $MdepartmentUser = D("DepartmentUser");   
     $departmentUserTb =  $MdepartmentUser->getTableName();
     
-    $Mrole = D("Role");
+    $Mrole = D("AuthRole");
     $roleTb = $Mrole->getTableName();
     $MroleUser = M("RoleUser");
     $roleUserTb = $MroleUser->getTableName();
@@ -479,7 +479,7 @@ function getUserDepartmnetAndChildDepartmentProjectManager($userId){
     $MdepartmentUser = D("DepartmentUser");   
     $departmentUserTb =  $MdepartmentUser->getTableName();
     
-    $Mrole = D("Role");
+    $Mrole = D("AuthRole");
     $roleTb = $Mrole->getTableName();
     $MroleUser = M("RoleUser");
     $roleUserTb = $MroleUser->getTableName();
@@ -509,7 +509,7 @@ function getUserDepartmentProjectManager($userId){
     $MdepartmentUser = D("DepartmentUser");
     $departmentUserTb =  $MdepartmentUser->getTableName();
     
-    $Mrole = D("Role");
+    $Mrole = D("AuthRole");
     $roleTb = $Mrole->getTableName();
     
     $MroleUser = M("RoleUser");
@@ -614,7 +614,7 @@ function getUserProjectId($userId,$modelName="project",$actionName="index"){
 	$MdepartmentUser = M("DepartmentUser");
 	$departmentUserTb = $MdepartmentUser->getTableName();
 		
-    $Mrole = D("Role");
+    $Mrole = D("AuthRole");
     $roleTb = $Mrole->getTableName();
     
     $MroleUser = M("RoleUser");

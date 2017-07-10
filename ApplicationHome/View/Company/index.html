@@ -8,15 +8,15 @@
 <!-- 查询区域 -->
 <div class="tablenav top">
 <!--单个查询条件-->
-<assign name="var" value="search_account" />
+<assign name="var" value="search_name" />
 <div class="alignleft actions">
-   <label>用户帐号</label>
+   <label>公司名称</label>
    <input type="text" usefor="search" name="{$var}" title="名称查询" value="{$search.$var}" />
 </div>
-<assign name="var" value="search_nickname" />
+<assign name="var" value="search_admin_mobile" />
 <div class="alignleft actions">
-   <label>用户名称</label>
-   <input type="text" usefor="search" name="{$var}" title="名称查询" value="{$search.$var}" />
+   <label>联系电话</label>
+   <input type="text" usefor="search" name="{$var}" title="电话查询" value="{$search.$var}" />
 </div>
 <td>
 <assign name="var" value="search_status" />
@@ -44,6 +44,7 @@
 	<tr>
 	<th scope='col'  class='manage-column ' width="5%">编号</th>
 	<th scope='col'  class='manage-column ' width="10%">客户名称</th>
+	<th scope='col'  class='manage-column ' width="10%">联系电话</th>
 	<th scope='col'  class='manage-column ' width="15%">添加时间</th>
 	<th scope='col'  class='manage-column ' width="5%">状态</th>
 	<th scope='col'  class='manage-column ' width="35%">操作</th>
@@ -53,15 +54,15 @@
 		<tr <eq name="mod" value="0"> class="alternate" </eq> >
 			<td class="manage-column">{$vo.id}</td>
 			<td class="manage-column">{$vo.name}</td>
+			<td class="manage-column">{$vo.admin_mobile}</td>
 			<td class="manage-column">{$vo.create_time|toDate='Y-m-d H#i#s'}</td>
 			<td class="manage-column">{$vo.status|getStatus}</td>
 			<td class="manage-column">
-			{$vo.status|showStatus=$vo[id]}
 			<a href="javascript:view('id','{$vo.id}')">查看</a>&nbsp;
 			<a href="javascript:edit('id','{$vo.id}')">编辑</a>&nbsp;
 			<a href="javascript:del('id','{$vo.id}')">删除</a>&nbsp;
-			<a href="javascript:assignrole('id','{$vo.id}')">用户列表</a>&nbsp;
-			<a href="javascript:assigndepartment('id','{$vo.id}')">添加用户</a>&nbsp;
+			<a href="javascript:userlist('id','{$vo.id}')">用户列表</a>&nbsp;
+			<a href="javascript:useradd('id','{$vo.id}')">添加用户</a>&nbsp;
 			</td>
 		</tr>
 	</volist>

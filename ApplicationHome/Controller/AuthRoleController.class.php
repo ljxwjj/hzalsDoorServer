@@ -3,7 +3,7 @@ namespace Home\Controller;
 
 use Lib\ORG\Util\CheckError;
 
-class RoleController extends CommonController {
+class AuthRoleController extends CommonController {
 
     public function _initialize() {
         $this->assign('pagetitle',"角色管理");

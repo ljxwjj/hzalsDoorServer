@@ -1,9 +1,7 @@
 <?php
 namespace Home\Controller;
 
-use Lib\ORG\Util\CheckError;
-
-class NodeController extends CommonController {
+class AuthNodeController extends CommonController {
 
     public function _initialize() {
         $this->assign('pagetitle',"权限管理");
@@ -380,4 +378,5 @@ class NodeController extends CommonController {
         $ret = $tableObj->where($map)->setDec('sort',$count);
         return $ret;
     }
+
 }
