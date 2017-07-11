@@ -1,7 +1,7 @@
 <tagLib name="html" />
 
 <div class="wrap">
-    <h2>添加控制器</h2>
+    <h2>编辑控制器</h2>
     <div class="tablenav top">
         <div class="alignleft actions">
             <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>
@@ -69,6 +69,8 @@
                     </php>
                     <!--保持搜索部分结束-->
                     <!--pk-->
+                    <assign name="var" value="id" />
+                    <input type="hidden" name="{$var}" value="{$vo.$var}" >
                     <assign name="var" value="company_id" />
                     <input type="hidden" name="{$var}" value="{$vo.$var}" >
                 </td>

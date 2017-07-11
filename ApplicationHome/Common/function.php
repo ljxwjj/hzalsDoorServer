@@ -72,6 +72,21 @@ function getUserStatus($status, $imageShow = true) {
     return ($imageShow === true) ?  $showImg  : $showText;
 }
 
+function getCompanyStatus($status, $imageShow = true) {
+    $__PUBLIC__ = __ROOT__.'/Public';
+    switch ($status) {
+        case - 1 :
+            $showText = '删除';
+            $showImg = "<IMG SRC='$__PUBLIC__/Images/delete.png' WIDTH='15' HEIGHT='15' BORDER='0' ALT='删除'>";
+            break;
+        default :
+            $showText = '正常';
+            $showImg = "<IMG SRC='$__PUBLIC__/Images/ok.png' WIDTH='15' HEIGHT='15' BORDER='0' ALT='正常'>";
+
+    }
+    return ($imageShow === true) ?  $showImg  : $showText;
+}
+
 function showStatus($status, $id) {
     switch ($status) {
         case 0 :
@@ -94,6 +109,13 @@ function showSex($sex) {
         case 1:
             return '男';
     }
+}
+
+function showDoorController($controllerName, $ip) {
+    if ($ip) {
+        $controllerName = "$controllerName ($ip)";
+    }
+    return $controllerName;
 }
 
 function showRequestUseStatus($status, $id) {

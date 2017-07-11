@@ -1,3 +1,48 @@
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.menu.js" />
+<script type="text/javascript">
+    $(function(){
+        //$("#search_open_time_start").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+        //$("#search_open_time_end").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+
+        var dateFormat = "yy-mm-dd",
+            from = $( "#search_open_time_start" )
+                .datepicker({
+                    defaultDate: "-3m",
+                    changeMonth: true,
+                    numberOfMonths: 3,
+                    maxDate: new Date(),
+                })
+                .on( "change", function() {
+                    to.datepicker( "option", "minDate", getDate( this ) );
+                }),
+            to = $( "#search_open_time_end" ).datepicker({
+                defaultDate: "-1m",
+                changeMonth: true,
+                numberOfMonths: 3,
+                maxDate: new Date(),
+            })
+                .on( "change", function() {
+                    from.datepicker( "option", "maxDate", getDate( this ) );
+                });
+
+        function getDate( element ) {
+            var date;
+            try {
+                date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+                date = null;
+            }
+
+            return date;
+        }
+    })
+</script>
 <div class="wrap">
     <h2>出入记录 &nbsp;
     </h2>
@@ -17,15 +62,17 @@
                 <input type="text" usefor="search" name="{$var}" title="控制器查询" value="{$search.$var}" />
             </div>
             <assign name="var" value="search_begin_time" />
+
             <div class="alignleft actions">
-                <label>开始时间</label>
-                <input type="text" usefor="search" name="{$var}" title="时间查询" value="{$search.$var}" />
+                <assign name="var" value="search_open_time_start" />
+                <label>开门时间</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="开门时间" value="{$search.$var}" class="medium"  />
+
+                <assign name="var" value="search_open_time_end" />
+                <label>~</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="开门时间" value="{$search.$var}" class="medium"  />
             </div>
-            <assign name="var" value="search_end_time" />
-            <div class="alignleft actions">
-                <label>结束时间</label>
-                <input type="text" usefor="search" name="{$var}" title="时间查询" value="{$search.$var}" />
-            </div>
+
             <!--单个查询条件结束-->
             <div class="alignleft actions">
                 <input class="button" type="submit" value="查询" name="btn_search">
@@ -53,7 +100,7 @@
                     <a href="javascript:viewUser('id','{$vo.id}')">{$vo.user_nickname}</a>
                 </td>
                 <td class="manage-column" scope="col">
-                    <a href="javascript:viewDoorController('id','{$vo.id}')">{$vo.ontroller_name}({$vo.controller_ip})</a>
+                    <a href="javascript:viewDoorController('id','{$vo.id}')">{$vo.controller_name|showDoorController=$vo["controller_ip"]}</a>
                 </td>
                 <td class="manage-column" scope="col">{$vo.door_id}</td>
                 <td class="manage-column" scope="col">{$vo.open_time|toDate='Y-m-d H#i#s'}</td>

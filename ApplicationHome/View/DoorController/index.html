@@ -48,7 +48,7 @@
                 <td class="manage-column" scope="col">{$vo.name}</td>
                 <td class="manage-column" scope="col">{$vo.serial_number}</td>
                 <td class="manage-column" scope="col">{$vo.model}</td>
-                <td class="manage-column" scope="col">{$vo.ip}{$vo.port}</td>
+                <td class="manage-column" scope="col">{$vo.ip} <if condition="$vo['port']">：{$vo.port}</if></td>
                 <td class="manage-column" scope="col">{$vo.company_name}</td>
                 <td class="manage-column" scope="col">
                     <a href="javascript:view('id','{$vo.id}')">查看</a>&nbsp;
