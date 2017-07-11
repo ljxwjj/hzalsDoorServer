@@ -126,7 +126,41 @@ class PublicController extends CommonRestController {
         $this->response($result,'json');
     }
 
-    public function modifyPassword() {
+    public function findPassword() {
+        $result = array();
+        $account = I('account');
+        $password = I('password', '', 'md5');
+        $smsCode = I('sms_code');
 
+        $User = M('User');
+        $map['account'] = $account;
+        $user = $User->where($map)->find();
+
+        if (!$user) {
+            $result = createResult(1, '非系统用户');
+        } else if (empty($user['password'])) {
+            $result = createResult(2, '帐号未激活');
+        } else if ($user['status'] === -1) {
+            $result = createResult(3, '用户被禁用');
+        } else {
+            // 核实验证码
+            $smsCode = M('SmsCode');
+            $map["mobile"] = $account;
+            $sms = $smsCode->where($map)->find();
+            if ($sms && ($sms["send_time"] + $sms["delay"] * 1000) > time() && $sms["code"] === $smsCode) {
+                $data['password'] = $password;
+                $saveFlag = $User->save($data);
+
+                if ($saveFlag) {
+                    $result = createResult(200, '找回成功');
+                } else {
+                    $result = createResult(0, '找回失败');
+                }
+            } else {
+                $result = createResult(4, '验证码错误');
+            }
+        }
+
+        $this->response($result,'json');
     }
 }
