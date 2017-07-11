@@ -98,7 +98,7 @@ class PublicController extends CommonController {
     }
 
 
-    public function alsTest($url = null) {//echo APP_PATH;exit;
+    public function alsTest($url = null, $user_id = 0) {//echo APP_PATH;exit;
         if ($url) {
             $params = $this->getKeyValue($url);  //var_dump($params);exit;
             $wenhao = true;
@@ -115,6 +115,11 @@ class PublicController extends CommonController {
                 }
                 $params = $paramsArray;      //var_dump($params);exit;
                 $wenhao = false;
+            }
+
+            if ($user_id) {
+                $token = D('UserToken')->where(array('user_id'=>$user_id))->getField('token');
+                $params['token'] = $token;
             }
 
             ksort($params);
