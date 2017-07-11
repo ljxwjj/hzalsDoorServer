@@ -464,10 +464,14 @@ class AuthRoleController extends CommonController {
                     //查询是否已经增加过
                     $RoleUser = D('AuthRoleUser');
                     $condition['user_id'] = $user_id;
-                    $isE = $RoleUser->where($condition)->getField('role_id');
-                    if($isE){
+                    $isE = $RoleUser->where(array('user_id'=>$user_id))->getField('role_id');
+                    if($isE == $id){
                         $error['users'] .= '"'.$user.'" 已经登录过，请不要重复登录！ ';
-                    }else{
+                    } else if ($isE) {
+                        $data = $RoleUser->create($condition);
+                        $RoleUser->where(array('user_id'=>$user_id))->save($data);
+                        $success['users'] .= '"'.$user.'" 成功登录在岗位内！ ';
+                    } else{
                         $data = $RoleUser->create($condition);
                         $RoleUser->add($data);
                         $success['users'] .= '"'.$user.'" 成功登录在岗位内！ ';

@@ -7,6 +7,7 @@ class PublicController extends CommonRestController {
         $result = array();
         $User = M('User');  // D('User');
         $map['account'] = $account;
+        $map['status'] = array('EQ', 1);
         $user = $User->where($map)->find();
         if ($user && $user['password'] == md5($password)) {
             // 更新最后登录时间
@@ -17,7 +18,7 @@ class PublicController extends CommonRestController {
             extract($user);   // 把数组拆分成变量
             $token = createToekn();
 
-            $companyData = M('Company')->where(array('id'=>$company_id))->find();
+            $companyData = M('Company')->where(array('id'=>$user['company_id']))->find();
             $company = $companyData?$companyData['name']:'';
 
             $result['code'] = 200;
@@ -25,7 +26,7 @@ class PublicController extends CommonRestController {
             $result['data'] = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company');
 
             $model = M('UserToken');
-            $userToken = $model->where(array('user_id'=>$id))->find();
+            $userToken = $model->where(array('user_id'=>$user['id']))->find();
             if ($userToken) {
                 $userToken['token'] = $token;
                 $userToken['update_time'] = time();

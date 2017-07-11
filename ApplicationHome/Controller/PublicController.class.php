@@ -34,7 +34,7 @@ class PublicController extends CommonController {
         $map   =   array();
         // 支持使用绑定帐号登录
         $map['account']	= $_POST['account'];
-//        $map["status"]	=	array('gt',0);
+        $map["status"]	=	array('EQ', 1);
 //        $map["is_admin"]	=	array('eq',1);
 
         import('Lib.ORG.Util.RBAC');
@@ -55,11 +55,12 @@ class PublicController extends CommonController {
             exit;
         }else{
             $_SESSION[C('USER_AUTH_KEY')]	=	$authInfo['id'];
-            $_SESSION['email']	=	$authInfo['email'];
+            $_SESSION['email']	            =	$authInfo['email'];
             $_SESSION['loginUserName']		=	$authInfo['nickname'];
             $_SESSION['lastLoginTime']		=	$authInfo['last_login_time'];
-            $_SESSION['login_count']	=	$authInfo['login_count'];
-            $_SESSION['account']	=	$authInfo['account'];
+            $_SESSION['login_count']	    =	$authInfo['login_count'];
+            $_SESSION['account']	        =	$authInfo['account'];
+            $_SESSION['company_id']         =   $authInfo['company_id'];
             if($authInfo['is_admin']==1) {
                 $_SESSION[C('ADMIN_AUTH_KEY')] = true;
             }

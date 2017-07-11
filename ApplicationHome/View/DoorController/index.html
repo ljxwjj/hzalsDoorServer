@@ -1,1 +1,84 @@
-index list
+<div class="wrap">
+    <h2>门禁管理 &nbsp;<a class="add-new-h2" href="#" onclick="add()">新增</a>
+    </h2>
+
+    <form name="form1" method='POST' action="{:U('DoorController/index')}">
+        <!-- 查询区域 -->
+        <div class="tablenav top">
+            <!--单个查询条件-->
+            <assign name="var" value="search_name" />
+            <div class="alignleft actions">
+                <label>名称</label>
+                <input type="text" usefor="search" name="{$var}" title="名称查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_serial_number" />
+            <div class="alignleft actions">
+                <label>序列号</label>
+                <input type="text" usefor="search" name="{$var}" title="序列号查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_model" />
+            <div class="alignleft actions">
+                <label>型号</label>
+                <input type="text" usefor="search" name="{$var}" title="型号查询" value="{$search.$var}" />
+            </div>
+            <!--单个查询条件结束-->
+            <div class="alignleft actions">
+                <input class="button" type="submit" value="查询" name="btn_search">
+            </div>
+        </div>
+        <br class="clear">
+        <!-- 查询区域结束 -->
+
+        <!-- 列表显示区域  -->
+        <table class="wp-list-table widefat fixed posts">
+            <thead>
+            <tr>
+                <th scope='col'  class='manage-column ' width="5%">编号</th>
+                <th scope='col'  class='manage-column ' width="10%">名称</th>
+                <th scope='col'  class='manage-column ' width="10%">序列号</th>
+                <th scope='col'  class='manage-column ' width="10%">型号</th>
+                <th scope='col'  class='manage-column ' width="10%">IP</th>
+                <th scope='col'  class='manage-column ' width="10%">公司</th>
+                <th scope='col'  class='manage-column ' width="25%">操作</th>
+            </tr>
+            </thead>
+            <volist name="list" id="vo" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> >
+                <td class="manage-column" scope="col" >{$vo.id}</td>
+                <td class="manage-column" scope="col">{$vo.name}</td>
+                <td class="manage-column" scope="col">{$vo.serial_number}</td>
+                <td class="manage-column" scope="col">{$vo.model}</td>
+                <td class="manage-column" scope="col">{$vo.ip}{$vo.port}</td>
+                <td class="manage-column" scope="col">{$vo.company_name}</td>
+                <td class="manage-column" scope="col">
+                    <a href="javascript:view('id','{$vo.id}')">查看</a>&nbsp;
+                    <a href="javascript:openRecord('controller_id','{$vo.id}')">出入记录</a>&nbsp;
+                    <a href="javascript:edit('id','{$vo.id}')">编辑</a>&nbsp;
+                    <a href="javascript:del('id','{$vo.id}')">删除</a>&nbsp;
+                </td>
+                </tr>
+            </volist>
+        </table>
+        <!-- 列表显示区域结束  -->
+
+
+        <!--  分页显示区域 -->
+        <div class="tablenav bottom">
+            <div class="alignleft actions"></div>
+            <div class="tablenav-pages">
+                <div class="page">{$page}</div>
+                <input type="hidden" usefor="search" name="search_p" value="{$nowpage}"  >
+            </div>
+            <br class="clear">
+        </div>
+        <!--  分页显示区域结束 -->
+        <!-- 列表显示区域结束 -->
+    </form>
+
+    <div id="ajax-response"></div>
+    <br class="clear">
+</div>
+<!--wrap-->
+<script type="text/javascript">
+
+</script>

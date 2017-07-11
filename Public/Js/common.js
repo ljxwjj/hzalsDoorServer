@@ -467,42 +467,43 @@ function view(key,id){
 	}
 	location.href =  URL+"/view/"+key+"/"+keyValue + '/' + params;
 }
-//审核未报备
-function approve(key,id){
- var params = gerParams();
-	var keyValue;
-	keyValue = id;
-	if (!keyValue)
-	{
-		alert('请选择编辑项！');
-		return false;
-	}
-	location.href =  URL+"/approve/"+key+"/"+keyValue + '/' + params;
+
+function viewUser(key, id) {
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    location.href =  APP+"/User/view/"+key+"/"+keyValue + '/' + params;
 }
 
-
-
-
-//form=form id   action=php action名  button=button value 只为审批使用
-function approvedel(form, button){
- var params = gerParams();
-	  
-	params = gerParams();
-	url = URL+"/approvedel/"+ params+"mode/" + button;
-	
-	//修改form action url
-	$("#"+form).attr('action',url);
-	//提交
-	$('#'+form).submit();
+function viewDoorController(key, id) {
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    location.href =  APP+"/DoorController/view/"+key+"/"+keyValue + '/' + params;
 }
 
-//报备历史
-function reportHistory(key,id){
-   var url = URL+"/reportHistory/"+key+"/"+id;
-   $.get(url,{},function(html){       
-       $('#select_dialog').html(html);
-       $('#select_dialog').dialog("open");
-   })   
+//查看门禁出入记录
+function openRecord(key,id){
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    //alert(URL);
+    location.href =  APP+"/OpenRecord/index/"+key+"/"+keyValue + '/' + params;
 }
 
 function PopModalWindow(url,width,height){

@@ -1,1 +1,83 @@
-index
+<div class="wrap">
+    <h2>出入记录 &nbsp;
+    </h2>
+
+    <form name="form1" method='POST' action="__SELF__">
+        <!-- 查询区域 -->
+        <div class="tablenav top">
+            <!--单个查询条件-->
+            <assign name="var" value="search_user_nickname" />
+            <div class="alignleft actions">
+                <label>用户</label>
+                <input type="text" usefor="search" name="{$var}" title="用户查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_controller_name" />
+            <div class="alignleft actions">
+                <label>控制器</label>
+                <input type="text" usefor="search" name="{$var}" title="控制器查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_begin_time" />
+            <div class="alignleft actions">
+                <label>开始时间</label>
+                <input type="text" usefor="search" name="{$var}" title="时间查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_end_time" />
+            <div class="alignleft actions">
+                <label>结束时间</label>
+                <input type="text" usefor="search" name="{$var}" title="时间查询" value="{$search.$var}" />
+            </div>
+            <!--单个查询条件结束-->
+            <div class="alignleft actions">
+                <input class="button" type="submit" value="查询" name="btn_search">
+            </div>
+        </div>
+        <br class="clear">
+        <!-- 查询区域结束 -->
+
+        <!-- 列表显示区域  -->
+        <table class="wp-list-table widefat fixed posts">
+            <thead>
+            <tr>
+                <th scope='col'  class='manage-column ' width="5%">编号</th>
+                <th scope='col'  class='manage-column ' width="10%">用户</th>
+                <th scope='col'  class='manage-column ' width="10%">控制器名称</th>
+                <th scope='col'  class='manage-column ' width="10%">门号</th>
+                <th scope='col'  class='manage-column ' width="10%">时间</th>
+                <th scope='col'  class='manage-column ' width="10%">公司</th>
+            </tr>
+            </thead>
+            <volist name="list" id="vo" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> >
+                <td class="manage-column" scope="col" >{$vo.id}</td>
+                <td class="manage-column" scope="col">
+                    <a href="javascript:viewUser('id','{$vo.id}')">{$vo.user_nickname}</a>
+                </td>
+                <td class="manage-column" scope="col">
+                    <a href="javascript:viewDoorController('id','{$vo.id}')">{$vo.ontroller_name}({$vo.controller_ip})</a>
+                </td>
+                <td class="manage-column" scope="col">{$vo.door_id}</td>
+                <td class="manage-column" scope="col">{$vo.open_time|toDate='Y-m-d H#i#s'}</td>
+                <td class="manage-column" scope="col">{$vo.company_name}</td>
+                </tr>
+            </volist>
+        </table>
+        <!-- 列表显示区域结束  -->
+
+
+        <!--  分页显示区域 -->
+        <div class="tablenav bottom">
+            <div class="alignleft actions"></div>
+            <div class="tablenav-pages">
+                <div class="page">{$page}</div>
+                <input type="hidden" usefor="search" name="search_p" value="{$nowpage}"  >
+            </div>
+            <br class="clear">
+        </div>
+        <!--  分页显示区域结束 -->
+        <!-- 列表显示区域结束 -->
+    </form>
+
+    <div id="ajax-response"></div>
+    <br class="clear">
+</div>
+<!--wrap-->

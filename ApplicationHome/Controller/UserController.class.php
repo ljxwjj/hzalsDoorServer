@@ -151,6 +151,28 @@ class UserController extends CommonController {
         }
     }
 
+    public function add()
+    {
+        $myUserId = $_SESSION[C('USER_AUTH_KEY')];
+        $mylevel = M('AuthRoleUser')
+            ->join('JOIN auth_role ON auth_role_user.role_id = auth_role.id')
+            ->where(array('auth_role_user.user_id'=>$myUserId))
+            ->getField('level');
+        $roleList = M('AuthRole')->where(array('level'=> array('EGT', $mylevel)))->getField('id, name');
+        $this->assign('roleList', $roleList);
+
+        $companyId = I('company_id');
+        if (!$companyId) {
+            $companyId = M('User')->where(array('id'=>$myUserId))->getField('company_id');
+        }
+        $vo['company_id'] = $companyId;
+
+        $this->assign('vo', $vo);
+        $this->keepSearch();
+
+        $this->display();
+    }
+
     public function edit($name = "")
     {
         $myUserId = $_SESSION[C('USER_AUTH_KEY')];
@@ -184,17 +206,43 @@ class UserController extends CommonController {
     public function save($name = '', $tpl = 'edit')
     {
         $is_add_tpl_file = $this->isAddTplFile();
-        $name = $name ? $name : $this->getActionName();
-        $model = D($name);
 
+        if(empty(I('account'))) {
+            $error['account']='账号不能为空！';
+        }
+        if (!I('role')){
+            $error['role']='角色不能为空！';
+        }
+        if ($error) {
+            $myUserId = $_SESSION[C('USER_AUTH_KEY')];
+            $mylevel = M('AuthRoleUser')
+                ->join('JOIN auth_role ON auth_role_user.role_id = auth_role.id')
+                ->where(array('auth_role_user.user_id'=>$myUserId))
+                ->getField('level');
+            $roleList = M('AuthRole')->where(array('level'=> array('EGT', $mylevel)))->getField('id, name');
+            $this->assign('roleList', $roleList);
 
+            $this->assign('vo', $_REQUEST);
+            $this->assign('error', $error);
+            $this->display('add');
+            return;
+        }
+
+        $model = D('User');
         $id = (int)I($model->getPk());
+        $account = I('account');
         $role = (int)I('role');
 
         $model->startTrans();
-        $userRoleId = $model->query("select role_id from auth_role_user where user_id = %d", $id);
-        if ($userRoleId !== $role) {
-            $roleSaveFlag = $model->execute("update auth_role_user set role_id = %d where user_id = %d", $role, $id);
+        if ($id) {// 编辑
+            $userRoleId = $model->query("select role_id from auth_role_user where user_id = %d", $id);
+            if (empty($userRoleId)) {
+                $roleSaveFlag = $model->execute("insert into auth_role_user(role_id, user_id) values(%d, %d)", $role, $id);
+            } else if ($userRoleId[0]['role_id'] != $role) {
+                $roleSaveFlag = $model->execute("update auth_role_user set role_id = %d where user_id = %d", $role, $id);
+            } else {
+                $roleSaveFlag = true;
+            }
         } else {
             $roleSaveFlag = true;
         }
@@ -216,16 +264,17 @@ class UserController extends CommonController {
                     $result = $model->save($data);
                 } else {
                     $result = $model->add($data);
+                    $roleSaveFlag = $model->execute("insert into auth_role_user(role_id, user_id) values(%d, %d)", $role, $result);
                 }
 
             }
         }
-        if ($result) {
+        if ($roleSaveFlag && $result) {
             $model->commit();
             $this->success('数据已保存！', $this->getReturnUrl());
         } else {
             $model->rollback();
-            $this->error('数据未保存！', $this->getReturnUrl());
+            $this->error('数据未保存！'.$model->getError(), $this->getReturnUrl());
         }
     }
 
