@@ -100,7 +100,8 @@ class PublicController extends CommonController {
 
     public function alsTest($url = null) {//echo APP_PATH;exit;
         if ($url) {
-            $params = $this->getKeyValue($url);
+            $params = $this->getKeyValue($url);  //var_dump($params);exit;
+            $wenhao = true;
 
             if(empty($params)) {
                 $info   =   parse_url($url);
@@ -112,7 +113,8 @@ class PublicController extends CommonController {
                 for ($i=1; $i < $count; $i++) {
                     $paramsArray[$params[$i*2]] = $params[$i*2+1];
                 }
-                $params = $paramsArray;
+                $params = $paramsArray;      //var_dump($params);exit;
+                $wenhao = false;
             }
 
             ksort($params);
@@ -120,7 +122,11 @@ class PublicController extends CommonController {
             strrev($paramsStr);
             $paramsStr = $paramsStr . '8djUK*014kJ';
             $paramsMd5 = md5($paramsStr);
-            $signurl = $url. ('/sign/'. $paramsMd5);
+            if ($wenhao) {
+                $signurl = $url . "&sign=$paramsMd5";
+            } else {
+                $signurl = $url . ('/sign/' . $paramsMd5);
+            }
 
         }
 

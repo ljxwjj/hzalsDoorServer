@@ -2,7 +2,18 @@
 {__NOLAYOUT__}
 
 <html>
+<head>
 
+    <load href="__PUBLIC__/Js/jquery.js"/>
+    <script type="text/javascript">
+        function convertJson() {
+            var text = $("#frame_1").contents().find('pre').html();
+            var jsObj = eval('(' + text + ')');
+            text = JSON.stringify(jsObj);
+            $("#div_1").html(text);
+        }
+    </script>
+</head>
 <body>
 
 <div>
@@ -13,14 +24,20 @@
 
         <textarea name="url" style="width:500px;height: 90px;">{$url}</textarea>
         <p>
-            用户：
+            用户：<input name="user_id"/> <button type="submit">提交</button>
         </p>
-        <input name="user_id"/>
-        <button type="submit">提交</button>
+
     </form>
 </div>
-<div>
-    <iframe src="{$signurl}" width="100%" height="300px"></iframe>
+<div style="width: 100%;">
+    <div style="float: left; width: 45%;">
+        <iframe src="{$signurl}" width="100%" height="300px" id="frame_1"></iframe>
+    </div>
+    <div style="float: left;width: 10%; height: 300px; text-align: center; margin: auto auto 0 auto;">
+        <input type="button" value="转换" onclick="convertJson()"></input>
+    </div>
+    <div style="float: left;width: 45%; height: 300px;" id="div_1">你好</div>
+    <div style="clear: both;"></div>
 </div>
 {$signurl}
 
