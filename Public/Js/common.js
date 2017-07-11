@@ -506,6 +506,31 @@ function openRecord(key,id){
     location.href =  APP+"/OpenRecord/index/"+key+"/"+keyValue + '/' + params;
 }
 
+// 查看用户列表
+function userlist(key, id) {
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    location.href =  APP+"/User/index/"+key+"/"+keyValue + '/' + params;
+}
+
+function useradd(key, id) {
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    location.href =  APP+"/User/add/"+key+"/"+keyValue + '/' + params;
+}
+
 function PopModalWindow(url,width,height){
 	var result=window.showModalDialog(url,"win","dialogWidth:"+width+"px;dialogHeight:"+height+"px;center:yes;status:no;scroll:no;dialogHide:no;resizable:no;help:no;edge:sunken;");
 	return result;

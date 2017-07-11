@@ -124,7 +124,7 @@ class DoorControllerController extends CommonController {
             $_REQUEST['company_id'] = session('company_id');
         } else {
             if (I('company_id') != session('company_id') && !session(C('ADMIN_AUTH_KEY'))) {
-                $error['model']='非法操作！';
+                $error['company_id']='非法操作！';
             }
         }
         if ($error) {
@@ -157,6 +157,7 @@ class DoorControllerController extends CommonController {
             if($result){
                 $this->success('数据已保存！',$this->getReturnUrl());
             }else{
+//                $this->display('edit');
                 $this->error('数据未保存！',$this->getReturnUrl());
             }
         }

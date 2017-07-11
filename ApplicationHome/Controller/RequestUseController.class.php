@@ -153,7 +153,7 @@ class RequestUseController extends CommonController {
 
         $requestUse = $model->table('request_use')->where($condition)->find();
         if ($requestUse) {
-            $model->startTrans();;
+            $model->startTrans();
             $data = array('name'=>$requestUse['company'],
                 'admin_mobile'=>$requestUse['telphone'],
                 'status'=> 0,
@@ -173,7 +173,7 @@ class RequestUseController extends CommonController {
 
             if ($userId) {
                 $data = array(
-                    'role_id' => 3,
+                    'role_id' => 20,
                     'user_id' => $userId,
                 );
                 $roleUserResult = $model->table('auth_role_user')->data($data)->add();

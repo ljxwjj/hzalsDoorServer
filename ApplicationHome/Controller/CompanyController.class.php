@@ -1,6 +1,8 @@
 <?php
 namespace Home\Controller;
 
+use Lib\ORG\Util\CheckError;
+
 class CompanyController extends CommonController {
 
     public function _initialize() {
@@ -66,62 +68,70 @@ class CompanyController extends CommonController {
         $this->assign('list', $voList);
         $this->display();
     }
-
     /**
-     * 保存用户*
+     * 保存*
      *
+     * @param string $name 数据对象
+     * @param string $tpl  模板名称
      */
-    function save(){
-        $this->keepSearch();
-        $id= $_POST['id'];
-        $User = D("User");
-        $_REQUEST['birthday'] =  $_REQUEST['birthday'] ? strtotime($_REQUEST['birthday']):'';
-        import("@.ORG.Util.CheckError");
-        $objError = new CheckError();
-        $objError->checkError();
-        $objError->doFunc(array("帐号","account",2,45),array("EXIST_CHECK","STRING_RANGE_CHECK"));
-        if(!$id){
-            $objError->doFunc(array("密码","password",6,30),array("EXIST_CHECK","STRING_RANGE_CHECK"));
-        }
-        $objError->doFunc(array("用户名称","nickname",45),array("EXIST_CHECK","MAX_LENGTH_CHECK","SPTAB_CHECK","HTML_TAG_CHECK"));
-
-        //$objError->doFunc(array("邮箱","email"),array("EXIST_CHECK","EMAIL_CHECK"));
-        $objError->doFunc(array("家庭住址","address",0,150),array("STRING_RANGE_CHECK"));
-        $objError->doFunc(array("备注","remark",0,100),array("STRING_RANGE_CHECK"));
-        if($_REQUEST['mobile']){
-            $objError->doFunc(array("移动电话","mobile"),array("CN_MOBILE_CHECK"));
-        }
-        if($_POST['email']){
-            $objError->doFunc(array("邮箱","email"),array("EMAIL_CHECK"));
-            if(!$objError->arrErr['email']){
-                if(!$User->uniqueEmail()){
-                    $objError->arrErr['email'] = '邮箱已经存在！';
-                }
-            }
-        }
-        if(!$objError->arrErr['account']){
-            if(!preg_match('/^[a-z]\w{2,}$/i',$_POST['account'])){
-                $objError->arrErr['account'] = '账号必须是字母，且2位以上！';
-            }else{
-                if(!$User->uniqueAccount()){
-                    $objError->arrErr['account'] = '账号已经存在！';
-                }
-            }
-        }
-
-        if(count($objError->arrErr) == 0){
-            parent::save();
-        }else{
-            $error = $objError->arrErr;
-            $this->assign('error',$error);
+    public function save() {
+        $is_add_tpl_file = $this->isAddTplFile();
+        $name = $this->getActionName();
+        $model = D($name);
+        $id = (int)I($model->getPk());
+        $data = $model->create($_REQUEST);
+        if(!$data){
+            $error = $model->getError();
             $this->assign('vo',$_REQUEST);
-            if($id){
-                $this->display('edit');
-            }else{
+            $this->assign('error',$error);
+            if(!$id && $is_add_tpl_file){
                 $this->display('add');
+            }else{
+                $this->display('edit');
             }
+            return;
+        }
+        if ($id) { // 编辑
+            $result = $model->save($data);
+        } else { // 新增
+            if (empty(I('contacts'))) {
+                $error['contacts'] = "联系人不能为空";
+                $this->assign('vo',$_REQUEST);
+                $this->assign('error',$error);
+                $this->display('add');
+                return;
+            }
+            $model->startTrans();
+            $companyId = $model->add($data);
+            if ($companyId) {
+                $data = array('company_id' => $companyId,
+                    'account' => I('admin_mobile'),
+                    'mobile' => I('admin_mobile'),
+                    'nickname' => I('contacts'),
+                    'is_admin' => 0,
+                    'status' => 0,);
+                $userId = $model->table('user')->data($data)->add();
+            }
+            if ($userId) {
+                $data = array(
+                    'role_id' => 20,
+                    'user_id' => $userId,
+                );
+                $result = $model->table('auth_role_user')->data($data)->add();
+            }
+            if ($result) {
+                $model->commit();
+            } else {
+                $model->rollback();
+            }
+        }
+        if($result){
+            $this->success('数据已保存！',$this->getReturnUrl());
+        }else{
+            $this->error('数据未保存！',$this->getReturnUrl());
         }
     }
+
 
     /**
      * 默认禁用操作
@@ -179,6 +189,15 @@ class CompanyController extends CommonController {
             $this->display();
         } else {
             $this->error("页面未找到", 'index');
+        }
+    }
+
+    public function del()
+    {
+        if ((int)I('id') === 1) {
+            $this->error('系统用户，禁止删失败！');
+        } else {
+            parent::del();
         }
     }
 }

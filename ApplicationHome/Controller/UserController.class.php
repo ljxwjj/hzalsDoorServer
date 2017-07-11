@@ -18,12 +18,6 @@ class UserController extends CommonController {
      */
     public function _filter(&$map){
         $map['user.status'] = array('neq', -1);
-
-        $user_id = $_SESSION[C('USER_AUTH_KEY')];
-        $company_id = M('User')->where(array('id'=>$user_id))->getField('company_id');
-        if ($company_id > 1) {
-            $map['user.company_id'] = $company_id;
-        }
     }
 
     /**
@@ -61,8 +55,15 @@ class UserController extends CommonController {
         }
         $this->setMap($map,$search);
 
+        $company_id = session('company_id');
+        if (I('company_id')) {
+            $map['user.company_id'] = I('company_id');
+        } else if ($company_id > 1) {
+            $map['user.company_id'] = $company_id;
+        }
+
         $this->keepSearch();
-        $name = $name ? $name : $this->getActionName();
+        $name = $this->getActionName();
         $model = D($name);
         if (!empty($model)) {
             $this->_list($model, $map);
@@ -131,7 +132,7 @@ class UserController extends CommonController {
 
 
     public function view($id) {
-        $name = $name ? $name : $this->getActionName();
+        $name = $this->getActionName();
         $model = D($name);
         $pk = $model->getPk();
         $id = I($pk);
@@ -154,12 +155,6 @@ class UserController extends CommonController {
     public function add()
     {
         $myUserId = $_SESSION[C('USER_AUTH_KEY')];
-        $mylevel = M('AuthRoleUser')
-            ->join('JOIN auth_role ON auth_role_user.role_id = auth_role.id')
-            ->where(array('auth_role_user.user_id'=>$myUserId))
-            ->getField('level');
-        $roleList = M('AuthRole')->where(array('level'=> array('EGT', $mylevel)))->getField('id, name');
-        $this->assign('roleList', $roleList);
 
         $companyId = I('company_id');
         if (!$companyId) {
@@ -167,6 +162,7 @@ class UserController extends CommonController {
         }
         $vo['company_id'] = $companyId;
 
+        $this->_loadAuthRole($companyId);
         $this->assign('vo', $vo);
         $this->keepSearch();
 
@@ -175,15 +171,6 @@ class UserController extends CommonController {
 
     public function edit($name = "")
     {
-        $myUserId = $_SESSION[C('USER_AUTH_KEY')];
-        $mylevel = M('AuthRoleUser')
-            ->join('JOIN auth_role ON auth_role_user.role_id = auth_role.id')
-            ->where(array('auth_role_user.user_id'=>$myUserId))
-            ->getField('level');
-        $roleList = M('AuthRole')->where(array('level'=> array('EGT', $mylevel)))->getField('id, name');
-        $this->assign('roleList', $roleList);
-
-
         $this->keepSearch();
         $name = $name ? $name : $this->getActionName();
         $model = D($name);
@@ -196,11 +183,30 @@ class UserController extends CommonController {
         $role_id = M("AuthRoleUser")->where(array('user_id'=>$id))->getField("role_id");
         $vo['role_id'] = $role_id;
         if($vo){
+            $this->_loadAuthRole($vo['company_id']);
             $this->assign('vo', $vo);
             $this->display();
         }else{
             $this->error('没有找到要编辑的数据！');
         }
+    }
+
+    private function _loadAuthRole($companyId) {
+        $myUserId = $_SESSION[C('USER_AUTH_KEY')];
+        $mylevel = M('AuthRoleUser')
+            ->join('JOIN auth_role ON auth_role_user.role_id = auth_role.id')
+            ->where(array('auth_role_user.user_id'=>$myUserId))
+            ->getField('level');
+        $map['level'] = array('EGT', $mylevel);  // >=
+        if (session('company_id') == 1 && $companyId == 1) {
+            $map['level'] = array('ELT', 2);  // <=
+        } else if (session('company_id') == 1) {
+            $map['level'] = array('EGT', 3);  // >=
+        }
+        $roleList = M('AuthRole')->where($map)->getField('id, name');
+        $this->assign('roleList', $roleList);
+
+
     }
 
     public function save($name = '', $tpl = 'edit')
@@ -213,14 +219,15 @@ class UserController extends CommonController {
         if (!I('role')){
             $error['role']='角色不能为空！';
         }
+        if (empty(I('company_id'))) {
+            $_REQUEST['company_id'] = session('company_id');
+        } else {
+            if (I('company_id') != session('company_id') && !session(C('ADMIN_AUTH_KEY'))) {
+                $error['company_id']='非法操作！';
+            }
+        }
         if ($error) {
-            $myUserId = $_SESSION[C('USER_AUTH_KEY')];
-            $mylevel = M('AuthRoleUser')
-                ->join('JOIN auth_role ON auth_role_user.role_id = auth_role.id')
-                ->where(array('auth_role_user.user_id'=>$myUserId))
-                ->getField('level');
-            $roleList = M('AuthRole')->where(array('level'=> array('EGT', $mylevel)))->getField('id, name');
-            $this->assign('roleList', $roleList);
+            $this->_loadAuthRole(I('company_id'));
 
             $this->assign('vo', $_REQUEST);
             $this->assign('error', $error);
@@ -243,8 +250,11 @@ class UserController extends CommonController {
             } else {
                 $roleSaveFlag = true;
             }
-        } else {
+        } else {// 新增
             $roleSaveFlag = true;
+            if ((int)I('company_id') === 1 && (int)I('role') < 20) {
+                $_REQUEST['is_admin'] = 1;
+            }
         }
 
 

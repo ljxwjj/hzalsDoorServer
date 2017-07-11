@@ -55,7 +55,6 @@ $(function(){
 	<th><label for="">昵称：</label></th>
 	<td>
 	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
-	<span style="color:red;">*</span>	
 	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
 	</td>
 </tr>
@@ -75,7 +74,6 @@ $(function(){
 	<th><label for="">邮箱：</label></th>
 	<td>
 	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
-	<span style="color:red;">*</span>	
 	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
 	</td>
 </tr>
@@ -96,6 +94,7 @@ $(function(){
 			<option value="{$k}" <eq name="k" value="$vo['role_id']">selected</eq> >{$v}</option>
 			</foreach>
 		</select>
+		<span style="color:red;">*</span>
 		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
 	</td>
 </tr>
