@@ -21,7 +21,8 @@ $ws_worker->onMessage = function($connection, $data)
     $date = date("Ymd");
     $logfile = dirname(__FILE__).DIRECTORY_SEPARATOR . "$date udp.log";
     file_put_contents($logfile, $data."\n", FILE_APPEND);
-    exec("php door/udp.php /Index/index/data/$data");
+    exec("php door/udp.php /Index/index/data/$data", $info);
+    file_put_contents($logfile, $info."\n", FILE_APPEND);
     // 向客户端发送hello $data
     $connection->send('hello' . $data."\n");
 };
