@@ -5,4 +5,8 @@ http://ip/door/api/usercenter/login
 技术参考文件
 http://document.thinkphp.cn/manual_3_2.html#insert_data
 
+OneinStack
+https://oneinstack.com/install/
+service httpd {start|restart|stop}
+
 ssh -l root 139.196.97.237
