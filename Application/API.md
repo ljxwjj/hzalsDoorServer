@@ -56,7 +56,7 @@
     * 返回值
         * data        null
 
-* 发送短信验证码 ／Public/sendSMS
+* 发送短信验证码 /Public/sendSMS
     * 参数
         * mobile
         * operation 【register | findPassword】
@@ -64,23 +64,92 @@
         * data        null
 
 #用户授权接口
-公共参数： token、sign
+公共参数： user_id、 account、 token、sign
 
 ##门禁管理
 
-* 门禁列表
+* 门禁列表 /DoorController/list
 
-* 门禁详情
+    * 参数
+        * company_id (可选)  公司ID
+    * 返回值
+        * data        array[DoorController]
 
-##个人信息
+>_company\_id not null（当前用户拥有管理页限）,可获得该公司下所有控制器列表_    
+>_company\_id is  null 可获得当前用户所在公司下所有控制器列表_
 
-* 个人信息
+* 门禁详情 /DoorController/detail
 
-* 修改密码
+    * 参数 
+        * door\_controller\_id   门禁ID
+    * 返回值
+        * data        DoorController
+
+
+##个人信息 
+
+* 个人信息  /Ucenter/detail
+
+    * 参数
+        * null           无
+    * 返回值
+        * data        User
+
+* 我的授权  /Ucenter/authAccess
+
+    * 参数
+        * null           无
+    * 返回值
+        * data        Access
+
+* 修改密码 /Ucenter/modifyPassword
+
+    * 参数
+        * password           原密码
+        * new_password       新密码
+    * 返回值
+        * data        null
 
 ##用户管理
 
-* 用户列表
+* 用户列表 /User/list
+
+    * 参数
+        * company_id (可选)  公司ID
+    * 返回值
+        * data        array[User]
+   
+> _company\_id not null（当前用户拥有管理页限）,可获得该公司下所有用户列表_   
+> _company\_id is  null 可获得当前用户所在公司下所有用户列表_
+
+* 用户详情 /User/detail
+
+    * 参数
+        * user_id     用户ID
+    * 返回值
+        * data        User
+
+* 用户编辑+离职 /User/edit
+
+    * 参数
+        * user[id, ...]     用户信息
+    * 返回值
+        * null
+
+##出入记录
+
+* 用户出入记录 /OpenRecord/list
+
+    * 参数
+        * user_id (可选)             用户ID
+        * door\_controller\_id (可选)  控制器ID
+        * open\_time\_start (可选)     开门时间
+        * open\_time\_end (可选)       开门时间
+    * 返回值
+        * data              array[OpenRecord]
+   
+> _user\_id not null（当前用户拥有管理页限）,可获得指定用户的出入记录_   
+> _user\_id is  null 可获得当前用户的出入记录_
 
 #sign加密算法
 
