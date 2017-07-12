@@ -1,6 +1,6 @@
 <?php
 //require_once 'C:/AppServ/workerman/Autoloader.php';
-require_once '/data/webroot/workerman/Autoloader.php';
+require_once '/data/wwwroot/workerman/Autoloader.php';
 use Workerman\Worker;
 
 // 创建一个Worker监听2346端口，使用websocket协议通讯
