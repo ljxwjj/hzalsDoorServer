@@ -17,7 +17,9 @@ class UserController extends CommonController {
      * @param array $map
      */
     public function _filter(&$map){
-        $map['user.status'] = array('neq', -1);
+        if (!I('search_status')) {
+            $map['status'] = array('neq', -1);
+        }
     }
 
     /**
@@ -56,15 +58,17 @@ class UserController extends CommonController {
         $this->setMap($map,$search);
 
         $company_id = session('company_id');
-        if (I('company_id')) {
-            $map['user.company_id'] = I('company_id');
+        if ($_REQUEST['company_id']) {
+            $company_id = $_REQUEST['company_id'];
+            $map['company_id'] = $company_id;
+            $this->assign('company_id', $company_id);
         } else if ($company_id > 1) {
-            $map['user.company_id'] = $company_id;
+            $map['company_id'] = $company_id;
+            $this->assign('company_id', $company_id);
         }
 
         $this->keepSearch();
-        $name = $this->getActionName();
-        $model = D($name);
+        $model = M('UserView');
         if (!empty($model)) {
             $this->_list($model, $map);
         }
@@ -102,10 +106,6 @@ class UserController extends CommonController {
             $p = new Page($count, $listRows);
             //分页查询数据
             $this->voList = $model->where($map)
-                ->field("user.*, company.name AS company_name, auth_role.name AS role_name")
-                ->join("LEFT JOIN company ON company.id = user.company_id")
-                ->join("LEFT JOIN auth_role_user ON auth_role_user.user_id = user.id")
-                ->join("LEFT JOIN auth_role ON auth_role.id = auth_role_user.role_id")
                 ->order("`" . $order . "` " . $sort)
                 ->limit($p->firstRow . ',' . $p->listRows)
                 ->select();

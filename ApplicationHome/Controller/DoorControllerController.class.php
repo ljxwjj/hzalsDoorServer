@@ -60,6 +60,16 @@ class DoorControllerController extends CommonController {
         $map['status'] = array("neq","-1");
         $this->setMap($map,$search);
 
+        $company_id = session('company_id');
+        if ($_REQUEST['company_id']) {
+            $company_id = $_REQUEST['company_id'];
+            $map['company_id'] = $company_id;
+            $this->assign('company_id', $company_id);
+        } else if ($company_id > 1) {
+            $map['company_id'] = $company_id;
+            $this->assign('company_id', $company_id);
+        }
+
         $this->keepSearch();
         $model = M('DoorControllerView');
         if (!empty($model)) {
@@ -100,6 +110,22 @@ class DoorControllerController extends CommonController {
         }else{
             $this->error('没有找到要编辑的数据！');
         }
+    }
+
+    public function add()
+    {
+        $myUserId = $_SESSION[C('USER_AUTH_KEY')];
+
+        $companyId = I('company_id');
+        if (!$companyId) {
+            $companyId = M('User')->where(array('id'=>$myUserId))->getField('company_id');
+        }
+        $vo['company_id'] = $companyId;
+
+        $this->assign('vo', $vo);
+        $this->keepSearch();
+
+        $this->display();
     }
 
 

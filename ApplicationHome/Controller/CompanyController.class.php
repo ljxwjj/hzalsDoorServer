@@ -179,13 +179,13 @@ class CompanyController extends CommonController {
         $condition = array($pk => $id);
         $vo = $model->where($condition)->find();
         if ($vo) {
-            $sql = "select user.*, auth_role.name AS role_name from user ".
-                "LEFT JOIN auth_role_user on user.id = auth_role_user.user_id ".
-                "LEFT JOIN auth_role on auth_role_user.role_id = auth_role.id where user.company_id = %d";
-            $arrList = M('User')->query($sql, $id);
+//            $sql = "select user.*, auth_role.name AS role_name from user ".
+//                "LEFT JOIN auth_role_user on user.id = auth_role_user.user_id ".
+//                "LEFT JOIN auth_role on auth_role_user.role_id = auth_role.id where user.company_id = %d";
+//            $arrList = M('User')->query($sql, $id);
 
             $this->assign('vo', $vo);
-            $this->assign('arrList', $arrList);
+//            $this->assign('arrList', $arrList);
             $this->display();
         } else {
             $this->error("页面未找到", 'index');
