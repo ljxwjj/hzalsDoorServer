@@ -1,6 +1,9 @@
 <?php
 namespace Home\Controller;
 
+use Lib\ORG\Util\CheckError;
+use Lib\ORG\Util\Page;
+
 class AuthNodeController extends CommonController {
 
     public function _initialize() {
@@ -71,7 +74,7 @@ class AuthNodeController extends CommonController {
 
         $Node = D('AuthNode');
         $id = (int)I($Node->getPk());
-        import('Lib.ORG.Util.CheckError');
+        import('@.ORG.Util.CheckError');
         $objError = new CheckError();
         $objError->checkError();
         //验证岗位编码

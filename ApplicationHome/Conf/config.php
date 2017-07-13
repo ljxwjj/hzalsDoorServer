@@ -16,6 +16,7 @@ return array(
     ),
     'GUEST_AUTH_ON'             =>  false,         // 是否开启游客授权访问
     'GUEST_AUTH_ID'             =>  0,             // 游客的用户ID
+    'LIST_ROWS'                 => 20,
 
     'AUTOLOAD_NAMESPACE' => array(
         'Lib'     => MODULE_PATH.'Lib',

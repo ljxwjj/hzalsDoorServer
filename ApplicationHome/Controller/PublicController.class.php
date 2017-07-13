@@ -119,19 +119,23 @@ class PublicController extends CommonController {
             }
 
             if ($user_id) {
-                $token = D('UserToken')->where(array('user_id'=>$user_id))->getField('token');
-                $params['token'] = $token;
+                $user = D('UserToken')->where(array('user_id'=>$user_id))->find();
+                $token = $user['token'];
+                $params['user_id'] = $user_id;
+                $params['token'] = $user['token'];
             }
 
             ksort($params);
             $paramsStr = implode("", $params);
-            strrev($paramsStr);
+            $paramsStr = strrev($paramsStr);
             $paramsStr = $paramsStr . '8djUK*014kJ';
             $paramsMd5 = md5($paramsStr);
             if ($wenhao) {
                 $signurl = $url . "&sign=$paramsMd5";
+                if ($user_id) $signurl .= "&user_id=$user_id&token=$token";
             } else {
                 $signurl = $url . ('/sign/' . $paramsMd5);
+                if ($user_id) $signurl .= "/user_id/$user_id/token/$token";
             }
 
         }
@@ -145,6 +149,7 @@ class PublicController extends CommonController {
         if ($url) {
             $this->assign('url',$url);
             $this->assign('signurl',$signurl);
+            $this->assign('user_id', $user_id);
         }
         $this->display();
     }

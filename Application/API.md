@@ -68,15 +68,15 @@
 
 ##门禁管理
 
-* 门禁列表 /DoorController/list
+* 门禁列表 /DoorController/lists
 
     * 参数
-        * company_id (可选)  公司ID
+        * search\_company_id (可选)  公司ID
     * 返回值
         * data        array[DoorController]
 
->_company\_id not null（当前用户拥有管理页限）,可获得该公司下所有控制器列表_    
->_company\_id is  null 可获得当前用户所在公司下所有控制器列表_
+>_search\_company\_id not null（当前用户拥有管理页限）,可获得该公司下所有控制器列表_    
+>_csearch\_ompany\_id is  null 可获得当前用户所在公司下所有控制器列表_
 
 * 门禁详情 /DoorController/detail
 
@@ -85,7 +85,34 @@
     * 返回值
         * data        DoorController
 
+* 添加门禁 /DoorController/add
 
+    * 参数 
+        * door[name...]   门禁信息
+    * 返回值
+        * data        null
+
+* 删除门禁 /DoorController/del
+
+    * 参数 
+        * door\_controller\_id   门禁ID
+    * 返回值
+        * data        null
+
+* 修改门禁 /DoorController/edit
+
+    * 参数 
+        * door[name...]   门禁信息
+    * 返回值
+        * data        null
+        
+* 开门 /DoorController/openDoor
+
+    * 参数 
+        * door\_controller\_id   门禁ID
+    * 返回值
+        * data        null
+        
 ##个人信息 
 
 * 个人信息  /Ucenter/detail
@@ -94,6 +121,13 @@
         * null           无
     * 返回值
         * data        User
+
+* 二维码 /Ucenter/qrCode
+
+    * 参数
+         * null           无
+     * 返回值
+         * data        二维码链接
 
 * 我的授权  /Ucenter/authAccess
 
@@ -112,15 +146,15 @@
 
 ##用户管理
 
-* 用户列表 /User/list
+* 用户列表 /User/lists
 
     * 参数
-        * company_id (可选)  公司ID
+        * search\_company\_id (可选)  公司ID
     * 返回值
         * data        array[User]
    
-> _company\_id not null（当前用户拥有管理页限）,可获得该公司下所有用户列表_   
-> _company\_id is  null 可获得当前用户所在公司下所有用户列表_
+> _search\_company\_id not null（当前用户拥有管理页限）,可获得该公司下所有用户列表_   
+> _search\_company\_id is  null 可获得当前用户所在公司下所有用户列表_
 
 * 用户详情 /User/detail
 
@@ -129,27 +163,34 @@
     * 返回值
         * data        User
 
-* 用户编辑+离职 /User/edit
+* 用户编辑 /User/edit
 
     * 参数
         * user[id, ...]     用户信息
     * 返回值
         * null
 
-##出入记录
-
-* 用户出入记录 /OpenRecord/list
+* 用户离职 /User/del
 
     * 参数
-        * user_id (可选)             用户ID
-        * door\_controller\_id (可选)  控制器ID
-        * open\_time\_start (可选)     开门时间
-        * open\_time\_end (可选)       开门时间
+        * user_id     用户ID
+    * 返回值
+        * null
+        
+##出入记录
+
+* 用户出入记录 /OpenRecord/lists
+
+    * 参数
+        * search\_user_id (可选)             用户ID
+        * search\_door\_controller\_id (可选)  控制器ID
+        * search\_open\_time\_start (可选)     开门时间
+        * search\_open\_time\_end (可选)       开门时间
     * 返回值
         * data              array[OpenRecord]
    
-> _user\_id not null（当前用户拥有管理页限）,可获得指定用户的出入记录_   
-> _user\_id is  null 可获得当前用户的出入记录_
+> _search\_user\_id not null（当前用户拥有管理页限）,可获得指定用户的出入记录_   
+> _search\_user\_id is  null 可获得当前用户的出入记录_
 
 #sign加密算法
 

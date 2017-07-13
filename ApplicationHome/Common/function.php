@@ -754,8 +754,4 @@ function generate_code($length = 6) {
     echo substr(str_shuffle("012345678901234567890123456789"), 0, $length);
 }
 
-function doSendSms($mobile, $code) {
-    return true;
-}
-
 ?>

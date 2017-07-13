@@ -1,1 +1,4 @@
-./ApplicationRuntime/*
+ApplicationRuntime/*
+ApplicationRuntime/Cache/*
+ApplicationRuntime/Cache/Home/*
+.idea/workspace.xml

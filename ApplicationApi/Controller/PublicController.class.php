@@ -4,7 +4,6 @@ namespace Api\Controller;
 class PublicController extends CommonRestController {
 
     public function login($account = '', $password = ''){
-        $result = array();
         $User = M('User');  // D('User');
         $map['account'] = $account;
         $map['status'] = array('EQ', 1);
@@ -18,15 +17,14 @@ class PublicController extends CommonRestController {
             extract($user);   // 把数组拆分成变量
             $token = createToekn();
 
-            $companyData = M('Company')->where(array('id'=>$user['company_id']))->find();
+            $companyData = M('Company')->find($user['company_id']);
             $company = $companyData?$companyData['name']:'';
 
-            $result['code'] = 200;
-            $result['message'] = '登录成功';
-            $result['data'] = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company');
+            $data = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company');
+            $result = $this->createResult(200, '登录成功', $data);
 
             $model = M('UserToken');
-            $userToken = $model->where(array('user_id'=>$user['id']))->find();
+            $userToken = $model->find($user['id']);
             if ($userToken) {
                 $userToken['token'] = $token;
                 $userToken['update_time'] = time();
@@ -36,15 +34,55 @@ class PublicController extends CommonRestController {
                 $model->add($userToken);
             }
         } else {
-            $result['code'] = 0;
-            $result['message'] = '登录失败';
-            $result['data'] = (object)array();
+            $result = $this->createResult(0, '登录失败');
         }
         $this->response($result,'json');
     }
 
     public function register() {
-        $result = array();
+        $account = I('account');
+        $password = I('password', '', 'md5');
+        $smsCode = I('sms_code');
+
+        $User = M('User');
+        $map['account'] = $account;
+        $user = $User->where($map)->find();
+
+        if (!$user) {
+            $result = $this->createResult(1, '非系统用户');
+        } else if (!empty($user['password'])) {
+            $result = $this->createResult(2, '该手机号已注册');
+        } else if ($user['status'] === -1) {
+            $result = $this->createResult(3, '用户被禁用');
+        } else {
+            // 核实验证码
+            $MSmsCode = M('SmsCode');
+            $map = array();
+            $map["mobile"] = $account;
+            $map["use_to"] = 'register';
+            $map["check_time"] = array("EQ", 0);
+            $sms = $MSmsCode->where($map)->order('send_time desc')->find();
+            if ($sms && ($sms["send_time"] + $sms["delay"]) > time() && $sms["code"] == $smsCode) {
+                $sms['check_time'] = time();
+                $MSmsCode->save($sms);
+                $user['password'] = $password;
+                $user['status'] = 1;
+                $saveFlag = $User->save($user);
+
+                if ($saveFlag) {
+                    $result = $this->createResult(200, '注册成功');
+                } else {
+                    $result = $this->createResult(0, '注册失败');
+                }
+            } else {
+                $result = $this->createResult(4, '验证码错误');
+            }
+        }
+
+        $this->response($result,'json');
+    }
+
+    public function findPassword() {
         $account = I('account');
         $password = I('password', '', 'md5');
         $smsCode = I('sms_code');
@@ -55,24 +93,26 @@ class PublicController extends CommonRestController {
 
         if (!$user) {
             $result = createResult(1, '非系统用户');
-        } else if (!empty($user['password'])) {
-            $result = createResult(2, '该手机号已注册');
+        } else if (empty($user['password'])) {
+            $result = createResult(2, '帐号未激活');
         } else if ($user['status'] === -1) {
             $result = createResult(3, '用户被禁用');
         } else {
             // 核实验证码
-            $smsCode = M('SmsCode');
+            $MSmsCode = M('SmsCode');
             $map["mobile"] = $account;
-            $sms = $smsCode->where($map)->find();
-            if ($sms && ($sms["send_time"] + $sms["delay"] * 1000) > time() && $sms["code"] === $smsCode) {
+            $map["use_to"] = 'register';
+            $map["check_time"] = array("EXP", "is null");
+            $sms = $MSmsCode->where($map)->order('send_time desc')->find();
+            if ($sms && ($sms["send_time"] + $sms["delay"]) > time() && $sms["code"] === $smsCode) {
+                $MSmsCode->setField("check_time", time());
                 $data['password'] = $password;
-                $data['status'] = 1;
                 $saveFlag = $User->save($data);
 
                 if ($saveFlag) {
-                    $result = createResult(200, '注册成功');
+                    $result = createResult(200, '找回成功');
                 } else {
-                    $result = createResult(0, '注册失败');
+                    $result = createResult(0, '找回失败');
                 }
             } else {
                 $result = createResult(4, '验证码错误');
@@ -103,9 +143,10 @@ class PublicController extends CommonRestController {
             }
         }
 
-        $smsCode = generate_code(4);
-        if (!doSendSms($mobile, $smsCode)) {
-            $result = $this->createResult(0, '发送失败');
+        $smsCode = generate_code(6);
+        $sendResult = doSendSms($mobile, $smsCode, $operation);
+        if ($sendResult->Code !== 'OK') {
+            $result = $this->createResult(0, '发送失败:'.$sendResult->Message);
             $this->response($result,'json');
             return;
         }
@@ -114,6 +155,9 @@ class PublicController extends CommonRestController {
             'code' => $smsCode,
             'send_time' => time(),
             'use_to' => $operation,
+            'delay'  => 15*60,
+            'sms_request_id' => $sendResult->RequestId,
+            'sms_biz_id' => $sendResult->BizId,
         );
         $smsCodeId = M('SmsCode')->data($data)->add();
 
@@ -121,44 +165,6 @@ class PublicController extends CommonRestController {
             $result = $this->createResult(200, '发送成功');
         } else {
             $result = $this->createResult(0, '发送失败');
-        }
-
-        $this->response($result,'json');
-    }
-
-    public function findPassword() {
-        $result = array();
-        $account = I('account');
-        $password = I('password', '', 'md5');
-        $smsCode = I('sms_code');
-
-        $User = M('User');
-        $map['account'] = $account;
-        $user = $User->where($map)->find();
-
-        if (!$user) {
-            $result = createResult(1, '非系统用户');
-        } else if (empty($user['password'])) {
-            $result = createResult(2, '帐号未激活');
-        } else if ($user['status'] === -1) {
-            $result = createResult(3, '用户被禁用');
-        } else {
-            // 核实验证码
-            $smsCode = M('SmsCode');
-            $map["mobile"] = $account;
-            $sms = $smsCode->where($map)->find();
-            if ($sms && ($sms["send_time"] + $sms["delay"] * 1000) > time() && $sms["code"] === $smsCode) {
-                $data['password'] = $password;
-                $saveFlag = $User->save($data);
-
-                if ($saveFlag) {
-                    $result = createResult(200, '找回成功');
-                } else {
-                    $result = createResult(0, '找回失败');
-                }
-            } else {
-                $result = createResult(4, '验证码错误');
-            }
         }
 
         $this->response($result,'json');
