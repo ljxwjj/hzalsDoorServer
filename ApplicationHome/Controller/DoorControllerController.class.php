@@ -17,7 +17,7 @@ class DoorControllerController extends CommonController {
      */
     public function _filter(&$map){
         $user_id = $_SESSION[C('USER_AUTH_KEY')];
-        $company_id = M('User')->where(array('id'=>$user_id))->getField('company_id');
+        $company_id = session('company_id');
         if ($company_id > 1) {
             $map['company_id'] = $company_id;
         }

@@ -14,8 +14,9 @@
 		<li class="wp-not-current-submenu wp-menu-separator">
 			<div class="separator"></div>
 		</li>
-	    
-		
+
+		<assign name="_ACCESS_LIST_HOME" value="$Think.session._ACCESS_LIST.HOME" />
+	<if condition='$_ACCESS_LIST_HOME.USER neq null'>
 		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='CONTROLLER_NAME eq User'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
 			<a href='__APP__/User/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='CONTROLLER_NAME eq User'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" aria-haspopup="true">
 				<div class="wp-menu-arrow">
@@ -34,7 +35,9 @@
 				</li>
 			</ul>
 		</li>
+	</if>
 
+	<if condition='$_ACCESS_LIST_HOME.DOORCONTROLLER neq null'>
 		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq DoorController'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
 			<a href='__APP__/DoorController/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq DoorController'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
@@ -54,7 +57,9 @@
 
 			</ul>
 		</li>
+	</if>
 
+	<if condition='$_ACCESS_LIST_HOME.OPENRECORD neq null'>
 		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq OpenRecord'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
 			<a href='__APP__/OpenRecord/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq OpenRecord'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
@@ -64,7 +69,9 @@
 				<div class='wp-menu-name'>出入记录</div>
 			</a>
 		</li>
-		
+	</if>
+
+	<if condition='$_ACCESS_LIST_HOME.REQUESTUSE neq null'>
 		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq RequestUse'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
 			<a href='__APP__/RequestUse/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq RequestUse'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
@@ -74,8 +81,9 @@
 				<div class='wp-menu-name'>申请审核</div>
 			</a>			
 		</li>
+	</if>
 
-
+	<if condition='$_ACCESS_LIST_HOME.COMPANY neq null'>
 		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
 			<a href='__APP__/Company/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
@@ -97,87 +105,8 @@
 				</li>
 			</ul>
 		</li>
+	</if>
 
-		
-		<!--<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
-			<a href='' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" aria-haspopup="true">
-				<div class="wp-menu-arrow">
-					<div></div>
-				</div>
-				<div class='wp-menu-image dashicons-before dashicons-storeadmin'><br /></div>
-				<div class='wp-menu-name'>库存管理</div>
-			</a>
-			<ul class='wp-submenu wp-submenu-wrap'>
-				<li class='wp-submenu-head'>库存管理</li>
-				<li class="wp-first-item">
-					<a href='' class="wp-first-item">材料出库</a>
-					<a href='' class="">成品出库</a>
-					<a href='' class="">材料入库</a>
-				</li>
-			</ul>
-		</li>
-
-		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
-			<a href='' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" aria-haspopup="true">
-				<div class="wp-menu-arrow">
-					<div></div>
-				</div>
-				<div class='wp-menu-image dashicons-before dashicons-produce'><br /></div>
-				<div class='wp-menu-name'>生产管理</div>
-			</a>
-			<ul class='wp-submenu wp-submenu-wrap'>
-				<li class='wp-submenu-head'>生产管理</li>
-				<li class="wp-first-item">
-					<a href='' class="wp-first-item">领料管理</a>
-					<a href='' class="">生产计划</a>
-				</li>
-			</ul>
-		</li>			
-		
-		<li class="menu-top menu-top-first menu-top-last" >
-			<a href='' class="menu-top menu-top-first menu-top-last" >
-				<div class="wp-menu-arrow">
-					<div></div>
-				</div>
-				<div class='wp-menu-image dashicons-before dashicons-networking'><br /></div>
-				<div class='wp-menu-name'>岗位管理</div>
-			</a>
-		</li>
-		<li class="menu-top menu-top-first menu-top-last" >
-			<a href='' class="menu-top menu-top-first menu-top-last" >
-				<div class="wp-menu-arrow">
-					<div></div>
-				</div>
-				<div class='wp-menu-image dashicons-before dashicons-groups'><br /></div>
-				<div class='wp-menu-name'>员工管理</div>
-			</a>
-		</li>
-		<li class="menu-top menu-top-first menu-top-last" >
-			<a href='' class="menu-top menu-top-first menu-top-last" >
-				<div class="wp-menu-arrow">
-					<div></div>
-				</div>
-				<div class='wp-menu-image dashicons-before dashicons-admin-network'><br /></div>
-				<div class='wp-menu-name'>权限管理</div>
-			</a>
-		</li>			
-		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
-			<a href='' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" aria-haspopup="true">
-				<div class="wp-menu-arrow">
-					<div></div>
-				</div>
-				<div class='wp-menu-image dashicons-before dashicons-media-spreadsheet'><br /></div>
-				<div class='wp-menu-name'>基础数据管理</div>
-			</a>
-			<ul class='wp-submenu wp-submenu-wrap'>
-				<li class='wp-submenu-head'>基础数据管理</li>
-				<li class="wp-first-item">
-					<a href='' class="wp-first-item">分类管理</a>
-					<a href='' class="">客户管理</a>
-				</li>
-			</ul>
-		</li>-->			
-				
 		<li class="wp-not-current-submenu wp-menu-separator">
 			<div class="separator"></div>
 		</li>	

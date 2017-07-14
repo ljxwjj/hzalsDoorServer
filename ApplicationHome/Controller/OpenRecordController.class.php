@@ -8,6 +8,26 @@ class OpenRecordController extends CommonController {
         $this->assign('pagetitle',"出入记录");
     }
 
+    protected function _filter(&$map) {
+        if (session(C('ADMIN_AUTH_KEY'))) {
+            // 管理员不做任何限制
+
+        } else {
+            // 判断用户角色
+            $user_id = session(C('USER_AUTH_KEY'));
+            $role_id = M('AuthRoleUser')->where(array('user_id'=> $user_id))->getField('role_id');
+            if (in_array($role_id, array(18, 19))) {
+                // 系统管理员不做任何限制
+            } else if (in_array($role_id, array(20, 21))) {
+                // 客户管理员
+                $map['company_id'] = session('company_id');
+            } else {
+                // 普通用户
+                $map['user_id'] = $user_id;
+            }
+        }
+    }
+
     public function index(){
         if (method_exists($this, '_filter')) {
             $this->_filter($map);
