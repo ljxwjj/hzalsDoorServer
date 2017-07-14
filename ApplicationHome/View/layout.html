@@ -7,7 +7,8 @@
 <!--<![endif]-->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>{$pagetitle}</title>
+<link rel="shortcut icon" href="__PUBLIC__/Images/favicon.ico" />
+	<title>{$pagetitle}</title>
 <script type="text/javascript">
 addLoadEvent = function(func){if(typeof jQuery!="undefined")jQuery(document).ready(func);else if(typeof wpOnload!='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
 var 
@@ -121,16 +122,17 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
 					<li id="wp-admin-bar-menu-toggle"><a class="ab-item"  href="#"><span class="ab-icon"></span><span class="screen-reader-text">菜单</span></a></li>
 					<li id="wp-admin-bar-wp-logo" class="menupop">
-						<a class="ab-item"  aria-haspopup="true" href="#" title="关于">
+						<a class="ab-item"  aria-haspopup="true" href="__APP__" title="首页">
 							<span class="ab-icon"></span>
 						</a>
 						<div class="ab-sub-wrapper">
+							<!--
 							<ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
 								<li id="wp-admin-bar-about">
 									<a class="ab-item"  href="#">关于PUP</a>
 								</li>
 							</ul>
-							<!--<ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+							<ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
 								<li id="wp-admin-bar-wporg"><a class="ab-item"  href="">官网</a></li>
 								<li id="wp-admin-bar-documentation"><a class="ab-item"  href="#">文档</a></li>
 								<li id="wp-admin-bar-support-forums"><a class="ab-item"  href="#">支持论坛</a></li>
@@ -138,20 +140,20 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 							</ul>-->
 						</div>		
 					</li>
-					<li id="wp-admin-bar-comments"><a class="ab-item"  href="__APP__/Index/index" title="消息通知"><span class="ab-icon"></span><span id="ab-awaiting-mod" class="ab-label awaiting-mod pending-count count-0">你有<span id="messageCount">{$_SESSION['messageCount']}</span>条消息通知，点击这里查看</span></a></li>
+					<!--<li id="wp-admin-bar-comments"><a class="ab-item"  href="__APP__/Index/index" title="消息通知"><span class="ab-icon"></span><span id="ab-awaiting-mod" class="ab-label awaiting-mod pending-count count-0">你有<span id="messageCount">{$_SESSION['messageCount']}</span>条消息通知，点击这里查看</span></a></li>-->
 				</ul>
 					
 				<ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
 					<li id="wp-admin-bar-my-account" class="menupop with-avatar">
 						<a class="ab-item"  aria-haspopup="true" href="#" title="我的帐户">您好，{$_SESSION['account']}
-						<img alt='' src='__PUBLIC__/images/smalldefaultuserimg.png' class='avatar avatar-26 photo' height='26' width='26' />
+						<img alt='' src='__PUBLIC__/Images/smalldefaultuserimg.png' class='avatar avatar-26 photo' height='26' width='26' />
 						</a>
 						<div class="ab-sub-wrapper">
 							<!--<ul id="wp-admin-bar-user-actions" class="ab-submenu">-->
 							<ul  class="ab-submenu">
 								<li id="wp-admin-bar-user-info">
 									<a class="ab-item" tabindex="-1" href="__APP__/Ucenter/index">
-										<!--<img alt='' src='images/middledefaultuserimg.png' class='avatar avatar-64 photo' height='64' width='64' />-->
+										<!--<img alt='' src='Images/middledefaultuserimg.png' class='avatar avatar-64 photo' height='64' width='64' />-->
 										<span class='display-name'>{$_SESSION['account']}</span>
 									</a>
 								</li>
@@ -181,9 +183,9 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 
 	<div id="wpfooter">
 			<p id="footer-left" class="aligncenter" style="text-align:center;">
-				<!--<span id="footer-thankyou">copyright@<a href="http://www.net" target="_blank"></a>。</span>-->
+				<span id="footer-thankyou">copyright@<a href="http://www.hzals.com" target="_blank">杭州阿里山电子有限公司</a>。 All Rights Reserved 浙ICP备08000079号</span>
 			</p>
-			<!--<p id="footer-upgrade" class="alignright">1.0.0版本	</p>-->
+			<p id="footer-upgrade" class="alignright">1.0.0版本	</p>
 			<div class="clear"></div>
 	</div>
 	
