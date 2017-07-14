@@ -18,7 +18,10 @@ return array(
     'GUEST_AUTH_ID'             =>  0,             // 游客的用户ID
     'LIST_ROWS'                 => 20,
 
-    'AUTOLOAD_NAMESPACE' => array(
+    'AUTOLOAD_NAMESPACE'        => array(
         'Lib'     => MODULE_PATH.'Lib',
+    ),
+    'SESSION_OPTIONS'           =>array(
+        'expire' => 3600,
     ),
 );
