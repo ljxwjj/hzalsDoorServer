@@ -22,6 +22,7 @@ return array(
         'Lib'     => MODULE_PATH.'Lib',
     ),
     'SESSION_OPTIONS'           =>array(
-        'expire' => 3600,
+        'name'   => 'hzals2004_door_session_name',
+        'expire' => 300,
     ),
 );
