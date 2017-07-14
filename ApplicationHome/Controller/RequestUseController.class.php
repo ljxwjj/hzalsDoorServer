@@ -105,6 +105,7 @@ class RequestUseController extends CommonController {
             $this->assign('error',$error);
             $this->display('add');
         }else{
+            $data['create_time'] = time();
             $result = $model->add($data);
             if($result){
                 $this->display(T('saveSuccess'));
