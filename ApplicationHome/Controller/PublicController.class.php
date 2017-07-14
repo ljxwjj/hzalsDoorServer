@@ -54,6 +54,7 @@ class PublicController extends CommonController {
             $this->display('login');
             exit;
         }else{
+            session('[regenerate]');
             $_SESSION[C('USER_AUTH_KEY')]	=	$authInfo['id'];
             $_SESSION['email']	            =	$authInfo['email'];
             $_SESSION['loginUserName']		=	$authInfo['nickname'];
@@ -61,6 +62,7 @@ class PublicController extends CommonController {
             $_SESSION['login_count']	    =	$authInfo['login_count'];
             $_SESSION['account']	        =	$authInfo['account'];
             $_SESSION['company_id']         =   $authInfo['company_id'];
+            session('session_refresh_time', time());
             if($authInfo['is_admin']==1) {
                 $_SESSION[C('ADMIN_AUTH_KEY')] = true;
             }

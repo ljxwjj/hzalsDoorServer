@@ -10,6 +10,10 @@
     <load href='__PUBLIC__/Css/login2base.css' />
     <load href="__PUBLIC__/Js/jquery.js" />
     <load href="__PUBLIC__/Js/common.js" />
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var commonL10n = {"warnDelete":"\u60a8\u5c06\u6c38\u4e45\u5220\u9664\u6240\u9009\u9879\u76ee\u3002\n\u70b9\u51fb\u201c\u53d6\u6d88\u201d\u505c\u6b62\uff0c\u70b9\u51fb\u201c\u786e\u5b9a\u201d\u5220\u9664\u3002"};var heartbeatSettings = {"nonce":"cd3b57b146"};var inlineEditL10n = {"error":"\u4fdd\u5b58\u66f4\u6539\u65f6\u53d1\u751f\u9519\u8bef\u3002","ntdeltitle":"\u4ece\u6279\u91cf\u7f16\u8f91\u4e2d\u79fb\u9664","notitle":"(\u65e0\u6807\u9898)","comma":"\u3001"};var authcheckL10n = {"beforeunload":"\u60a8\u7684\u767b\u5f55\u4f1a\u8bdd\u5df2\u8fc7\u671f\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002","interval":"180"};/* ]]> */
+    </script>
 
 
     <script language="JavaScript">
@@ -22,15 +26,12 @@
     </script>
     <script language="JavaScript">
         <!--
-        function fleshVerify(){
-            //重载验证码
-            var timenow = new Date().getTime();
-            $('#verifyImg').attr('src','__URL__/verify/'+timenow);
-        }
-        $(document).keyup(function(event){
-            if(event.keyCode ==13){
-                document.login.submit();
-            }
+        $(function(){
+            $(document).keyup(function(event){
+                if(event.keyCode ==13){
+                    document.login.submit();
+                }
+            });
         });
         //-->
     </script>

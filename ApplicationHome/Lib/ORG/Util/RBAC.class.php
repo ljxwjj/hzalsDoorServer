@@ -127,6 +127,14 @@ class RBAC {
 
 	// 登录检查
 	static public function checkLogin() {
+        // 判断session 是否过期
+        if (session('?session_refresh_time') && C('SESSION_OPTIONS.expire')) {
+            if (session('session_refresh_time') + C('SESSION_OPTIONS.expire') < time()) {
+                session_destroy();
+            } else {
+                session('session_refresh_time', time());
+            }
+        }
         //检查当前操作是否需要认证
         if(RBAC::checkAccess()) {
             //检查认证识别号
