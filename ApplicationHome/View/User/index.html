@@ -1,20 +1,20 @@
 <div class="wrap">
-    <h2>客户管理 &nbsp;<a class="add-new-h2" href="#" onclick="add()">新增</a>
+    <h2>用户管理 &nbsp;<a class="add-new-h2" href="#" onclick="add('company_id', '{$company_id}')">新增</a>
     </h2>
 
-    <form name="form1" method='POST' action="{:U('User/index')}">
+    <form name="form1" method='POST' action="__SELF__">
         <!-- 查询区域 -->
         <div class="tablenav top">
             <!--单个查询条件-->
-            <assign name="var" value="search_name" />
+            <assign name="var" value="search_nickname" />
             <div class="alignleft actions">
-                <label>公司名称</label>
-                <input type="text" usefor="search" name="{$var}" title="名称查询" value="{$search.$var}" />
+                <label>姓名</label>
+                <input type="text" usefor="search" name="{$var}" title="姓名查询" value="{$search.$var}" />
             </div>
-            <assign name="var" value="search_admin_mobile" />
+            <assign name="var" value="search_account" />
             <div class="alignleft actions">
-                <label>联系电话</label>
-                <input type="text" usefor="search" name="{$var}" title="电话查询" value="{$search.$var}" />
+                <label>帐号</label>
+                <input type="text" usefor="search" name="{$var}" title="帐号查询" value="{$search.$var}" />
             </div>
             <td>
                 <assign name="var" value="search_status" />
@@ -22,8 +22,8 @@
                     <select usefor="search" name="{$var}" id="{$var}" title="状态">
                         <option value="">选择所有状态</option>
                         <option value="1" <if condition="'1' eq $search[$var]">selected </if> >启用</option>
-                        <option value="0" <if condition="'0' eq $search[$var]">selected </if> >禁用</option>
-                        <option value="-1" <if condition="-1  eq $search[$var]">selected </if> >注销</option>
+                        <option value="0" <if condition="'0' eq $search[$var]">selected </if> >未启用</option>
+                        <option value="-1" <if condition="-1  eq $search[$var]">selected </if> >禁用</option>
                     </select>
                 </div>
             </td>

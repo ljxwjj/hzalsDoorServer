@@ -331,7 +331,7 @@ function returnIndex(){
 	location.href  = URL+"/index/"+params;	
 }
 
-function returnList(url){	
+function returnList(url, key, id){
     var params = gerParams();    
     if(url == ""){
        url = URL+"/index/";
@@ -341,12 +341,19 @@ function returnList(url){
     if(url.lastIndexOf("/") != (url.length-1) ){
         url += "/";
     }
+    if(key != "" && id != "") {
+    	url += (key +"/" + id + "/");
+    }
     location.href  = url+params;
 }
 	
-function add(){
+function add(key, id){
     var params = gerParams();
-	location.href  = URL+"/add/"+params;
+    if(key != "" && id != "") {
+        location.href  = URL+"/add/" + key + "/" + id + "/"+params;
+    } else {
+        location.href  = URL+"/add/"+params;
+	}
 }
 
 function imports(){
@@ -519,6 +526,19 @@ function userlist(key, id) {
     location.href =  APP+"/User/index/"+key+"/"+keyValue + '/' + params;
 }
 
+// 查看门禁控制器列表
+function doorlist(key, id) {
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    location.href =  APP+"/DoorController/index/"+key+"/"+keyValue + '/' + params;
+}
+
 function useradd(key, id) {
     var params = gerParams();
     var keyValue;
@@ -529,6 +549,18 @@ function useradd(key, id) {
         return false;
     }
     location.href =  APP+"/User/add/"+key+"/"+keyValue + '/' + params;
+}
+
+function dooradd(key, id) {
+    var params = gerParams();
+    var keyValue;
+    keyValue = id;
+    if (!keyValue)
+    {
+        alert('请选择编辑项！');
+        return false;
+    }
+    location.href =  APP+"/DoorController/add/"+key+"/"+keyValue + '/' + params;
 }
 
 function PopModalWindow(url,width,height){

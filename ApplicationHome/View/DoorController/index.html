@@ -1,8 +1,8 @@
 <div class="wrap">
-    <h2>门禁管理 &nbsp;<a class="add-new-h2" href="#" onclick="add()">新增</a>
+    <h2>门禁管理 &nbsp;<a class="add-new-h2" href="#" onclick="add('company_id', '{$company_id}')">新增</a>
     </h2>
 
-    <form name="form1" method='POST' action="{:U('DoorController/index')}">
+    <form name="form1" method='POST' action="__SELF__">
         <!-- 查询区域 -->
         <div class="tablenav top">
             <!--单个查询条件-->

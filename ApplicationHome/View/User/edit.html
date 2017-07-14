@@ -1,36 +1,9 @@
 <tagLib name="html" />
-<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
-<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
-<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
-<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
-<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.menu.js" />
-<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.autocomplete.js" />
-<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
-<script language="JavaScript">
-<!--
-function resetPwd(){
-	//var pass	 =	 $F('resetPwd');
-	var pass = $("#resetPwd").val();
-	$.post('__URL__/resetPwd/','ajax=1&id={$vo.id}&password='+encodeURIComponent(pass), function(data) {
-	    alert(data.info);
-	});
-}
-function checkName(){
-	var v = $("#account").val();
-	$.post('__URL__/checkAccount/','ajax=1&account='+v, function(data) {
-	    alert(data.info);
-	});
-}
-$(function(){
-	$("#birthday").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
-})
-//-->
-</script>
 <div class="wrap">
 <h2>编辑用户</h2>
 <div class="tablenav top">
 	<div class="alignleft actions">
-	    <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>    
+	    <a class="button button-primary button-hero" href="javascript:returnList('__CONTROLLER__/index', 'company_id', '{$vo.company_id}');">返回列表</a>
 	</div>
 	<br class="clear">
 </div>
