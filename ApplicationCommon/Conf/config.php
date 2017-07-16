@@ -5,7 +5,7 @@ return array(
     'DB_HOST'      =>   'localhost',
     'DB_NAME'      =>   'hzals_door',
     'DB_USER'      =>   'root',
-    'DB_PWD'       =>   '0123456789',
+    'DB_PWD'       =>   'root',
     'DB_PORT'      =>    '',
     'DB_PREFIX'    =>    '',           // 数据库表前缀
 
@@ -22,6 +22,7 @@ return array(
     'URL_HTML_SUFFIX'        => '',  // URL伪静态后缀设置
     'URL_MODEL'              => 1,  //启用rewrite
 
+    // 自定义配置
     'yourAccessKeyId'   => 'LTAIylWfQ2JvmsOG',
     'yourAccessKeySecret' => 'Ou3LWjUicUY3Sz1F16R9TSjCVxIgM1',
 );

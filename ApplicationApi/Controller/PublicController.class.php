@@ -4,6 +4,8 @@ namespace Api\Controller;
 class PublicController extends CommonRestController {
 
     public function login($account = '', $password = ''){
+        \Think\Log::record('public login....');
+
         $User = M('User');  // D('User');
         $map['account'] = $account;
         $map['status'] = array('EQ', 1);
