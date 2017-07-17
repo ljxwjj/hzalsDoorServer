@@ -143,14 +143,38 @@ class DoorControllerController extends CommonController {
         if(empty(I('serial_number'))) {
             $error['serial_number']='序列号不能为空！';
         }
-        if (empty(I('model'))){
-            $error['model']='角色不能为空！';
-        }
         if (empty(I('company_id'))) {
             $_REQUEST['company_id'] = session('company_id');
         } else {
             if (I('company_id') != session('company_id') && !session(C('ADMIN_AUTH_KEY'))) {
                 $error['company_id']='非法操作！';
+            }
+        }
+        if ($id) {
+            // 编辑时，当序列号变更时，判断序列号是否被占用
+            $data = $model->find($id);
+            if (I('serial_number') != $data['serial_number']) {
+                $map['serial_number'] = I('serial_number');
+                $map['status'] = 0;
+                if ($model->where($map)->find()) {
+                    $error['serial_number']='序列号已经被绑定！';
+                }
+            }
+        } else {
+            // 当新增时，判断序列号是否被占用
+            $map['serial_number'] = I('serial_number');
+            $map['status'] = 0;
+            $data = $model->where($map)->find();
+            if ($data && $data['company_id']) {
+                if ($data['compan_id'] == $_REQUEST['company_id']) {
+                    $error['serial_number']='该序列号不能重复绑定！';
+                } else {
+                    $error['serial_number']='序列号已经被其它用户绑定！';
+                }
+            }
+            if ($data && !$error && !$data['company_id']) {
+                // 控制器已经自动注册上来的数据
+                $id = $data['id'];
             }
         }
         if ($error) {
@@ -176,14 +200,13 @@ class DoorControllerController extends CommonController {
             }
         }else{
             if($id){
-                $result = $model->save($data);
+                $result = $model->where(array('id'=>$id))->save($data);
             }else{
                 $result = $model->add($data);
             }
             if($result){
                 $this->success('数据已保存！',$this->getReturnUrl());
             }else{
-//                $this->display('edit');
                 $this->error('数据未保存！',$this->getReturnUrl());
             }
         }

@@ -33,7 +33,9 @@ class IndexController extends Controller\RestController {
         if ($crcstr === $crc16) {
             echo "----CRC right";
             $MDoorController = M('DoorController');
-            $controllerData = $MDoorController->where(array('serial_number'=>$addr))->find();
+            $map['serial_number'] = $addr;
+            $map['status'] = 0;
+            $controllerData = $MDoorController->where($map)->find();
             if ($controllerData) {
                 $controllerData['ip'] = $ip;
                 $controllerData['port'] = $port;
