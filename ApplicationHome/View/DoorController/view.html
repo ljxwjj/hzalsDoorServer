@@ -112,7 +112,7 @@
 
 <script>
     function openDoor(value) {
-        $.post(APP + "/" + "openDoor", {
+        $.post("__CONTROLLER__/openDoor", {
             'controller_id': "{$vo.id}",
             'door_id': value
         }, function(data){
