@@ -283,7 +283,8 @@ class DoorControllerController extends CommonController {
      * @return void
      */
     protected function response($data,$type='',$code=200) {
-        $this->sendHttpStatus($code);
+        header('HTTP/1.1 200 OK');
+        header('Status:200 OK');
         exit($this->encodeData($data,strtolower($type)));
     }
 
