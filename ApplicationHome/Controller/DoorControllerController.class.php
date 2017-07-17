@@ -254,10 +254,10 @@ class DoorControllerController extends CommonController {
     public function openDoor() {
         $controller_id = I('controller_id');
         $door_id = I('door_id');
-        if (!$controller_id) {
+        if (empty($controller_id)) {
             $error['controller_id'] = "请选择控制器";
         }
-        if (!$door_id) {
+        if (empty($door_id)) {
             $error['controller_id'] = "请选择门";
         }
         if ($error) {
