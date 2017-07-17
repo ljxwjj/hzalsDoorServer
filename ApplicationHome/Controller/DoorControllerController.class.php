@@ -251,4 +251,49 @@ class DoorControllerController extends CommonController {
         }
     }
 
+    public function openDoor() {
+        $controller_id = I('controller_id');
+        $door_id = I('door_id');
+        if (!$controller_id) {
+            $error['controller_id'] = "请选择控制器";
+        }
+        if (!$door_id) {
+            $error['controller_id'] = "请选择门";
+        }
+        if ($error) {
+            $result['code'] = 0;
+            $result['data'] = $error;
+            $this->response($result, 'json');
+            exit;
+        }
+
+        $data = M('DoorController')->find($controller_id);
+        $wait = intval($data['wait_time']);
+        $msg = sprintf("02C003%02x%04x", $door_id, $wait);
+        $msg = pack("H*", $msg);
+        $this->sendUdpCode($data['ip'], $data['port'], $msg);
+    }
+
+    /**
+     * 输出返回数据
+     * @access protected
+     * @param mixed $data 要返回的数据
+     * @param String $type 返回类型 JSON XML
+     * @param integer $code HTTP状态
+     * @return void
+     */
+    protected function response($data,$type='',$code=200) {
+        $this->sendHttpStatus($code);
+        exit($this->encodeData($data,strtolower($type)));
+    }
+
+    protected function sendUdpCode($ip, $port, $sendMsg) {
+        $handle = stream_socket_client("udp://{$ip}:{$port}", $errno, $errstr);
+        if( !$handle ){
+            die("ERROR: {$errno} - {$errstr}\n");
+        }
+        fwrite($handle, $sendMsg);
+        fclose($handle);
+    }
+
 }

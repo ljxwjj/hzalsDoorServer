@@ -103,7 +103,23 @@
     </div>
 </div>
 
+<div class="wrap">
+开门:
+<for start="0" end="4" name="i">
+    <input type="button" value="门{$i}" onclick="openDoor('{$id}')"/>
+</for>
+</div>
 
+<script>
+    function openDoor(value) {
+        $.post(APP + "/" + "openDoor", {
+            'controller_id': "{$vo.id}",
+            'door_id': value
+        }, function(data){
+            alert("开门成功");
+        }, 'JSON');
+    }
+</script>
 
 
 
