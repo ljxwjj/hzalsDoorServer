@@ -263,7 +263,7 @@ class DoorControllerController extends CommonController {
         if ($error) {
             $result['code'] = 0;
             $result['data'] = $error;
-            $this->response($result, 'json');
+            $this->response($result);
             exit;
         }
 
@@ -272,20 +272,21 @@ class DoorControllerController extends CommonController {
         $msg = sprintf("02C003%02x%04x", $door_id, $wait);
         $msg = pack("H*", $msg);
         $this->sendUdpCode($data['ip'], $data['port'], $msg);
+        $result['code'] = 200;
+        $result['message'] = "OK";
+        $this->response($result);
     }
 
     /**
      * 输出返回数据
      * @access protected
      * @param mixed $data 要返回的数据
-     * @param String $type 返回类型 JSON XML
-     * @param integer $code HTTP状态
      * @return void
      */
-    protected function response($data,$type='',$code=200) {
+    protected function response($data) {
         header('HTTP/1.1 200 OK');
         header('Status:200 OK');
-        exit($this->encodeData($data,strtolower($type)));
+        exit(json_encode($data));
     }
 
     protected function sendUdpCode($ip, $port, $sendMsg) {
