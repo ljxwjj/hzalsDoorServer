@@ -116,7 +116,11 @@
             'controller_id': "{$vo.id}",
             'door_id': value
         }, function(data){
-            alert("开门成功");
+            if (data.code == 200) {
+                alert("开门成功");
+            } else {
+                alert(data.message);
+            }
         }, 'JSON');
     }
 </script>
