@@ -18,11 +18,13 @@ $ws_worker->count = 4;
 // 当收到客户端发来的数据后返回hello $data给客户端
 $ws_worker->onMessage = function($connection, $data)
 {
+    $ip = $connection->getRemoteIp();
     $date = date("Ymd");
+
     $logfile = dirname(__FILE__).DIRECTORY_SEPARATOR ."log".DIRECTORY_SEPARATOR. "$date-udp.log";
     $unpackData = unpack("H*", $data);
     file_put_contents($logfile, $unpackData[1]."\n", FILE_APPEND);
-    exec("php door/udp.php /Index/index/data/$data", $info);
+    exec("php door/udp.php /Index/index/ip/$ip/data/$unpackData[1]", $info);
     file_put_contents($logfile, $info[0]."\n", FILE_APPEND);
     // 向客户端发送hello $data
     $connection->send('hello' . $data."\n");
