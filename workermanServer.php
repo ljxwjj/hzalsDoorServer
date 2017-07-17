@@ -19,8 +19,9 @@ $ws_worker->count = 4;
 $ws_worker->onMessage = function($connection, $data)
 {
     $date = date("Ymd");
-    $logfile = dirname(__FILE__).DIRECTORY_SEPARATOR ."log".DIRECTORY_SEPARATOR. "$date udp.log";
-    file_put_contents($logfile, $data."\n", FILE_APPEND);
+    $logfile = dirname(__FILE__).DIRECTORY_SEPARATOR ."log".DIRECTORY_SEPARATOR. "$date-udp.log";
+    $unpackData = unpack("H*", $data);
+    file_put_contents($logfile, $unpackData[1]."\n", FILE_APPEND);
     exec("php door/udp.php /Index/index/data/$data", $info);
     file_put_contents($logfile, $info[0]."\n", FILE_APPEND);
     // 向客户端发送hello $data
