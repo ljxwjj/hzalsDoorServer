@@ -6,7 +6,7 @@ class IndexController extends Controller\RestController {
         //$cmd = "3aa3000000000015000602c003000000";//b175
         //echo strCRCHex($cmd);exit;
 
-        echo "收到信息：ip: $ip data: $data";
+        \Think\Log::record("收到信息：ip: $ip data: $data");
 
         $binData = hex2bin($data);
 
@@ -34,7 +34,6 @@ class IndexController extends Controller\RestController {
         }
         $crcstr = getCRChex($crcstr);
         if ($crcstr === $crc16) {
-            echo "----CRC right";
             $MDoorController = M('DoorController');
             $map['serial_number'] = $addr;
             $map['status'] = 0;
@@ -53,8 +52,11 @@ class IndexController extends Controller\RestController {
                 $controllerData['status'] = 0;
                 $MDoorController->add($controllerData);
             }
+            echo "db save ---- CRC right";
+            \Think\Log::record("db save ---- CRC right");
         } else {
-            \Think\Log::record("CRC ERROIR--  ip: $ip  port: $port  data: $data");
+            echo "db save ---- CRC right";
+            \Think\Log::record("db no save ---- CRC ERROIR");
         }
     }
 
