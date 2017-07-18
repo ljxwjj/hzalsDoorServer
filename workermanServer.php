@@ -112,7 +112,7 @@ function paresLocalMessage($data) {
         $doorId = sprintf("%02x", $unData[++$i]);
         $openTime = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
 
-        $cmd = "02C003".$doorId.$openTime;// 开门
+        $cmd = "02C003";// 开门
         $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
 
         $crc = strCRCHex($msg);
