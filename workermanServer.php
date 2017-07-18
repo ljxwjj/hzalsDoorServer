@@ -99,7 +99,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
         exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
         _log($info[0]);
     } else {
-        _log("CRC ERROR--");
+        _log("CRC ERROR--  $crcstr === $crc16 \n");
     }
 }
 
