@@ -33,9 +33,6 @@ $ws_worker->onMessage = function($connection, $data)
 
     if (strpos($unpackData[1], "3aa3") === 0) {
         paresRemoteMessage($connection, $ip, $port, $unpackData[1]);
-
-        global $udpConnectionsCache;
-        $udpConnectionsCache[$ip] = $connection;
     } else if (strpos($unpackData[1], "3003") === 0 && strcmp($ip, "127.0.0.1") === 0) {
         paresLocalMessage($data);
     }
@@ -96,6 +93,9 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             _log("upload data data data .....\n");
         }
 
+        global $udpConnectionsCache;
+        $udpConnectionsCache[$addr] = $connection;
+
         exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
         _log($info[0]);
     } else {
@@ -129,8 +129,8 @@ function paresLocalMessage($data) {
         $msg = hex2bin($msg.$crc);
 
         global $udpConnectionsCache;
-        if (array_key_exists($ip, $udpConnectionsCache)) {
-            $connection = $udpConnectionsCache[$ip];
+        if (array_key_exists($addr, $udpConnectionsCache)) {
+            $connection = $udpConnectionsCache[$addr];
             if ($connection) {
                 $connection->send($msg);
                 _log( "open door cmd sended \n");
