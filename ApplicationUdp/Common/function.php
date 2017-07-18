@@ -57,7 +57,7 @@ function strCRCHex($str) {
     $binData = hex2bin($str);
     $unData = unpack("C*", $binData);
     $crcstr = "";
-    for ($m = 0; $m < count($unData) - 2; $m++) {
+    for ($m = 0; $m < count($unData); $m++) {
         $crcstr .= chr($unData[$m+1]);
     }
     return getCRChex($crcstr);
