@@ -269,9 +269,7 @@ class DoorControllerController extends CommonController {
 
         $data = M('DoorController')->find($controller_id);
         $wait = intval($data['wait_time']);
-        $msg = sprintf("02C003%02x%04x", $door_id, $wait);
-        $msg = pack("H*", $msg);
-        $this->sendUdpCode($data['ip'], $data['port'], $msg);
+        $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
         $result['code'] = 200;
         $result['message'] = "OK";
         $this->response($result);
@@ -289,11 +287,22 @@ class DoorControllerController extends CommonController {
         exit(json_encode($data));
     }
 
-    protected function sendUdpCode($ip, $port, $sendMsg) {
-        $handle = stream_socket_client("udp://{$ip}:{$port}", $errno, $errstr);
+    protected function sendOpenDoorUdpCode($ip, $port, $serialNumber, $doorId, $wait) {
+        $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
         if( !$handle ){
             die("ERROR: {$errno} - {$errstr}\n");
         }
+        $sendMsg = "30030001"; // 开门指令
+        $ips = explode(".", $ip);
+        foreach ($ips as $i) {
+            $sendMsg .= sprintf("%02x", $i);
+        }
+        $sendMsg .= sprintf("%04x", $port);
+        $sendMsg .= "01";
+        $sendMsg .= $serialNumber;
+        $sendMsg .= sprintf("%02x", $doorId);
+        $sendMsg .= sprintf("%04x", $wait);
+        $sendMsg = hex2bin($sendMsg);
         fwrite($handle, $sendMsg);
         fclose($handle);
     }

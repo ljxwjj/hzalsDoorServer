@@ -52,3 +52,13 @@ function getCRChex(&$ptr) {
     $crc = genCRC($ptr);
     return sprintf("%04x", $crc);
 }
+
+function strCRCHex($str) {
+    $binData = hex2bin($str);
+    $unData = unpack("C*", $binData);
+    $crcstr = "";
+    for ($m = 0; $m < count($unData) - 2; $m++) {
+        $crcstr .= chr($unData[$m+1]);
+    }
+    return getCRChex($crcstr);
+}
