@@ -68,7 +68,8 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
     }
     $crcstr = getCRChex($crcstr);
 
-    if ($crcstr === $crc16) {echo "begin login";
+    if ($crcstr === $crc16) {
+        echo "begin login";
         if ($command == "0901") {// 登录
             $binData = hex2bin($data);
 
@@ -82,8 +83,9 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
 
             $cmd = "090100";// 登录成功
             $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
-            echo "\n";echo $msg;echo "\n";
-            $msg = hex2bin($msg);
+            $crc = strCRCHex($msg);
+            echo "\n";echo $msg.$crc;echo "\n";
+            $msg = hex2bin($msg.$crc);
             $connection->send($msg);
             echo "login success sended";
         }
