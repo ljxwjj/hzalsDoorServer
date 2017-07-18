@@ -27,8 +27,9 @@ $ws_worker->onMessage = function($connection, $data)
     $port = $connection->getRemotePort();
 
     $unpackData = unpack("H*", $data);
-    var_dump($unpackData);
+    _log("-----------------------------------\n");
     _log($unpackData[1]);
+    _log("\n");
 
     if (strpos($unpackData[1], "3aa3") === 0) {
         paresRemoteMessage($connection, $ip, $port, $unpackData[1]);
@@ -69,8 +70,9 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
     $crcstr = getCRChex($crcstr);
 
     if ($crcstr === $crc16) {
-        echo "begin login";
+
         if ($command == "0901") {// 登录
+            _log("begin login\n");
             $binData = hex2bin($data);
 
             $unData = unpack("C*", $binData);
@@ -87,7 +89,11 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             echo "\n";echo $msg.$crc;echo "\n";
             $msg = hex2bin($msg.$crc);
             $connection->send($msg);
-            echo "login success sended";
+            _log("login success sended \n") ;
+        } else if ($command == "0902") {
+            _log("budong budong budong \n");
+        } else if ($command == "0903") {
+            _log("upload data data data .....\n");
         }
 
         exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
@@ -99,11 +105,11 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
 
 function paresLocalMessage($data) {
     $unData = unpack("C*", $data);
-    //var_dump($unData);
     $i = 0;
     $syn = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
     $command = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
     if (strcmp($command, "0001") === 0) {//开门指令  300300017F000001270E015209150810000026010000
+        _log( "received open door command \n");
         $ip = sprintf("%d.%d.%d.%d", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
         $port = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
         $port = hexdec($port);
@@ -127,10 +133,10 @@ function paresLocalMessage($data) {
             $connection = $udpConnectionsCache[$ip];
             if ($connection) {
                 $connection->send($msg);
-                echo "open door cmd sended";
+                _log( "open door cmd sended \n");
             }
         } else {
-            echo "door is not on line!!!";
+            _log("door is not on line!!! \n");
         }
     }
 }

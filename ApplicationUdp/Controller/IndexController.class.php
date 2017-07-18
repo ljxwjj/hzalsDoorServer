@@ -3,6 +3,9 @@ namespace Udp\Controller;
 use Think\Controller;
 class IndexController extends Controller\RestController {
     public function index($ip = '', $port = '', $data = ''){
+        //$cmd = "3aa3000000000015000602c003000000";//b175
+        //echo strCRCHex($cmd);exit;
+
         echo "收到信息：ip: $ip data: $data";
 
         $binData = hex2bin($data);
