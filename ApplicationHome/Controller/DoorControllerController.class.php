@@ -103,6 +103,10 @@ class DoorControllerController extends CommonController {
             $this->error('请选择要编辑的数据！');
             exit;
         }
+        if (!$this->checkDoorControllerAccess($id)) {
+            $this->error('没有该数据的操作权限！');
+            exit;
+        }
         $vo = $model->getById($id);
         if($vo){
             $this->assign('vo', $vo);
@@ -151,6 +155,10 @@ class DoorControllerController extends CommonController {
             }
         }
         if ($id) {
+            if (!$this->checkDoorControllerAccess($id)) {
+                $this->error('没有该数据的操作权限！');
+                exit;
+            }
             // 编辑时，当序列号变更时，判断序列号是否被占用
             $data = $model->find($id);
             if (I('serial_number') != $data['serial_number']) {
@@ -213,11 +221,27 @@ class DoorControllerController extends CommonController {
     }
 
     public function view($id) {
+        if (!$this->checkDoorControllerAccess($id)) {
+            $this->error('没有该数据的操作权限！');
+            exit;
+        }
         $model = M('DoorControllerView');
         $condition = array('id' => $id);
         $vo = $model->where($condition)->find();
         if ($vo) {
+            $doors = M('Door')->where(array('controller_id'=>$id))->select();
+            $arrList = array();
+            foreach ($doors as $door) {
+                $arrList[$door['door_index']] = $door;
+            }
+            for ($i = 0; $i < $vo['door_count']; $i++) {
+                if (!array_key_exists($i, $arrList)) {
+                    $arrList[$i] = array('door_index'=>$i, 'controller_id'=>$id, 'name'=>$i."号门");
+                }
+            }
+            ksort($arrList);
             $this->assign('vo', $vo);
+            $this->assign('arrList', $arrList);
             $this->display();
         } else {
             $this->error("页面未找到", 'index');
@@ -238,6 +262,10 @@ class DoorControllerController extends CommonController {
             $id = I($pk);
 
             if (isset($id)) {
+                if (!$this->checkDoorControllerAccess($id)) {
+                    $this->error('没有该数据的操作权限！');
+                    exit;
+                }
                 $condition = array($pk => array('in', explode(',', $id)));
                 $list = $model->where($condition)->setField('status', -1);
                 if ($list !== false) {
@@ -251,28 +279,95 @@ class DoorControllerController extends CommonController {
         }
     }
 
+    /**
+     * ajax
+     */
     public function openDoor() {
         $controller_id = I('controller_id');
         $door_id = I('door_id');
         if ($controller_id == null) {
-            $error['controller_id'] = "请选择控制器";
+            $error = "请选择控制器";
         }
         if ($door_id == null) {
-            $error['controller_id'] = "请选择门";
+            $error = "请选择门";
         }
         if ($error) {
             $result['code'] = 0;
-            $result['data'] = $error;
+            $result['message'] = $error;
+            $this->response($result);
+            exit;
+        }
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $result['code'] = 0;
+            $result['message'] = "权限校验失败!";
             $this->response($result);
             exit;
         }
 
         $data = M('DoorController')->find($controller_id);
-        $wait = intval($data['wait_time']);
-        $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
-        $result['code'] = 200;
-        $result['message'] = "OK";
-        $this->response($result);
+        if ($data) {
+            $openRecord['controller_id'] = $controller_id;
+            $openRecord['door_id'] = $door_id;
+            $openRecord['open_time'] = time();
+            $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
+            $openRecord['way'] = 1;
+            M('OpenRecord')->add($openRecord);
+
+            $wait = intval($data['wait_time']);
+            $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
+            $result['code'] = 200;
+            $result['message'] = "OK";
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     */
+    public function saveDoor() {
+        $controller_id = I('controller_id');
+        $door_index = I('door_index');
+        $door_name = I('door_name');
+        if ($controller_id == null) {
+            $error = "请选择控制器";
+        }
+        if ($door_index == null) {
+            $error = "请选择门";
+        }
+        if (empty($door_name)) {
+            $error = "请输入名称";
+        }
+        if ($error) {
+            $result['code'] = 0;
+            $result['message'] = $error;
+            $this->response($result);
+            exit;
+        }
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $result['code'] = 0;
+            $result['message'] = "权限校验失败!";
+            $this->response($result);
+            exit;
+        }
+
+        $MDoor = M('Door');
+        $data = $MDoor->where(array('controller_id'=> $controller_id, 'door_index'=>$door_index))->find();
+        if ($data) {
+            $data['name'] = $door_name;
+            $result = $MDoor->save($data);
+        } else {
+            $data['controller_id'] = $controller_id;
+            $data['door_index'] = $door_index;
+            $data['name'] = $door_name;
+            $result = $MDoor->add($data);
+        }
+        if ($result) {
+            $result = array();
+            $result['code'] = 200;
+            $result['message'] = "保存成功";
+            $this->response($result);
+        }
     }
 
     /**
@@ -305,6 +400,16 @@ class DoorControllerController extends CommonController {
         $sendMsg = hex2bin($sendMsg);
         fwrite($handle, $sendMsg);
         fclose($handle);
+    }
+
+    private function checkDoorControllerAccess($controller_id) {
+        if (session(C('ADMIN_AUTH_KEY'))) return true;
+        $MDoorController = M("DoorController");
+        $map['id'] = $controller_id;
+        $map['company_id'] = session('company_id');
+        $data = $MDoorController->where($map)->find();
+        if ($data) return true;
+        return false;
     }
 
 }
