@@ -53,10 +53,10 @@ class IndexController extends Controller\RestController {
                 $MDoorController->add($controllerData);
             }
             echo "db save ---- CRC right";
-            \Think\Log::record("db save ---- CRC right");
+            \Think\Log::record("last connect time db save ---- CRC right");
         } else {
             echo "db no save ---- CRC ERROIR";
-            \Think\Log::record("db no save ---- CRC ERROIR");
+            \Think\Log::record("last connect time db no save ---- CRC ERROIR");
         }
     }
 
