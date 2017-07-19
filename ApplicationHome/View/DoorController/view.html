@@ -108,7 +108,7 @@
             <td class="manage-column" scope="col" >{$door.door_index}</td>
             <td class="manage-column" scope="col" name="door_name" door_index="{$door.door_index}">{$door.name}</td>
             <td class="manage-column" scope="col">
-                <a href="javascript:openDoor('{$door.door_index}');">开门</a>&nbsp;
+                <a href="javascript:openDoor('{$door.door_index}', '{$door.name}');">开门</a>&nbsp;
             </td>
             </tr>
         </volist>
@@ -129,17 +129,19 @@
 
 
 <script>
-    function openDoor(value) {
-        $.post("__CONTROLLER__/openDoor", {
-            'controller_id': "{$vo.id}",
-            'door_id': value
-        }, function(data){
-            if (data.code == 200) {
-                alert("开门成功");
-            } else {
-                alert(data.message);
-            }
-        }, 'JSON');
+    function openDoor(value, name) {
+        if(confirm("确定开启 " + name)) {
+            $.post("__CONTROLLER__/openDoor", {
+                'controller_id': "{$vo.id}",
+                'door_id': value
+            }, function(data){
+                if (data.code == 200) {
+                    alert("开门成功");
+                } else {
+                    alert(data.message);
+                }
+            }, 'JSON');
+        }
     }
 
     $(function () {
