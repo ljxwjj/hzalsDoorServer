@@ -91,6 +91,10 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             _log("budong budong budong ..... \n");
         } else if ($command == "0903") {
             _log("upload data data data .....\n");
+        } else if ($command == "02c0") {
+            _log("open door success feedback \n");
+            exec("php door/udp.php /Index/openDoorFeedback/ip/$ip/port/$port/data/$data", $info);
+            _log($info[0]);
         } else {
             _log("unknow command !!!\n");
         }
