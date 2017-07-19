@@ -17,7 +17,7 @@ class PublicController extends CommonRestController {
             $User->save($user);
 
             extract($user);   // 把数组拆分成变量
-            $token = createToekn();
+            $token = createToeken();
 
             $companyData = M('Company')->find($user['company_id']);
             $company = $companyData?$companyData['name']:'';

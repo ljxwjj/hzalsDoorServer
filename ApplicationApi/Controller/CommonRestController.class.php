@@ -308,7 +308,7 @@ class CommonRestController extends RestController {
         $result = array();
         $result['code'] = $code;
         $result['message'] = $message;
-        $result['data'] = (object)$data;
+        $result['data'] = $data;
         return $result;
     }
 }

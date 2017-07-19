@@ -70,7 +70,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
 
         if ($command == "0901") {// 登录
             _log("begin login  ");
-            $binData = hex2bin($data);
+            $binData = hex2bin($appdata);
 
             $unData = unpack("C*", $binData);
             $i = 0;
@@ -91,6 +91,54 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             _log("budong budong budong ..... \n");
         } else if ($command == "0903") {
             _log("upload data data data .....\n");
+
+            $binData = hex2bin($appdata);
+
+            $unData = unpack("C*", $binData);
+            $i = 0;
+            $transactionNo = sprintf("%02x", $unData[++$i]);// 上传流水号
+            $recordCount = sprintf("%02x", $unData[++$i]); // 返回记录数
+            $recordLength = sprintf("%02x", $unData[++$i]); // 单条记录长度
+            if ($recordLength == '1a') {
+                $recodeArray = array();
+                for ($m = 0; $m < $recordCount; $m++) {
+                    $record = array();
+                    $dakaResult = sprintf("%02x", $unData[++$i]);
+                    $record['swing_card_result'] = substr($dakaResult, 1, 1); // 打卡结果
+                    $record['swing_card_flag'] = substr($dakaResult, 0, 1); // 内部标识
+                    $record['event_name'] = sprintf("%02x", $unData[++$i]);// 事件名称
+                    $record['transaction_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析终端机交易流水号
+                    $record['year'] = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);// 解析年份
+                    $record['month'] = sprintf("%02x", $unData[++$i]);// 解析月份
+                    $record['day'] = sprintf("%02x", $unData[++$i]);// 解析日
+                    $record['hour'] = sprintf("%02x", $unData[++$i]);// 解析小时
+                    $record['minute'] = sprintf("%02x", $unData[++$i]);// 解析分钟
+                    $record['second'] = sprintf("%02x", $unData[++$i]);// 解析秒
+                    $record['carad_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析卡号
+                    $record['door_number'] = sprintf("%02x", $unData[++$i]);// 解析门编号
+                    $record['read_head_number'] = sprintf("%02x", $unData[++$i]);// 解析读头编号
+                    $record['in_out_channel_number'] = sprintf("%02x", $unData[++$i]);// 解析输入输出通道编号
+                    $record['password_type'] = sprintf("%02x", $unData[++$i]);// 解析密码类型
+                    $record['open_password'] = sprintf("%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i]);//解析开门密码
+                    $record['door_actual_status'] = sprintf("%02x", $unData[++$i]);//解析门实时状态
+                    $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
+                    $recodeArray[] = $record;
+                }
+
+                $cmd = "0903";// 主动数据上报接收成功
+                $cmd .= $transactionNo;
+                $cmd .= $recordCount;
+                $cmd .= "00"; // 成功
+                $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
+                $crc = strCRCHex($msg);
+                echo "\n";echo "data upload feedback cmd: ".$msg.$crc;echo "\n";
+                $msg = hex2bin($msg.$crc);
+                $connection->send($msg);
+                _log("data upload feedback send success \n") ;
+
+            } else {
+                _log("unknow record length \n");
+            }
         } else if ($command == "02c0") {
             _log("open door success feedback \n");
             exec("php door/udp.php /Index/openDoorFeedback/ip/$ip/port/$port/data/$data", $info);
@@ -102,6 +150,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
         global $udpConnectionsCache;
         $udpConnectionsCache[$addr] = $connection;
 
+        $info = array();
         exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
         _log($info[0]);
     } else {

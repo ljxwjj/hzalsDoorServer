@@ -850,8 +850,9 @@ function rmbFormat($num,$separator=',',$accuracy=2 ){
 
 }
 
-function createToekn() {
-    return md5(time()."als2005");
+function createToeken($length = 32) {
+    $token = md5(time()."als2005");
+    return substr(str_shuffle($token), 0, $length);;
 }
 
 function generate_code($length = 6) {

@@ -11,8 +11,24 @@ class UcenterController extends CommonRestController {
     // 显示二维码
     public function qrCode() {
         $user_id = I("user_id");
-        $url = "http://qrcode.com?u=$user_id&s=aaa";
-        $this->response($this->createResult(200, "", $url), "json");
+        $token = createToeken(4);
+        $update_time = time();
+        $model = D('UserQrcode');
+        $data = $model->find($user_id);
+        if ($data) {
+            $data['token'] = $token;
+            $data['update_time'] = $update_time;
+            $result = $model->save($data);
+        } else {
+            $data = compact('user_id', 'token', 'update_time');
+            $result = $model->add($data);
+        }
+        if ($result) {
+            $url = "http://qrcode.com?u=$user_id&s=$token";
+            $this->response($this->createResult(200, "", $url), "json");
+        } else {
+            $this->response($this->createResult(0, "系统错误"), "json");
+        }
     }
 
     public function authAccess() {
