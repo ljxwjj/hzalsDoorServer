@@ -72,6 +72,7 @@
 
     * 参数
         * search\_company_id (可选)  公司ID
+        * page  (可选)                         页数（从1开始）
     * 返回值
         * data        array[DoorController]
 
@@ -150,6 +151,7 @@
 
     * 参数
         * search\_company\_id (可选)  公司ID
+        * page  (可选)                         页数（从1开始）
     * 返回值
         * data        array[User]
    
@@ -159,7 +161,7 @@
 * 用户详情 /User/detail
 
     * 参数
-        * user_id     用户ID
+        * id     用户ID
     * 返回值
         * data        User
 
@@ -173,7 +175,7 @@
 * 用户离职 /User/del
 
     * 参数
-        * user_id     用户ID
+        * id     用户ID
     * 返回值
         * null
         
@@ -184,10 +186,12 @@
     * 参数
         * search\_user_id (可选)             用户ID
         * search\_door\_controller\_id (可选)  控制器ID
+        * search\_door\_id (可选)              门编号
         * search\_open\_time\_start (可选)     开门时间
         * search\_open\_time\_end (可选)       开门时间
+        * page  (可选)                         页数（从1开始）
     * 返回值
-        * data              array[OpenRecord]
+        * data        array[OpenRecord]
    
 > _search\_user\_id not null（当前用户拥有管理页限）,可获得指定用户的出入记录_   
 > _search\_user\_id is  null 可获得当前用户的出入记录_

@@ -68,7 +68,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
     _log("++++++ remote:  ".$addr. "  ++++++");
     if ($crcstr === $crc16) {
 
-        if ($command == "0901") {// 登录
+        if ($command == "0901") {// 登录请求
             _log("begin login  ");
             $binData = hex2bin($appdata);
 
@@ -87,9 +87,9 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $msg = hex2bin($msg.$crc);
             $connection->send($msg);
             _log("login success sended \n") ;
-        } else if ($command == "0902") {
+        } else if ($command == "0902") { // 心跳包
             _log("budong budong budong ..... \n");
-        } else if ($command == "0903") {
+        } else if ($command == "0903") { // 主动数据上报
             _log("upload data data data .....\n");
 
             $binData = hex2bin($appdata);
@@ -139,7 +139,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             } else {
                 _log("unknow record length \n");
             }
-        } else if ($command == "02c0") {
+        } else if ($command == "02c0") { // 开门反馈
             _log("open door success feedback \n");
             exec("php door/udp.php /Index/openDoorFeedback/ip/$ip/port/$port/data/$data", $info);
             _log($info[0]);
