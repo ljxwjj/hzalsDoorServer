@@ -100,7 +100,7 @@
                     <a href="javascript:viewUser('id','{$vo.id}')">{$vo.user_nickname}</a>
                 </td>
                 <td class="manage-column" scope="col">
-                    <a href="javascript:viewDoorController('id','{$vo.id}')">{$vo.controller_name|showDoorController=$vo["controller_ip"]}</a>
+                    <a href="javascript:viewDoorController('id','{$vo.controller_id}')">{$vo.controller_name|showDoorController=$vo["controller_ip"]}</a>
                 </td>
                 <td class="manage-column" scope="col">{$vo.door_name}({$vo.door_id})</td>
                 <td class="manage-column" scope="col">{$vo.open_time|toDate='Y-m-d H#i#s'}</td>
