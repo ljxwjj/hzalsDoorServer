@@ -136,6 +136,14 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
                 $connection->send($msg);
                 _log("data upload feedback send success \n") ;
 
+                foreach ($recodeArray as $record) {
+                    if ($record['event_name'] == '80') { // 0x80 非法刷卡事件（扫二维码）
+                        _log('discovered swing card');
+                        $swingData = implode("", $record);
+                        exec("php door/udp.php /Index/swingCord/serial_number/$addr/data/$swingData", $info);
+                        _log($info[0]);
+                    }
+                }
             } else {
                 _log("unknow record length \n");
             }

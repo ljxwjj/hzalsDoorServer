@@ -11,7 +11,7 @@ class UcenterController extends CommonRestController {
     // 显示二维码
     public function qrCode() {
         $user_id = I("user_id");
-        $token = createToeken(4);
+        $token = createToeken(8);
         $update_time = time();
         $model = D('UserQrcode');
         $data = $model->find($user_id);
