@@ -125,6 +125,7 @@ class DoorControllerController extends CommonController {
             $companyId = M('User')->where(array('id'=>$myUserId))->getField('company_id');
         }
         $vo['company_id'] = $companyId;
+        $vo['product_type'] = "0";
 
         $this->assign('vo', $vo);
         $this->keepSearch();
@@ -144,6 +145,9 @@ class DoorControllerController extends CommonController {
         $model = D($name);
         $id = (int)I($model->getPk());
 
+        if (empty(I('product_type'))) {
+            $error['product_type'] = "请选择产品类型！";
+        }
         if(empty(I('serial_number'))) {
             $error['serial_number']='序列号不能为空！';
         }
@@ -168,7 +172,7 @@ class DoorControllerController extends CommonController {
                     $error['serial_number']='序列号已经被绑定！';
                 }
             }
-        } else {
+        } else if (I('product_type') == "2") {
             // 当新增时，判断序列号是否被占用
             $map['serial_number'] = I('serial_number');
             $map['status'] = 0;

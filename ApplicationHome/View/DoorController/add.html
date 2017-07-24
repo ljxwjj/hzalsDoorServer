@@ -1,5 +1,11 @@
 <tagLib name="html" />
 
+<style>
+    .dongtai {
+        display: none;
+    }
+</style>
+
 <div class="wrap">
     <h2>添加控制器</h2>
     <div class="tablenav top">
@@ -15,8 +21,20 @@
 <form method='POST' id="form1" action="{:U('DoorController/save')}">
     <div class="formarea">
         <table class="form-table">
-            <assign name="var" value="name" />
+            <assign name="var" value="product_type" />
             <tr>
+                <th><label for="">产品类型：</label></th>
+                <td>
+                    <select name="{$var}">
+                        <option value="0">请选择产品类型</option>
+                        <option value="1" <eq name="vo[$var]" value="1">selected</eq> >第一代(序列号:ALS******01)</option>
+                        <option value="2" <eq name="vo[$var]" value="2">selected</eq> >第二代(序列号:000000000*******)</option>
+                    </select>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="name" />
+            <tr class="dongtai type1 type2">
                 <th><label for="">名称：</label></th>
                 <td>
                     <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
@@ -24,7 +42,7 @@
                 </td>
             </tr>
             <assign name="var" value="serial_number" />
-            <tr>
+            <tr class="dongtai type1 type2">
                 <th><label for="">序列号：</label></th>
                 <td>
                     <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
@@ -33,7 +51,7 @@
                 </td>
             </tr>
             <assign name="var" value="model" />
-            <tr>
+            <tr class="dongtai type1">
                 <th><label for="">型号：</label></th>
                 <td>
                     <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
@@ -41,7 +59,7 @@
                 </td>
             </tr>
             <assign name="var" value="ip" />
-            <tr>
+            <tr class="dongtai type1">
                 <th><label for="">IP地址：</label></th>
                 <td>
                     <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
@@ -49,14 +67,13 @@
                 </td>
             </tr>
             <assign name="var" value="port" />
-            <tr>
+            <tr class="dongtai type1">
                 <th><label for="">端口：</label></th>
                 <td>
                     <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
                     <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
                 </td>
             </tr>
-
             <tr>
                 <td></td>
                 <td class="center">
@@ -85,6 +102,53 @@
     </div>
 </form>
 
+<switch name="vo.product_type">
+    <case value="1">
+        <script>
+            $(function(){
+                $(".dongtai").hide();
+                $(".type1").show();
+            });
+        </script>
+    </case>
+    <case value="2">
+        <script>
+            $(function(){
+                $(".dongtai").hide();
+                $(".type2").show();
+            });
+        </script>
+    </case>
+    <default/>
+        <script>
+            $(function(){
+                $(".dongtai").hide();
+            });
+        </script>
+
+</switch>
+<script>
+    $(function(){
+        $("select[name='product_type']").change(function(){
+            var type = $(this).val();
+            switch (type) {
+                case "0":
+                    $(".dongtai").hide();
+                    break;
+                case "1":
+                    $(".dongtai").hide();
+                    $(".type1").show();
+                    break;
+                case "2":
+                    $(".dongtai").hide();
+                    $(".type2").show();
+                    break;
+                default:
+                    $(".dongtai").hide();
+            }
+        });
+    });
+</script>
 
 
 
