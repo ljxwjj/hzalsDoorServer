@@ -16,3 +16,6 @@ tail -f log/stdout.log             //查看UDP输出日志
 tail -f ApplicationRuntime/Logs/Api/17_07_18.log
 tail -f ApplicationRuntime/Logs/Home/17_07_18.log
 tail -f ApplicationRuntime/Logs/Udp/17_07_18.log
+
+
+这里写日志
