@@ -140,6 +140,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
                     if ($record['event_name'] == '80') { // 0x80 非法刷卡事件（扫二维码）
                         _log('discovered swing card');
                         $swingData = implode("", $record);
+                        $info = array();
                         exec("php door/udp.php /Index/swingCord/serial_number/$addr/data/$swingData", $info);
                         _log($info[0]);
                     }
@@ -149,6 +150,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             }
         } else if ($command == "02c0") { // 开门反馈
             _log("open door success feedback \n");
+            $info = array();
             exec("php door/udp.php /Index/openDoorFeedback/ip/$ip/port/$port/data/$data", $info);
             _log($info[0]);
         } else {
