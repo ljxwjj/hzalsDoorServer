@@ -171,4 +171,9 @@ class PublicController extends CommonRestController {
 
         $this->response($result,'json');
     }
+
+    public function qrcode($text) {
+        Vendor('phpqrcode/phpqrcode', COMMON_PATH . 'Vendor/', '.php');
+        \QRcode::png($text);
+    }
 }
