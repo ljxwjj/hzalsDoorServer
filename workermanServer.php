@@ -87,8 +87,16 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $msg = hex2bin($msg.$crc);
             $connection->send($msg);
             _log("login success sended \n") ;
+
+            $info = array();
+            exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
+            _log($info[0]);
         } else if ($command == "0902") { // 心跳包
             _log("budong budong budong ..... \n");
+
+            $info = array();
+            exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
+            _log($info[0]);
         } else if ($command == "0903") { // 主动数据上报
             _log("upload data data data .....\n");
 
@@ -160,9 +168,6 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
         global $udpConnectionsCache;
         $udpConnectionsCache[$addr] = $connection;
 
-        $info = array();
-        exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
-        _log($info[0]);
     } else {
         _log("CRC ERROR--  $crcstr === $crc16 \n");
     }
