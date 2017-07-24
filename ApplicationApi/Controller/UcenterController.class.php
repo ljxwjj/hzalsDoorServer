@@ -25,8 +25,8 @@ class UcenterController extends CommonRestController {
         }
         if ($result) {
             $tokenNumber = hexdec($token);
-            $url = "http://qr.topscan.com/api.php?text=$tokenNumber";
-            $this->response($this->createResult(200, "", $url), "json");
+//            $url = "http://qr.topscan.com/api.php?text=$tokenNumber";
+            $this->response($this->createResult(200, "", $tokenNumber), "json");
         } else {
             $this->response($this->createResult(0, "系统错误"), "json");
         }
