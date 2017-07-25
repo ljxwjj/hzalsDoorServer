@@ -1,8 +1,8 @@
 #阿里桑门禁系统API文档
 
-接口地址：http://http://139.196.97.237/door/api.php
+接口地址：http://api.hzals.com/door/index.php
 
-管理后台地址：http://http://139.196.97.237/door/index.php
+管理后台地址：http://admin.hzals.com/door/index.php
 
 帐号：18957125011   密码：123456 
 
