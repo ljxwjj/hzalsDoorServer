@@ -187,6 +187,8 @@ class DoorControllerController extends CommonController {
             if ($data && !$error && !$data['company_id']) {
                 // 控制器已经自动注册上来的数据
                 $id = $data['id'];
+                $_REQUEST['ip'] = $data['ip'];
+                $_REQUEST['port'] = $data['port'];
             }
         }
         if ($error) {
