@@ -53,9 +53,9 @@ class UcenterController extends CommonRestController {
         } else if ($user['password'] !== $password){
             $result = $this->createResult(0, '原密码错误');
         } else {
-            $data['password'] = $new_password;
-            $data['update_time'] = time();
-            $saveFlag = $User->save($data);
+            $user['password'] = $new_password;
+            $user['update_time'] = time();
+            $saveFlag = $User->save($user);
 
             if ($saveFlag) {
                 $result = $this->createResult(200, '找回成功');
