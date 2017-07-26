@@ -13,6 +13,7 @@ return array(
     'AUTOLOAD_NAMESPACE'        => array(
         'Lib'     => MODULE_PATH.'Lib',
     ),
-    'LOG_RECORD' => true, // 开启日志记录
-    'LOG_LEVEL'  =>'EMERG,ALERT,CRIT,ERR', // 只记录EMERG ALERT CRIT ERR 错误
+    'LOG_RECORD'                => true, // 开启日志记录
+    'LOG_LEVEL'                 =>'EMERG,ALERT,CRIT,ERR', // 只记录EMERG ALERT CRIT ERR 错误
+    'DEFAULT_FILTER'            => 'trim,strip_tags,htmlspecialchars',
 );

@@ -27,5 +27,6 @@ return array(
     'GUEST_AUTH_ON'             =>  false,         // 是否开启游客授权访问
     'GUEST_AUTH_ID'             =>  0,             // 游客的用户ID
     'LIST_ROWS'                 => 20,             // 分页页面每页记录数
+    'DEFAULT_FILTER'            => 'trim,strip_tags,htmlspecialchars',
 
 );

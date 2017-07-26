@@ -3,8 +3,10 @@ namespace Api\Controller;
 
 class PublicController extends CommonRestController {
 
-    public function login($account = '', $password = ''){
+    public function login(){
         \Think\Log::record('public login....');
+        $account = I('account');
+        $password = I('password');
 
         $User = M('User');  // D('User');
         $map['account'] = $account;
@@ -124,7 +126,10 @@ class PublicController extends CommonRestController {
         $this->response($result,'json');
     }
 
-    public function sendSMS($mobile, $operation) {
+    public function sendSMS() {
+        $mobile = I('mobile');
+        $operation = I('operation');
+
         $operations = array("register", "findPassword");
         if (!in_array($operation, $operations)) {
             $result = $this->createResult(0, '参数错误');
@@ -172,7 +177,8 @@ class PublicController extends CommonRestController {
         $this->response($result,'json');
     }
 
-    public function qrcode($text) {
+    public function qrcode() {
+        $text = I('text');
         Vendor('phpqrcode/phpqrcode', COMMON_PATH . 'Vendor/', '.php');
         \QRcode::png($text);
     }
