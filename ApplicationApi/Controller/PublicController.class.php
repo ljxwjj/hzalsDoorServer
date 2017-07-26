@@ -96,11 +96,11 @@ class PublicController extends CommonRestController {
         $user = $User->where($map)->find();
 
         if (!$user) {
-            $result = createResult(1, '非系统用户');
+            $result = $this->createResult(1, '非系统用户');
         } else if (empty($user['password'])) {
-            $result = createResult(2, '帐号未激活');
+            $result = $this->createResult(2, '帐号未激活');
         } else if ($user['status'] === -1) {
-            $result = createResult(3, '用户被禁用');
+            $result = $this->createResult(3, '用户被禁用');
         } else {
             // 核实验证码
             $MSmsCode = M('SmsCode');
@@ -114,12 +114,12 @@ class PublicController extends CommonRestController {
                 $saveFlag = $User->save($data);
 
                 if ($saveFlag) {
-                    $result = createResult(200, '找回成功');
+                    $result = $this->createResult(200, '找回成功');
                 } else {
-                    $result = createResult(0, '找回失败');
+                    $result = $this->createResult(0, '找回失败');
                 }
             } else {
-                $result = createResult(4, '验证码错误');
+                $result = $this->createResult(4, '验证码错误');
             }
         }
 
