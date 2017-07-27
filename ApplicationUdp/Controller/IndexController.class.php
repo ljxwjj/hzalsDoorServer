@@ -36,7 +36,7 @@ class IndexController extends Controller\RestController {
         if ($crcstr === $crc16) {
             $MDoorController = M('DoorController');
             $map['serial_number'] = $addr;
-            $map['door_count'] = substr($addr, 9, 1);
+            $map['product_type'] = 2;
             $map['status'] = 0;
             $controllerData = $MDoorController->where($map)->find();
             if ($controllerData) {
@@ -46,8 +46,10 @@ class IndexController extends Controller\RestController {
                 $MDoorController->save($controllerData);
             } else {
                 $controllerData['serial_number'] = $addr;
+                $controllerData['product_type'] = 2;
                 $controllerData['ip'] = $ip;
                 $controllerData['port'] = $port;
+                $controllerData['door_count'] = substr($addr, 9, 1);
                 $controllerData['last_connect_time'] = time();
                 $controllerData['add_time'] = time();
                 $controllerData['status'] = 0;
