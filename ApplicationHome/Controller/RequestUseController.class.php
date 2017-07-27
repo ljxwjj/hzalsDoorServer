@@ -85,7 +85,7 @@ class RequestUseController extends CommonController {
             return;
         }
         $map = array();
-        $map["telphone"] = $_POST['contacts'];
+        $map["telphone"] = $_POST['telphone'];
         $map['status'] = array("neq", -1);
         $model = M("RequestUse");
         $data = $model->where($map)->find();
@@ -108,8 +108,8 @@ class RequestUseController extends CommonController {
             $data['create_time'] = time();
             $result = $model->add($data);
             if($result){
-                $this->display(T('saveSuccess'));
-//                $this->success('数据已保存！', U("saveSuccess"));
+//                $this->display(T('saveSuccess'));
+                $this->success('数据已保存！', U("saveSuccess"));
             }else{
                 $this->error('数据未保存！', U("add"));
             }

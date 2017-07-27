@@ -33,6 +33,12 @@
 				<li class="<if condition='(CONTROLLER_NAME eq User) and (ACTION_NAME eq add)'>current</if>">
 					<a href="__APP__/User/add" class="current">添加用户</a>
 				</li>
+				<li class="<if condition='(CONTROLLER_NAME eq Department) and (ACTION_NAME eq index)'>current</if>">
+					<a href="__APP__/Department/index" class="current">部门管理</a>
+				</li>
+				<li class="<if condition='(CONTROLLER_NAME eq Department) and (ACTION_NAME eq index)'>current</if>">
+					<a href="__APP__/UserPermissions/index" class="current">用户授权</a>
+				</li>
 			</ul>
 		</li>
 	</if>

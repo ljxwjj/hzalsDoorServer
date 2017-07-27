@@ -100,6 +100,110 @@ class PublicController extends CommonController {
         }
     }
 
+    public function register() {
+        $this->display();
+    }
+
+    public function checkRegister() {
+        $account = I('account');
+        $password = I('password', '', 'md5');
+        $smsCode = I('sms_code');
+
+        $User = M('User');
+        $map['account'] = $account;
+        $user = $User->where($map)->find();
+
+        if (!$user) {
+            $error['account'] = '非系统用户';
+        } else if (!empty($user['password'])) {
+            $error['account'] = '该手机号已注册';
+        } else if ($user['status'] === -1) {
+            $error['account'] = '用户被禁用';
+        } else {
+            // 核实验证码
+            $MSmsCode = M('SmsCode');
+            $map = array();
+            $map["mobile"] = $account;
+            $map["use_to"] = 'register';
+            $map["check_time"] = array("EQ", 0);
+            $sms = $MSmsCode->where($map)->order('send_time desc')->find();
+            if ($sms && ($sms["send_time"] + $sms["delay"]) > time() && $sms["code"] == $smsCode) {
+                $sms['check_time'] = time();
+                $MSmsCode->save($sms);
+                $user['password'] = $password;
+                $user['status'] = 1;
+                $saveFlag = $User->save($user);
+
+                if ($saveFlag) {
+                    $this->success('注册成功！',U('Public/login'));
+                    return true;
+                } else {
+                    $this->error('注册失败！', U('Public/register'));
+                    return false;
+                }
+            } else {
+                $error['sms_code'] = '验证码错误';
+            }
+        }
+        if ($error) {
+            $this->assign('error', $error);
+            $this->assign('vo', $_REQUEST);
+            $this->display('register');
+        }
+
+    }
+
+    public function sendRegisterSMS() {
+        $mobile = I('account');
+
+        $user = M('User')->where(array('account'=>$mobile, 'status'=>0))->find();
+        if (!$user) {
+            $result['code'] = 0;
+            $result['message'] = "用户已注册或非系统用户";
+            $this->response($result);
+            exit;
+        }
+        $MSmsCode = M('SmsCode');
+        $map = array();
+        $map["mobile"] = $mobile;
+        $map["use_to"] = 'register';
+        $map["check_time"] = array("EQ", 0);
+        $sms = $MSmsCode->where($map)->order('send_time desc')->find();
+        if ($sms && ($sms["send_time"] + 120) > time()) {
+            $result['code'] = 0;
+            $result['message'] = "信息发送太频繁!";
+            $this->response($result);
+            exit;
+        }
+
+        $smsCode = generate_code(6);
+        $sendResult = doSendSms($mobile, $smsCode, "register");
+        if ($sendResult->Code !== 'OK') {
+            $result['code'] = 0;
+            $result['message'] = '发送失败:'.$sendResult->Message;
+            $this->response($result);
+            return;
+        }
+        $data = array(
+            'mobile'=> $mobile,
+            'code' => $smsCode,
+            'send_time' => time(),
+            'use_to' => "register",
+            'delay'  => 15*60,
+            'sms_request_id' => $sendResult->RequestId,
+            'sms_biz_id' => $sendResult->BizId,
+        );
+        $smsCodeId = $MSmsCode->data($data)->add();
+
+        if ($smsCodeId) {
+            $result['code'] = 200;
+            $result['message'] = '发送成功';
+        } else {
+            $result['code'] = 0;
+            $result['message'] = '发送失败';
+        }
+        $this->response($result);
+    }
 
     public function alsTest($url = null, $user_id = 0) {//echo APP_PATH;exit;
         if ($url) {

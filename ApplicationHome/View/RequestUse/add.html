@@ -72,6 +72,19 @@
                 </div>
             </div>
 
+            <assign name="key" value="email" />
+            <if condition="$error[$key]">
+                <div style="height: 21px;width: 49px;float:left;">&nbsp;</div>
+                <div style="float: left;"><span class="tips">{$error[$key]}</div>
+                <div style="clear:both;"></div>
+            </if>
+            <div class="login_main_1">
+                <div class="login_main_1_lb"></div>
+                <div class="login_main_1_r">
+                    <input check="Require" warning="请输入联系邮箱" name="{$key}"  value="{$vo.$key}" placeholder="输入联系人邮箱"/>
+                </div>
+            </div>
+
             <assign name="key" value="order_number" />
             <if condition="$error[$key]">
                 <div style="height: 21px;width: 49px;float:left;">&nbsp;</div>
@@ -86,6 +99,9 @@
             </div>
 
             <div class="login_main_1">
+                <label>
+                    <span class="f-l p-l-10 login_main_1_txt"><a href='__APP__'>返回登录</a></span>
+                </label>
                 <div class="login_btn"><a class="button_kv" onclick="document.login.submit();">提交</a></div>
             </div>
             <div style="height:auto;width:448px;text-align:center;position:absolute;bottom:20px;font-size:11pt;">

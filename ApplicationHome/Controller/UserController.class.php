@@ -131,21 +131,12 @@ class UserController extends CommonController {
     }
 
 
-    public function view($id) {
-        $name = $this->getActionName();
-        $model = D($name);
-        $pk = $model->getPk();
-        $id = I($pk);
-        $condition = array($pk => $id);
-        $vo = $model->where($condition)->find();
+    public function view() {
+        $model = M('UserView');
+        $id = I('id');
+        $vo = $model->find($id);
         if ($vo) {
-            $sql = "select user.*, auth_role.name AS role_name from user ".
-                "LEFT JOIN auth_role_user on user.id = auth_role_user.user_id ".
-                "LEFT JOIN auth_role on auth_role_user.role_id = auth_role.id where user.company_id = %d";
-            $arrList = M('User')->query($sql, $id);
-
             $this->assign('vo', $vo);
-            $this->assign('arrList', $arrList);
             $this->display();
         } else {
             $this->error("页面未找到", 'index');
@@ -182,8 +173,10 @@ class UserController extends CommonController {
         $vo = $model->getById($id);
         $role_id = M("AuthRoleUser")->where(array('user_id'=>$id))->getField("role_id");
         $vo['role_id'] = $role_id;
+        $vo['department_id'] = M('UserDepartment')->where(array('user_id'=>$id))->getField('department_id');
         if($vo){
             $this->_loadAuthRole($vo['company_id']);
+            $this->_loadDepartment($vo['company_id']);
             $this->assign('vo', $vo);
             $this->display();
         }else{
@@ -209,6 +202,12 @@ class UserController extends CommonController {
 
     }
 
+    private function _loadDepartment($companyId) {
+        $Department = M('Department');
+        $departmentList = $Department->where(array('company_id'=>$companyId))->select();
+        $this->assign('departmentList', $departmentList);
+    }
+
     public function save($name = '', $tpl = 'edit')
     {
         $is_add_tpl_file = $this->isAddTplFile();
@@ -228,6 +227,7 @@ class UserController extends CommonController {
         }
         if ($error) {
             $this->_loadAuthRole(I('company_id'));
+            $this->_loadDepartment(I('company_id'));
 
             $this->assign('vo', $_REQUEST);
             $this->assign('error', $error);
@@ -236,20 +236,32 @@ class UserController extends CommonController {
         }
 
         $model = D('User');
-        $id = (int)I($model->getPk());
+        $id = (int)I('id');
         $account = I('account');
         $role = (int)I('role');
+        $department = (int)I('department');
+
+        $user = $model->where(array('account'=>$account, 'status'=>array("neq", -1)))->find();
+        if ($user && $user['company_id'] != I('company_id')) {
+            $this->error('该手机号已被在其它公司注册过！'.$model->getError(), $this->getReturnUrl());
+            exit;
+        }
+
+        $user = $model->where(array('account'=>$account, 'company_id'=>I('company_id')))->find();
+        if ($user && $user['status'] == -1) {
+            $user['status'] = empty($user['password'])?0:1;
+            $model->save($user);
+            $this->success('用户数据已恢复！', $this->getReturnUrl());
+            exit;
+        } else if ($user) {
+            $this->error('该用户已存在！'.$model->getError(), $this->getReturnUrl());
+            exit;
+        }
 
         $model->startTrans();
         if ($id) {// 编辑
-            $userRoleId = $model->query("select role_id from auth_role_user where user_id = %d", $id);
-            if (empty($userRoleId)) {
-                $roleSaveFlag = $model->execute("insert into auth_role_user(role_id, user_id) values(%d, %d)", $role, $id);
-            } else if ($userRoleId[0]['role_id'] != $role) {
-                $roleSaveFlag = $model->execute("update auth_role_user set role_id = %d where user_id = %d", $role, $id);
-            } else {
-                $roleSaveFlag = true;
-            }
+            $model->execute("delete from auth_role_user where user_id = %d", $id);
+            $model->execute("delete from user_department where user_id = %d", $id);
         } else {// 新增
             $roleSaveFlag = true;
             if ((int)I('company_id') === 1 && (int)I('role') < 20) {
@@ -257,29 +269,37 @@ class UserController extends CommonController {
             }
         }
 
-
-        if ($roleSaveFlag) {
-            $data = $model->create($_REQUEST);
-            if (!$data) {
-                $error = $model->getError();
-                $this->assign('vo', $_REQUEST);
-                $this->assign('error', $error);
-                if (!$id && $is_add_tpl_file) {
-                    $this->display('add');
-                } else {
-                    $this->display($tpl);
-                }
+        $data = $model->create($_REQUEST);
+        if (!$data) {
+            $error = $model->getError();
+            $this->assign('vo', $_REQUEST);
+            $this->assign('error', $error);
+            if (!$id && $is_add_tpl_file) {
+                $this->display('add');
             } else {
-                if ($id) {
-                    $result = $model->save($data);
-                } else {
-                    $result = $model->add($data);
-                    $roleSaveFlag = $model->execute("insert into auth_role_user(role_id, user_id) values(%d, %d)", $role, $result);
-                }
-
+                $this->display($tpl);
             }
+        } else {
+            if ($id) {
+                $result = $model->save($data);
+            } else {
+                $result = $model->add($data);
+                if ($result) $id = $result;
+            }
+            if ($role) {
+                $roleSaveFlag = $model->execute("insert into auth_role_user(role_id, user_id) values(%d, %d)", $role, $id);
+            } else {
+                $roleSaveFlag = true;
+            }
+            if ($department) {
+                $departmentSaveFlag = $model->execute("insert into user_department(department_id, user_id) values(%d, %d)", $department, $id);
+            } else {
+                $departmentSaveFlag = true;
+            }
+
         }
-        if ($roleSaveFlag && $result) {
+
+        if ($roleSaveFlag && $departmentSaveFlag && $result) {
             $model->commit();
             $this->success('数据已保存！', $this->getReturnUrl());
         } else {
@@ -287,5 +307,108 @@ class UserController extends CommonController {
             $this->error('数据未保存！'.$model->getError(), $this->getReturnUrl());
         }
     }
+
+    public function doorlist() {
+        $id = I('id');
+        $company_id = I('company_id');
+        if (empty($id)) {
+            $this->error('请选择要分配权限的用户！');
+            exit;
+        }
+        $user = M('User')->find($id);
+        $this->assign('user', $user);
+        if (empty($company_id)) {
+            $company_id = $user['company_id'];
+        }
+
+        $arrList = $this->getDoorByUser($company_id, $id);
+        $this->assign('arrList', $arrList);
+        $this->display();
+    }
+
+    public function savenodes($id='') {
+        $user_id = $id;
+        $node_id = I('node_id');
+
+        $UserDoor = M('UserDoor');
+        $map['user_id'] = array('eq',$user_id);
+        $UserDoor->where($map)->delete();
+
+        foreach($node_id as $controller_id=>$doors){
+            foreach ($doors as $door_id) {
+                $data[] = array('user_id'=>$user_id, 'controller_id'=>$controller_id, 'door_id'=>intval($door_id));
+            }
+        }
+        $result = $UserDoor->addAll($data);
+        if ($result) {
+            $this->success('数据已保存！', $this->getReturnUrl());
+        } else {
+            $this->error('数据未保存！'.$UserDoor->getError(), $this->getReturnUrl());
+        }
+    }
+
+    /**
+     * 查询岗位权限*
+     *
+     * @param int $id 部门ID
+     * @return array
+     */
+    protected function getDoorByUser($company_id, $id){
+        if (empty($id)) {
+            $this->error('请选择要分配权限的用户！');
+            exit;
+        }
+
+        //取得所有门禁
+        $Node = D('DoorController');
+        $map = array();
+        $map['company_id'] = $company_id;
+        $map['status'] = 0;
+        $controllers = $Node->where($map)->getField("id,name,door_count");
+
+        $cid = array_keys($controllers);
+        $map = array('controller_id'=>array('in', $cid));
+        $doors = M('Door')->where($map)->select();
+        foreach ($doors as $door) {
+            $doorsMap[$door['controller_id']][$door['door_index']] = $door;
+        }
+
+        $arrTree = array();
+        foreach ($controllers as $value) {
+            for ($j = 0; $j < $value['door_count']; $j++) {
+                $door = $doorsMap[$value['id']][$j];
+                if (!$door) {
+                    $door = array();
+                    $door['controller_id'] = $value['id'];
+                    $door['door_index'] = $j;
+                    $door['name'] = $j."号门";
+                }
+                $door['cate_lv']=0;
+                $door['cate_namepre'] = '';
+                $door['controller_name'] = $value['name'];
+                $arrTree[]=$door;
+            }
+        }
+
+
+        //取得已分配的权限
+        $Access = D('UserDoor');
+        $map = array();
+        $map['user_id'] = array('eq',$id);
+        $doors = $Access->where($map)->select();
+        $doorsMap = array();
+        foreach ($doors as $door) {
+            $doorsMap[$door['controller_id']][$door['door_id']] = 1;
+        }
+
+        //匹配分配岗位
+        foreach($arrTree as $k=>$v){
+            if ($doorsMap[$v['controller_id']][$v['door_index']] === 1) {
+                $arrTree[$k]['checked'] = 1;
+            }
+        }
+        return $arrTree;
+    }
+
 
 }

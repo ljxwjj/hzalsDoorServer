@@ -402,4 +402,16 @@ class CommonController extends Controller {
         return CONTROLLER_NAME;
     }
 
+    /**
+     * 输出返回数据
+     * @access protected
+     * @param mixed $data 要返回的数据
+     * @return void
+     */
+    protected function response($data) {
+        header('HTTP/1.1 200 OK');
+        header('Status:200 OK');
+        exit(json_encode($data));
+    }
+
 }
