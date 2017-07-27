@@ -36,6 +36,7 @@ class IndexController extends Controller\RestController {
         if ($crcstr === $crc16) {
             $MDoorController = M('DoorController');
             $map['serial_number'] = $addr;
+            $map['door_count'] = substr($addr, 9, 1);
             $map['status'] = 0;
             $controllerData = $MDoorController->where($map)->find();
             if ($controllerData) {

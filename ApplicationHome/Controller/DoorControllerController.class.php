@@ -148,9 +148,24 @@ class DoorControllerController extends CommonController {
         if (empty(I('product_type'))) {
             $error['product_type'] = "请选择产品类型！";
         }
-        if(empty(I('serial_number'))) {
+        $serialNumber = I('serial_number', '', 'trim,strtoupper');
+        $productType = I('product_type');
+        if(empty($serialNumber)) {
             $error['serial_number']='序列号不能为空！';
+        } else if ($productType == "1" && strpos($serialNumber, "ALS") === 0 && strlen($serialNumber) == 11) {
+            $doorCount = substr($serialNumber, 3, 1);
+        } else if ($productType == "2" && strpos($serialNumber, "000000000") === 0 && strlen($serialNumber) == 16) {
+            $doorCount = substr($serialNumber, 9, 1);
+        } else {
+            $error['serial_number']='序列号格式错误！';
         }
+
+        if ($doorCount) {
+            if (!intval($doorCount)) {
+                $error['serial_number']='序列号格式错误！';
+            }
+        }
+
         if (empty(I('company_id'))) {
             $_REQUEST['company_id'] = session('company_id');
         } else {
@@ -213,6 +228,7 @@ class DoorControllerController extends CommonController {
                 $this->display('edit');
             }
         }else{
+            $data['door_count'] = $doorCount;
             if($id){
                 $result = $model->where(array('id'=>$id))->save($data);
             }else{
