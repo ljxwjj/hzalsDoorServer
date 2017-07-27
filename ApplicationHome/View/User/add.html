@@ -72,6 +72,19 @@
                     <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
                 </td>
             </tr>
+            <assign name="var" value="department" />
+            <tr>
+                <th><label for="">部门：</label></th>
+                <td>
+                    <select name="{$var}">
+                        <option value="0">请选择部门</option>
+                        <foreach name="departmentList" item="v" key="k">
+                            <option value="{$v.id}" <eq name="v.id" value="$vo['department_id']">selected</eq> >{$v.name}</option>
+                        </foreach>
+                    </select>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
 
             <tr>
                 <td></td>

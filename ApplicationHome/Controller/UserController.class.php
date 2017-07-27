@@ -154,6 +154,7 @@ class UserController extends CommonController {
         $vo['company_id'] = $companyId;
 
         $this->_loadAuthRole($companyId);
+        $this->_loadDepartment($companyId);
         $this->assign('vo', $vo);
         $this->keepSearch();
 
