@@ -17,7 +17,7 @@
 
 		<assign name="_ACCESS_LIST_HOME" value="$Think.session._ACCESS_LIST.HOME" />
 	<if condition='$_ACCESS_LIST_HOME.USER neq null'>
-		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='CONTROLLER_NAME eq User'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
+		<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='in_array(CONTROLLER_NAME,array(User,Department))'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" >
 			<a href='__APP__/User/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media <if condition='CONTROLLER_NAME eq User'>wp-has-current-submenu wp-menu-open open-if-no-js</if>" aria-haspopup="true">
 				<div class="wp-menu-arrow">
 					<div></div>
@@ -35,9 +35,6 @@
 				</li>
 				<li class="<if condition='(CONTROLLER_NAME eq Department) and (ACTION_NAME eq index)'>current</if>">
 					<a href="__APP__/Department/index" class="current">部门管理</a>
-				</li>
-				<li class="<if condition='(CONTROLLER_NAME eq Department) and (ACTION_NAME eq index)'>current</if>">
-					<a href="__APP__/UserPermissions/index" class="current">用户授权</a>
 				</li>
 			</ul>
 		</li>
