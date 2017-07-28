@@ -136,7 +136,9 @@ class DoorControllerController extends CommonRestController {
             $openRecord['open_time'] = time();
             $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
             $openRecord['way'] = 1;
-            M('OpenRecord')->add($openRecord);
+            $OpenRecord = M('OpenRecord');
+            $OpenRecord->create($openRecord);
+            $OpenRecord->add();
 
             $wait = intval($data['wait_time']);
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);

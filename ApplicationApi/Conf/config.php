@@ -4,6 +4,7 @@ return array(
     'SESSION_AUTO_START'        => false,     // 接口中不自动开启session
     'CHECK_PARAMS_SIGN'         => true,      // 是否开启参数签名验证
     'USER_AUTH_ON'              =>  true,
+    'USER_AUTH_KEY'             =>  'lcsomauthId',	   // 用户认证SESSION标记
     'ADMIN_AUTH_KEY'			=>  'administrator',
     'API_PARAMS_SIGN_KEY'       => 'sign',
     'API_PARAMS_SIGN_VALUE'     => '8djUK*014kJ',
