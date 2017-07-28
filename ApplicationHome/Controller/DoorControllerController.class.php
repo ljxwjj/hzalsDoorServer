@@ -326,12 +326,19 @@ class DoorControllerController extends CommonController {
             $this->response($result);
             exit;
         }
-        $userDoors = getUserDoors();
-        if (!$userDoors[$controller_id][$door_id]) {
-            $result['code'] = 0;
-            $result['message'] = "授权失败!";
-            $this->response($result);
-            exit;
+
+        if (!session(C('ADMIN_AUTH_KEY'))) {
+            $user_id = session(C('USER_AUTH_KEY'));
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors();
+                if (!$userDoors[$controller_id][$door_id]) {
+                    $result['code'] = 0;
+                    $result['message'] = "授权失败!";
+                    $this->response($result);
+                    exit;
+                }
+            }
         }
 
         $data = M('DoorController')->find($controller_id);

@@ -35,30 +35,37 @@ class DoorControllerController extends CommonRestController {
         $user_id = I('user_id');
         $controller_id = I('controller_id');
         $door_id = I('door_id');
-        $userDoors = getUserDoors($user_id);
-        if (!$userDoors[$controller_id][$door_id]) {
-            $result = $this->createResult(0, "授权失败");
-            $this->response($result,'json');
-        } else {
 
-            $data = M('DoorController')->find($controller_id);
-            if ($data) {
-                $openRecord['controller_id'] = $controller_id;
-                $openRecord['door_id'] = $door_id;
-                $openRecord['open_time'] = time();
-                $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
-                $openRecord['way'] = 1;
-                M('OpenRecord')->add($openRecord);
-
-                $wait = intval($data['wait_time']);
-                $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
-                $result = $this->createResult(200, "开门成功");
-                $this->response($result,'json');
-            } else {
-                $result = $this->createResult(0, "开门失败");
-                $this->response($result,'json');
+        if (!session(C('ADMIN_AUTH_KEY'))) {
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors();
+                if (!$userDoors[$controller_id][$door_id]) {
+                    $result = $this->createResult(0, "授权失败");
+                    $this->response($result,'json');
+                    exit;
+                }
             }
         }
+
+        $data = M('DoorController')->find($controller_id);
+        if ($data) {
+            $openRecord['controller_id'] = $controller_id;
+            $openRecord['door_id'] = $door_id;
+            $openRecord['open_time'] = time();
+            $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
+            $openRecord['way'] = 1;
+            M('OpenRecord')->add($openRecord);
+
+            $wait = intval($data['wait_time']);
+            $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
+            $result = $this->createResult(200, "开门成功");
+            $this->response($result,'json');
+        } else {
+            $result = $this->createResult(0, "开门失败");
+            $this->response($result,'json');
+        }
+
     }
 
     protected function sendOpenDoorUdpCode($ip, $port, $serialNumber, $doorId, $wait) {
