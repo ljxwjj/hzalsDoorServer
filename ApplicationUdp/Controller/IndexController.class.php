@@ -166,20 +166,30 @@ class IndexController extends Controller\RestController {
 
             $MUser = M('User');
             $map = array();
-            $map['company_id'] = $company_id;
+//            $map['company_id'] = $company_id;
             $map['status'] = 1;
             $map['token'] = $record['carad_number'];
             $tokenData = $MUser
-                ->field("user.id AS user_id, user.is_admin AS is_admin, user_qrcode.update_time AS update_time")
+                ->field("user.id AS user_id, user.company_id AS company_id, user.is_admin AS is_admin, user_qrcode.update_time AS update_time")
                 ->join("join user_qrcode on user.id = user_qrcode.user_id")
                 ->where($map)->find();
             if ($tokenData) {
                 if ($tokenData['update_time'] + 30 >= time()) {
                     $user_id = $tokenData['user_id'];
+                    $user_company = $tokenData['company_id'];
 
                     if (!$tokenData['is_admin']) {
+                        // 非系统管理员，验证权限
+                        if ($user_company != $company_id) {
+                            // 非系统管理员不能操作非本公司门禁
+                            $message = "Non system admin, non operating, non company door ";
+                            echo $message;
+                            \Think\Log::record("刷卡请求 处理结果：$message");
+                            exit;
+                        }
                         $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
                         if ($role_id > 21) { // > 21即非管理员用户
+                            // 非公司管理员，验证权限
                             $userDoors = getUserDoors();
                             if (!$userDoors[$controller_id][$door_id]) {
                                 $message = "Open door authorization failed ";
