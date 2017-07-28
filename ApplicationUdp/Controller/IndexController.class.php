@@ -162,6 +162,7 @@ class IndexController extends Controller\RestController {
             $record['open_password'] = sprintf("%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i]);//解析开门密码
             $record['door_actual_status'] = sprintf("%02x", $unData[++$i]);//解析门实时状态
             $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
+            $door_id = $record['door_number'];
 
             $MUser = M('User');
             $map = array();
@@ -169,15 +170,28 @@ class IndexController extends Controller\RestController {
             $map['status'] = 1;
             $map['token'] = $record['carad_number'];
             $tokenData = $MUser
-                ->field("user.id AS user_id, user_qrcode.update_time AS update_time")
+                ->field("user.id AS user_id, user.is_admin AS is_admin, user_qrcode.update_time AS update_time")
                 ->join("join user_qrcode on user.id = user_qrcode.user_id")
                 ->where($map)->find();
             if ($tokenData) {
                 if ($tokenData['update_time'] + 30 >= time()) {
                     $user_id = $tokenData['user_id'];
 
+                    if (!$tokenData['is_admin']) {
+                        $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+                        if ($role_id > 21) { // > 21即非管理员用户
+                            $userDoors = getUserDoors();
+                            if (!$userDoors[$controller_id][$door_id]) {
+                                $message = "Open door authorization failed ";
+                                echo $message;
+                                \Think\Log::record("刷卡请求 处理结果：$message");
+                                exit;
+                            }
+                        }
+                    }
+
                     $openRecord['controller_id'] = $controller_id;
-                    $openRecord['door_id'] = $record['door_number'];
+                    $openRecord['door_id'] = $door_id;
                     $openRecord['open_time'] = time();
                     $openRecord['user_id'] = $user_id;
                     $openRecord['way'] = 2;

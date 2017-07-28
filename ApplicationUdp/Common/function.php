@@ -62,3 +62,28 @@ function strCRCHex($str) {
     }
     return getCRChex($crcstr);
 }
+
+function getUserDoors($user_id = null) {
+    if (!$user_id) {
+        return false;
+    }
+    $user = M('User')->find($user_id);
+    if (!$user) return false;
+    $userDoors = M('UserDoor')->where(array('user_id'=>$user_id))->select();
+    foreach ($userDoors as $door) {
+        $doorMap[$door['controller_id']][$door['door_id']] = 1;
+    }
+
+    $department = M('UserDepartment')->where(array('user_id'=>$user_id))
+        ->getField('department_id');
+    while ($department) {
+        $departmentDoors = M('DepartmentDoor')->where(array('department_id'=>$department))
+            ->select();
+        foreach ($departmentDoors as $door) {
+            $doorMap[$door['controller_id']][$door['door_id']] = 1;
+        }
+        $department = M('Department')->where(array('id'=>$department))
+            ->getField('pid');
+    }
+    return $doorMap;
+}
