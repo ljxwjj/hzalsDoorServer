@@ -190,7 +190,7 @@ class IndexController extends Controller\RestController {
                         $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
                         if ($role_id > 21) { // > 21即非管理员用户
                             // 非公司管理员，验证权限
-                            $userDoors = getUserDoors();
+                            $userDoors = getUserDoors($user_id);
                             if (!$userDoors[$controller_id][$door_id]) {
                                 $message = "Open door authorization failed ";
                                 echo $message;

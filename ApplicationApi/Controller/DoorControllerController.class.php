@@ -20,6 +20,87 @@ class DoorControllerController extends CommonRestController {
         parent::detail();
     }
 
+    public function doorLists($sortBy = '', $asc = false) {
+        $user = session('user');
+        $map = array();
+        $map['status'] = 0;
+        if ($user['is_admin']) {
+
+        } else {
+            $map['company_id'] = $user['company_id'];
+
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user['id']))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors($user['id']);
+                if ($userDoors) {
+                    $controllerIds = array_keys($userDoors);
+                } else {
+                    $controllerIds = array();
+                }
+                $map['id'] = array("IN", $controllerIds);
+            }
+        }
+
+        $model = M('DoorController');
+
+        //排序字段 默认为主键名
+        if (isset($_REQUEST ['_order'])) {
+            $order = $_REQUEST ['_order'];
+        } else {
+            $order = !empty($sortBy) ? $sortBy : $model->getPk();
+        }
+        //排序方式默认按照倒序排列
+        //接受 sost参数 0 表示倒序 非0都 表示正序
+        if (isset($_REQUEST ['_sort'])) {
+            $sort = $_REQUEST ['_sort'] ? 'asc' : 'desc';
+        } else {
+            $sort = $asc ? 'asc' : 'desc';
+        }
+        //取得满足条件的记录数
+        $count = $model->where($map)->count($model->getPk());
+
+        if ($count > 0) {
+            //创建分页对象
+            if (!empty($_REQUEST ['_listRows'])) {
+                $listRows = $_REQUEST ['_listRows'];
+            } else {
+                $listRows = C('LIST_ROWS');
+            }
+            $nowPage = I('page')?I('page'):1;
+            $firstRow = $listRows * ($nowPage - 1);
+            //分页查询数据
+            $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($firstRow . ',' . $listRows)->select();
+        } else {
+            $voList = array();
+        }
+
+        load("Home.Array");
+        $controllerIds = array_col_values($voList, "id");
+        $doors = M('Door')->where(array('controller_id'=> array("IN", $controllerIds)))->select();
+        foreach ($doors as $door) {
+            $doorMap[$door['controller_id']][$door['door_id']] = $door;
+        }
+
+        $doorList = array();
+        foreach ($voList as $vo) {
+            for ($i = 0; $i < $vo['door_count']; $i++) {
+                if ($role_id > 21 && !$userDoors[$vo['id']][$i]) { // > 21即非管理员用户
+                    continue;
+                }
+                $door = $doorMap[$vo['id']][$i];
+                if (is_array($door)) {
+                    $door['controller_name'] = $vo['name'];
+                    $doorList[] = $door;
+                } else {
+                    $doorList[] = array('controller_id'=>$vo['id'], 'door_id'=>$i, 'name'=>$i."号门", 'controller_name'=>$vo['name']);
+                }
+            }
+        }
+
+        $result = $this->createResult(200, "", $doorList);
+        $this->response($result,'json');
+    }
+
     // 添加控制器
     public function add() {
         parent::add();
@@ -39,7 +120,7 @@ class DoorControllerController extends CommonRestController {
         if (!session(C('ADMIN_AUTH_KEY'))) {
             $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
             if ($role_id > 21) { // > 21即非管理员用户
-                $userDoors = getUserDoors();
+                $userDoors = getUserDoors($user_id);
                 if (!$userDoors[$controller_id][$door_id]) {
                     $result = $this->createResult(0, "授权失败");
                     $this->response($result,'json');

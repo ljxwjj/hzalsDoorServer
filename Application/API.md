@@ -75,6 +75,14 @@
         * page  (可选)                         页数（从1开始）
     * 返回值
         * data        array[DoorController]
+        
+* 门列表 /DoorController/doorLists
+
+    * 参数
+        * page  (可选)                         页数（从1开始）
+    * 返回值
+        * data        array[Door]
+        
 
 >_search\_company\_id not null（当前用户拥有管理页限）,可获得该公司下所有控制器列表_    
 >_csearch\_ompany\_id is  null 可获得当前用户所在公司下所有控制器列表_
@@ -110,7 +118,8 @@
 * 开门 /DoorController/openDoor
 
     * 参数 
-        * door\_controller\_id   门禁ID
+        * controller\_id   控制器ID
+        * door\_id         门ID
     * 返回值
         * data        null
         
