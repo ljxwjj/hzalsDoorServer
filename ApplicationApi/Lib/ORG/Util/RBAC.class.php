@@ -150,6 +150,7 @@ class RBAC {
             $user = M('User')->find(I('user_id'));
             if ($user) {
                 session('user', $user);
+                session(C('USER_AUTH_KEY'), $user['id']);
                 if ($user['is_admin']) {
                     session(C('ADMIN_AUTH_KEY'), true);
                 }
