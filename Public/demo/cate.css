@@ -17,7 +17,7 @@ body .mainmenu:after { clear: both; content: " "; display: block; }
 
 body .mainmenu li{ float:left;margin-left: 2.5%;
 margin-top: 2.5%;
-width: 30%;  border-radius:3px; overflow:hidden;}
+width: 95%;  border-radius:3px; overflow:hidden;}
 
 body .mainmenu li a{ display:block;  color:#FFF;   text-align:center }
 body .mainmenu li a b{ display:block; height:80px;}
