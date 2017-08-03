@@ -251,3 +251,7 @@
 
 
 
+.novice_zs_f_in_l_center ul{ width:100%;height:100%;overflow:hidden;}
+.novice_zs_f_in_l_center ul li{ width:25%;height:100%;float:left;}
+.mark5_f span{display:block; height:48px; margin:0 auto;position:relative; margin-top:36px;overflow:hidden; line-height: 48px;}
+.mark5_f img{display:block; width:48px; height:48px;margin:0 auto;position:relative; margin-top:36px;overflow:hidden;}
