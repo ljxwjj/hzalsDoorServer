@@ -3,10 +3,16 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>信富平台</title>
+    <title>添加控制器</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/home.css">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/css.css">
+    <script src="__PUBLIC__/demo/jquery-1.4.2.min.js"></script>
+    <script>
+        function formSubmit() {
+            $('#form1').submit();
+        }
+    </script>
 </head>
 
 <body style="background:#fff;">
@@ -16,68 +22,30 @@
 <div class="top">
     <div class="box">
         <a href="__URL__/index" class="return"><img src="__PUBLIC__/demo/return.png"></a>
-        注册
+        添加控制器
     </div>
 </div>
 
 
+<form name="form1" id="form1" action="__URL__/save" method="post">
 <div class="login_lo" style="margin-top:56px;">
     <div class="box">
+        <assign name="var" value="name" />
         <div class="lo_1 lo_2">
-            <span>手机号</span>
-            <input type="text" name="address" size="60" maxlength="60" style="color:#ccc" value="请输入手机号" onfocus="if(this.value==&#39;请输入手机号&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入手机号&#39;){this.value=&#39;请输入手机号&#39;;this.style.color=&#39;#ccc&#39;;}">
+            <span>名称</span>
+            <input type="text" name="{$var}" size="60" maxlength="60" style="color:#ccc" value="{$vo.$var|default="请输入名称"}" onfocus="if(this.value==&#39;请输入名称&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入名称&#39;){this.value=&#39;请输入名称&#39;;this.style.color=&#39;#ccc&#39;;}">
+            <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
         </div>
+        <assign name="var" value="serial_number" />
         <div class="lo_1 lo_2">
-            <span>验证码</span>
-            <input type="text" name="address" size="60" maxlength="60" style="color:#ccc" value="请输入验证码" onfocus="if(this.value==&#39;请输入验证码&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入验证码&#39;){this.value=&#39;请输入验证码&#39;;this.style.color=&#39;#ccc&#39;;}">
-            <div class="yan">
-                <input type="button" id="btn" class="btn_mfyzm" value="获取验证码">
-                <script type="text/javascript">
-                    var wait=60;
-                    document.getElementById("btn").disabled = false;
-                    function time(o) {
-                        if (wait == 0) {
-                            o.removeAttribute("disabled");
-                            o.value="获取验证码";
-                            wait = 60;
-                        } else {
-                            o.setAttribute("disabled", true);
-                            o.value="重新发送(" + wait + ")";
-                            wait--;
-                            setTimeout(function() {
-                                    time(o)
-                                },
-                                1000)
-                        }
-                    }
-                    document.getElementById("btn").onclick=function(){time(this);}
-                </script>
-            </div>
+            <span>序列号</span>
+            <input type="text" name="{$var}" size="60" maxlength="60" style="color:#ccc;min-width:50%;max-width: 75%;" value="{$vo.$var|default="请输入序列号"}" onfocus="if(this.value==&#39;请输入序列号&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入序列号&#39;){this.value=&#39;请输入序列号&#39;;this.style.color=&#39;#ccc&#39;;}">
+            <if condition="$error[$var]"><span class="description" style="width: 15%;">{$error[$var]}</span></if>
         </div>
-        <div class="lo_1 lo_2">
-            <span>邀请码</span>
-            <input type="text" name="address" size="60" maxlength="60" style="color:#ccc" value="选填" onfocus="if(this.value==&#39;选填&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;选填&#39;){this.value=&#39;选填&#39;;this.style.color=&#39;#ccc&#39;;}">
-        </div>
-        <div class="lo_1 lo_2">
-            <span>密码</span>
-            <input type="text" name="address" size="60" maxlength="60" style="color:#ccc" value="请输入密码" onfocus="if(this.value==&#39;请输入密码&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入密码&#39;){this.value=&#39;请输入密码&#39;;this.style.color=&#39;#ccc&#39;;}">
-        </div>
-        <div class="lo_1 lo_2">
-            <span>确认密码</span>
-            <input type="text" name="address" size="60" maxlength="60" style="color:#ccc" value="请再一次输入密码" onfocus="if(this.value==&#39;请再一次输入密码&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请再一次输入密码&#39;){this.value=&#39;请再一次输入密码&#39;;this.style.color=&#39;#ccc&#39;;}">
-        </div>
-        <div class="lo_1 lo_2">
-            <span>客服人员</span>
-            <select style="margin-top:10px; width:100px;">
-                <option>请选择客服</option>
-                <option>客服人员一</option>
-                <option>客服人员二</option>
-                <option>客服人员三</option>
-            </select>
-        </div>
-        <a href="#" class="lo_login">注册</a>
+
+        <a href="javascript:formSubmit()" class="lo_login">提 交</a>
     </div>
 </div>
-
+</form>
 
 </body></html>

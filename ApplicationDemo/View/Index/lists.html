@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>投资列表</title>
+    <title>出入记录</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/common.css">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/style1.css">
-    <script src="__PUBLIC__/demo/jquery.min.js"></script>
+    <script src="__PUBLIC__/demo/jquery-1.4.2.min.js"></script>
     <script src="__PUBLIC__/demo/public.js"></script>
 </head>
 
@@ -28,22 +28,27 @@
     <div class="display_f_in">
         <!--灵活收益-->
         <div class="fourcp_1" style="display: block;">
-            <!--一条开始-->
-            <div class="novice_zs_f_in" style="margin-bottom: 6px;">
-                <!--left-->
-                <div class="novice_zs_f_in_l">
-                    <div class="novice_zs_f_in_l_center">
-                        <ul>
-                            <li class="mark5_f">
-                                <img src="__PUBLIC__/demo/door.jpg">
-                            </li>
-                            <li class="mark5_f" style="width: 50%;">
-                                <span>测试标不要投</span>
-                            </li>
-                        </ul>
+            <volist name="arrList" id="door" mod="2">
+                <!--一条开始-->
+                <div class="novice_zs_f_in" style="margin-bottom: 6px;height: 80px;">
+                    <!--left-->
+                    <div class="novice_zs_f_in_l" style="height: 80px;">
+                        <div class="novice_zs_f_in_l_center" style="height: 80px;">
+                            <ul>
+                                <li class="mark5_f" style="width: 25%;">
+                                    <img src="__PUBLIC__/demo/door.jpg" style="margin-top:16px;">
+                                </li>
+                                <li class="mark5_f" style="width: 25%;">
+                                    <span style="margin-top:16px;">{$door.door_name}</span>
+                                </li>
+                                <li class="mark5_f" style="width: 50%;">
+                                    <span style="margin-top:16px;">{$door.open_time|toDate='Y-m-d H#i#s'}</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </volist>
             <!--一条开始-->
             <div class="novice_zs_f_in" style="margin-bottom: 6px; display:none;">
                 <!--left-->

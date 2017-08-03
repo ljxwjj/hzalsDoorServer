@@ -193,7 +193,7 @@ class DoorControllerController extends CommonController {
             $map['status'] = 0;
             $data = $model->where($map)->find();
             if ($data && $data['company_id']) {
-                if ($data['compan_id'] == $_REQUEST['company_id']) {
+                if ($data['company_id'] == $_REQUEST['company_id']) {
                     $error['serial_number']='该序列号不能重复绑定！';
                 } else {
                     $error['serial_number']='序列号已经被其它用户绑定！';
