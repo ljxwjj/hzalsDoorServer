@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/common.css">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/style1.css">
     <load href="__PUBLIC__/Js/jquery.js"/>
+    <load href="__PUBLIC__/demo/aotSdk2.0.0.js"/>
 
     <link rel="stylesheet" href="__PUBLIC__/demo/jquery-confirm.min.css">
     <load href="__PUBLIC__/demo/jquery-confirm.min.js"/>
@@ -104,6 +105,23 @@
             iframe.parentNode.removeChild(iframe);
             return result;
         };
+
+        function skipUrl(title, url) {
+            var key = '';
+            aot.navigateTo({
+                "data": {
+                    "title": title,
+                    "url": url,
+                    "key": key,
+                },
+                "error": function(err) {
+
+                },
+                "success": function(data) {
+
+                }
+            });
+        }
     </script>
 </head>
 
@@ -168,8 +186,8 @@
 
 <div class="top_f">
     <div class="top_f_in">
-        <a href="__URL__/lists" class="login_f">记录</a>
-        <a href="__URL__/add" class="register_f">添加</a>
+        <a href="#" onclick="javascript:skipUrl('出入记录','__URL__/lists')" class="login_f">记录</a>
+        <a href="#" onclick="javascript:skipUrl('添加控制器','__URL__/add')" class="register_f">添加</a>
     </div>
 </div>
 
