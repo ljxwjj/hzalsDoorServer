@@ -98,7 +98,11 @@ class IndexController extends Controller {
         }else{
             $data['company_id'] = $company_id;
             $data['door_count'] = $doorCount;
-            $result = $model->add($data);
+            if($id){
+                $result = $model->where(array('id'=>$id))->save($data);
+            }else{
+                $result = $model->add($data);
+            }
             if($result){
                 $this->success('数据已保存！',U("Index/index"));
             }else{
