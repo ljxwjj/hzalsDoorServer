@@ -34,13 +34,13 @@
         <div class="lo_1 lo_2">
             <span>名称</span>
             <input type="text" name="{$var}" size="60" maxlength="60" style="color:#ccc" value="{$vo.$var|default="请输入名称"}" onfocus="if(this.value==&#39;请输入名称&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入名称&#39;){this.value=&#39;请输入名称&#39;;this.style.color=&#39;#ccc&#39;;}">
-            <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+            <if condition="$error[$var]"><span class="description" style="width: 15%;min-width: 125px;">{$error[$var]}</span></if>
         </div>
         <assign name="var" value="serial_number" />
         <div class="lo_1 lo_2">
             <span>序列号</span>
             <input type="text" name="{$var}" size="60" maxlength="60" style="color:#ccc;min-width:50%;max-width: 75%;" value="{$vo.$var|default="请输入序列号"}" onfocus="if(this.value==&#39;请输入序列号&#39;){this.value=&#39;&#39;};this.style.color=&#39;black&#39;;" onblur="if(this.value==&#39;&#39;||this.value==&#39;请输入序列号&#39;){this.value=&#39;请输入序列号&#39;;this.style.color=&#39;#ccc&#39;;}">
-            <if condition="$error[$var]"><span class="description" style="width: 15%;">{$error[$var]}</span></if>
+            <if condition="$error[$var]"><span class="description" style="width: 15%;min-width: 125px;">{$error[$var]}</span></if>
         </div>
 
         <a href="javascript:formSubmit()" class="lo_login">提 交</a>
