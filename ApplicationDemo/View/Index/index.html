@@ -121,6 +121,7 @@
 
                 }
             });
+            return false;
         }
     </script>
 </head>
@@ -186,8 +187,8 @@
 
 <div class="top_f">
     <div class="top_f_in">
-        <a href="#" onclick="javascript:skipUrl('出入记录','__URL__/lists')" class="login_f">记录</a>
-        <a href="#" onclick="javascript:skipUrl('添加控制器','__URL__/add')" class="register_f">添加</a>
+        <a href="#" onclick="javascript:skipUrl('出入记录','{:U("Index/lists", "", "", true)}')" class="login_f">记录</a>
+        <a href="#" onclick="javascript:skipUrl('添加控制器','{:U("Index/add", "", "", true)}')" class="register_f">添加</a>
     </div>
 </div>
 
