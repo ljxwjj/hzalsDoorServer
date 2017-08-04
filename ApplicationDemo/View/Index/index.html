@@ -11,10 +11,15 @@
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/style1.css">
     <script src="__PUBLIC__/demo/jquery-1.11.0.min.js"></script>
     <script src="__PUBLIC__/demo/public.js"></script>
+
+    <link rel="stylesheet" href="__PUBLIC__/demo/jquery-confirm.min.css">
+    <script src="__PUBLIC__/demo/jquery-confirm.min.js"></script>
+
     <!--banner-->
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/demo/responsiveslides.css">
     <script src="__PUBLIC__/demo/responsiveslides.min.js"></script>
     <script>
+        /*
         function openDoor(controller, door, name) {
             if(confirm("确定开启 " + name)) {
                 $.post("__CONTROLLER__/openDoor", {
@@ -29,18 +34,81 @@
                 }, 'JSON');
             }
         }
+        */
+        function openDoor(controller, door, name) {
+            $.confirm({
+                title: '系统提示',
+                boxWidth: '80%',
+                useBootstrap: false,
+                content: "确定开启 " + name,
+                buttons: {
+                    button1: {
+                        text: '确定',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            doOpenDoor(controller, door);
+                        }
+                    },
+                    button2: {
+                        text: '取消',
+                        action: function() {
+
+                        }
+                    }
+                }
+            });
+        }
+
+        function doOpenDoor(controller, door) {
+            $.post("__CONTROLLER__/openDoor", {
+                'controller_id': controller,
+                'door_id': door
+            }, function(data){
+                if (data.code == 200) {
+                    shouOpenSuccess();
+                } else {
+                    alert(data.message);
+                }
+            }, 'JSON');
+        }
+
+        function shouOpenSuccess() {
+            $.alert({
+                title: '系统提示',
+                boxWidth: '80%',
+                useBootstrap: false,
+                content: '开门成功',
+                buttons: {
+                    okay: {
+                        text: '确定',
+                        btnClass: 'btn-blue',
+                    }
+                }
+            });
+        }
+
+        window.alert = function(name){
+            var iframe = document.createElement("IFRAME");
+            iframe.style.display="none";
+            iframe.setAttribute("src", 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            window.frames[0].window.alert(name);
+            iframe.parentNode.removeChild(iframe);
+        };
+        window.confirm = function (message) {
+            var iframe = document.createElement("IFRAME");
+            iframe.style.display = "none";
+            iframe.setAttribute("src", 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            var alertFrame = window.frames[0];
+            var result = alertFrame.window.confirm(message);
+            iframe.parentNode.removeChild(iframe);
+            return result;
+        };
     </script>
 </head>
 
 <body>
-<!--top-->
-<div class="top_f">
-    <div class="top_f_in">
-        <a href="__URL__/lists" class="login_f">记录</a>
-        <a href="__URL__/add" class="register_f">添加</a>
-        <img src="__PUBLIC__/demo/logo3.png">
-    </div>
-</div>
 
 <!--banner-->
 <div class="callbacks_container">
@@ -80,8 +148,8 @@
     <div class="notice_f_in">
         <img src="__PUBLIC__/demo/gaogao.png">
         <ul>
-            <li style="display: none;"><a href="#">公告1今日阿里山门禁系统上线</a></li>
-            <li style="display: block;"><a href="#">公告2今日阿里山门禁用户超过500万</a></li>
+            <li style="display: none;"><a href="#">公告1今日阿里桑门禁系统上线</a></li>
+            <li style="display: block;"><a href="#">公告2今日阿里桑门禁用户超过500万</a></li>
             <li style="display: none;"><a href="#">公告3明日公司将举行年终总结大会</a></li>
         </ul>
     </div>
@@ -98,6 +166,13 @@
     }
     setInterval(ggds,4000)
 </script>
+
+<div class="top_f">
+    <div class="top_f_in">
+        <a href="__URL__/lists" class="login_f">记录</a>
+        <a href="__URL__/add" class="register_f">添加</a>
+    </div>
+</div>
 
 <!--显示区域-->
 <div class="display_f">
@@ -130,6 +205,7 @@
         </div>
     </div>
 </div>
+
 
 
 </body></html>
