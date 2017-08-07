@@ -136,12 +136,40 @@
                 'door_id': value
             }, function(data){
                 if (data.code == 200) {
-                    alert("开门成功");
+                    //alert("开门成功");
+                    onOpenSendSuccess(data.message);
                 } else {
                     alert(data.message);
                 }
             }, 'JSON');
         }
+    }
+
+    function onOpenSendSuccess(id) {
+        var retryTimes = 3;
+        var tmid;
+
+        function checkOpenDoorFeedback() {
+            if (retryTimes-- <= 0) {
+                window.clearInterval(tmid);
+                alert("开门超时");
+                return;
+            }
+            $.post("__CONTROLLER__/openDoorFeedBack", {
+                'id': id
+            }, function(data){
+                if(data.code == 1) {
+                    // 继续等待
+                } else if (data.code == 200) {
+                    window.clearInterval(tmid);
+                    alert("开门成功");
+                } else { // code == 0 错误请求
+                    window.clearInterval(tmid);
+                }
+            }, 'JSON')
+        }
+
+        tmid = window.setInterval(checkOpenDoorFeedback, 300);
     }
 
     $(function () {

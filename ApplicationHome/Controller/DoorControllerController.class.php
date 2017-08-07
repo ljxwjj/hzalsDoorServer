@@ -348,14 +348,32 @@ class DoorControllerController extends CommonController {
             $openRecord['open_time'] = time();
             $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
             $openRecord['way'] = 1;
-            M('OpenRecord')->add($openRecord);
+            $addid = M('OpenRecord')->add($openRecord);
 
             $wait = intval($data['wait_time']);
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
             $result['code'] = 200;
-            $result['message'] = "OK";
+            $result['message'] = $addid;
             $this->response($result);
         }
+    }
+
+    /**
+     * ajax
+     */
+    public function openDoorFeedBack() {
+        $id = I('id');
+        if ($id) {
+            $feedbackTime = M('OpenRecord')->where(array('id'=>$id))->getField('feedback_time');
+            if ($feedbackTime > 0) {
+                $result['code'] = 200;
+            } else {
+                $result['code'] = 1;
+            }
+        } else {
+            $result['code'] = 0;
+        }
+        $this->response($result);
     }
 
     /**

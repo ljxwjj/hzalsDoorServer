@@ -256,7 +256,8 @@
 	 */
 
 	// Create element
-	fixedTest = $('<div style="position:fixed; top:0"></div>').appendTo(bod);
+    fixedTest = $('<div style="position:fixed; top:0"></div>');
+    fixedTest.appendTo(bod);
 	function _checkPositionFixed()
 	{
 		// Top position
