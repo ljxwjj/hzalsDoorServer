@@ -121,7 +121,14 @@
         * controller\_id   控制器ID
         * door\_id         门ID
     * 返回值
-        * data        null
+        * data        id: 开门请求标识
+        
+* 开门反馈 /DoorController/openDoorFeedBack
+
+    * 参数 
+        * id          开门请求标识
+    * 返回值
+        * data        code 200：开门成功 1：等待门禁响应  0：非法请求
         
 ##个人信息 
 

@@ -138,11 +138,11 @@ class DoorControllerController extends CommonRestController {
             $openRecord['way'] = 1;
             $OpenRecord = M('OpenRecord');
             $OpenRecord->create($openRecord);
-            $OpenRecord->add();
+            $addid = $OpenRecord->add();
 
             $wait = intval($data['wait_time']);
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
-            $result = $this->createResult(200, "开门成功");
+            $result = $this->createResult(200, "开门成功", array("id"=>$addid));
             $this->response($result,'json');
         } else {
             $result = $this->createResult(0, "开门失败");
@@ -169,5 +169,20 @@ class DoorControllerController extends CommonRestController {
         $sendMsg = hex2bin($sendMsg);
         fwrite($handle, $sendMsg);
         fclose($handle);
+    }
+
+    public function openDoorFeedBack() {
+        $id = I('id');
+        if ($id) {
+            $feedbackTime = M('OpenRecord')->where(array('id'=>$id))->getField('feedback_time');
+            if ($feedbackTime > 0) {
+                $result = $this->createResult(200, "开门成功");
+            } else {
+                $result = $this->createResult(1, "开门中");
+            }
+        } else {
+            $result = $this->createResult(0, "非法请求");
+        }
+        $this->response($result,'json');
     }
 }
