@@ -266,7 +266,7 @@ class DoorControllerController extends CommonController {
             $this->assign('arrList', $arrList);
             $this->display();
         } else {
-            $this->error("页面未找到", 'index');
+            $this->error("页面未找到");
         }
     }
 
