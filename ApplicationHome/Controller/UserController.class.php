@@ -18,7 +18,7 @@ class UserController extends CommonController {
      */
     public function _filter(&$map){
         if (!I('search_status')) {
-            $map['status'] = array('neq', -1);
+            $map['status'] = array('in', '0,1');
         }
     }
 
@@ -410,6 +410,43 @@ class UserController extends CommonController {
         }
         return $arrTree;
     }
-
+    /**
+     * 默认恢复操作
+     *
+     * @param string 模型对象
+     */
+    public function resume($name='') {
+        //恢复指定记录
+        $name = $name ? $name : $this->getActionName();
+        $model = D($name);
+        $pk = $model->getPk();
+        $id = I($pk);
+        $condition = array($pk => $id);
+        $data = $model->where($condition)->find();
+        if (!$data) {
+            $this->error('状态恢复失败！',$this->getReturnUrl());
+            return;
+        }
+        $map = array(
+            'account'=> $data['account'],
+            'company_id' => array('neq', $data['company_id']),
+            'status' => array('in', '0,1'));
+        $others = $model->where($map)->find();
+        if ($others) {
+            $this->error('状态恢复失败，已在其它公司帐号下使用！',$this->getReturnUrl());
+            return;
+        }
+        if (empty($data['password'])) {
+            $data['status'] = 0;
+        } else {
+            $data['status'] = 1;
+        }
+        $result = $model->save($data);
+        if ($result) {
+            $this->success('状态恢复成功！',$this->getReturnUrl());
+        } else {
+            $this->error('状态恢复失败！',$this->getReturnUrl());
+        }
+    }
 
 }

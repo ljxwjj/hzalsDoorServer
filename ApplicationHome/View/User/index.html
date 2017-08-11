@@ -15,7 +15,7 @@
     <h2>用户管理 &nbsp;<a class="add-new-h2" href="#" onclick="add('company_id', '{$company_id}')">新增</a>
     </h2>
 
-    <form name="form1" method='POST' action="__SELF__">
+    <form name="form1" method='POST' action="{:U('User/index')}">
         <!-- 查询区域 -->
         <div class="tablenav top">
             <!--单个查询条件-->
@@ -34,9 +34,9 @@
                 <div class="alignleft actions">
                     <select usefor="search" name="{$var}" id="{$var}" title="状态">
                         <option value="">选择所有状态</option>
-                        <option value="1" <if condition="'1' eq $search[$var]">selected </if> >启用</option>
-                        <option value="0" <if condition="'0' eq $search[$var]">selected </if> >未启用</option>
-                        <option value="-1" <if condition="-1  eq $search[$var]">selected </if> >禁用</option>
+                        <option value="0" <if condition="0 eq $search[$var]">selected </if> >未注册</option>
+                        <option value="1" <if condition="1 eq $search[$var]">selected </if> >在职</option>
+                        <option value="2" <if condition="2 eq $search[$var]">selected </if> >离职</option>
                     </select>
                 </div>
             </td>
@@ -70,12 +70,24 @@
                 <td class="manage-column" scope="col">{$vo.account}</td>
                 <td class="manage-column" scope="col">{$vo.company_name}</td>
                 <td class="manage-column" scope="col">{$vo.role_name}</td>
-                <td class="manage-column" scope="col">{$vo.status|getUserStatus}</td>
+                <td class="manage-column" scope="col">
+                    <switch name="vo.status" >
+                        <case value="0">未注册</case>
+                        <case value="1">在职</case>
+                        <case value="2">离职</case>
+                    </switch>
+                </td>
                 <td class="manage-column" scope="col">
                     <a href="javascript:view('id','{$vo.id}')">查看</a>&nbsp;
-                    <a href="javascript:edit('id','{$vo.id}')">编辑</a>&nbsp;
-                    <a href="javascript:del('id','{$vo.id}')">离职</a>&nbsp;
-                    <a href="javascript:assigndoor('id','{$vo.id}')">分配权限</a>&nbsp;
+                    <in name="vo.status" value="0,1">
+                        <a href="javascript:edit('id','{$vo.id}')">编辑</a>&nbsp;
+                        <a href="javascript:forbid('id','{$vo.id}')">离职</a>&nbsp;
+                        <a href="javascript:assigndoor('id','{$vo.id}')">分配权限</a>&nbsp;
+                    </in>
+                    <if condition="2 eq $vo['status']">
+                        <a href="javascript:resume('id','{$vo.id}')">恢复</a>&nbsp;
+                        <a href="javascript:del('id','{$vo.id}')">删除</a>&nbsp;
+                    </if>
                 </td>
                 </tr>
             </volist>

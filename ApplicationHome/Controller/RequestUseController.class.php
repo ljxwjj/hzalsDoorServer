@@ -65,6 +65,7 @@ class RequestUseController extends CommonController {
     }
 
     public function save() {
+        $telphone = I('telphone', '', 'trim');
         if(empty($_POST['company'])) {
             $error['company']='单位名称不能为空！';
         }
@@ -85,12 +86,22 @@ class RequestUseController extends CommonController {
             return;
         }
         $map = array();
-        $map["telphone"] = $_POST['telphone'];
+        $map["telphone"] = $telphone;
         $map['status'] = array("neq", -1);
         $model = M("RequestUse");
         $data = $model->where($map)->find();
         if ($data) {
             $error['telphone'] = '该手机号已审请过，请等待审核';
+
+            $this->assign('error',$error);
+            $this->assign('vo',$_POST);
+            $this->display('add');
+            return;
+        }
+        $map = array('account'=> $telphone, 'status'=> array('neq', -1));
+        $data = M("User")->where($map)->find();
+        if ($data) {
+            $error['telphone'] = '该手机号已经注册过了';
 
             $this->assign('error',$error);
             $this->assign('vo',$_POST);
