@@ -34,9 +34,9 @@
                 <div class="alignleft actions">
                     <select usefor="search" name="{$var}" id="{$var}" title="状态">
                         <option value="">选择所有状态</option>
-                        <option value="0" <if condition="0 eq $search[$var]">selected </if> >未注册</option>
-                        <option value="1" <if condition="1 eq $search[$var]">selected </if> >在职</option>
-                        <option value="2" <if condition="2 eq $search[$var]">selected </if> >离职</option>
+                        <option value="0" <if condition="'0' eq $search[$var]">selected </if> >未注册</option>
+                        <option value="1" <if condition="'1' eq $search[$var]">selected </if> >在职</option>
+                        <option value="2" <if condition="'2' eq $search[$var]">selected </if> >离职</option>
                     </select>
                 </div>
             </td>
