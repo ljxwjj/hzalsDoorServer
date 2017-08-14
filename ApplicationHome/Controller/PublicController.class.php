@@ -62,6 +62,7 @@ class PublicController extends CommonController {
             $_SESSION['login_count']	    =	$authInfo['login_count'];
             $_SESSION['account']	        =	$authInfo['account'];
             $_SESSION['company_id']         =   $authInfo['company_id'];
+            $_SESSION['head_image']         =   $authInfo['head_image'];
             session('session_refresh_time', time());
             if($authInfo['is_admin']==1) {
                 $_SESSION[C('ADMIN_AUTH_KEY')] = true;

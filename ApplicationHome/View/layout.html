@@ -146,14 +146,14 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 				<ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
 					<li id="wp-admin-bar-my-account" class="menupop with-avatar">
 						<a class="ab-item"  aria-haspopup="true" href="#" title="我的帐户">您好，{$_SESSION['account']}
-						<img alt='' src='__PUBLIC__/Images/smalldefaultuserimg.png' class='avatar avatar-26 photo' height='26' width='26' />
+						<img alt='' src='__PUBLIC__/{$_SESSION['head_image']|default="Images/smalldefaultuserimg.png"}' class='avatar avatar-26 photo' height='26' width='26' />
 						</a>
 						<div class="ab-sub-wrapper">
 							<!--<ul id="wp-admin-bar-user-actions" class="ab-submenu">-->
 							<ul  class="ab-submenu">
 								<li id="wp-admin-bar-user-info">
 									<a class="ab-item" tabindex="-1" href="__APP__/Ucenter/index">
-										<!--<img alt='' src='Images/middledefaultuserimg.png' class='avatar avatar-64 photo' height='64' width='64' />-->
+										<img alt='' src='__PUBLIC__/{$_SESSION['head_image']|default="Images/middledefaultuserimg.png"}' class='avatar avatar-64 photo' height='64' width='64' />
 										<span class='display-name'>{$_SESSION['account']}</span>
 									</a>
 								</li>

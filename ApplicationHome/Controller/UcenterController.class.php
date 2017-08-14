@@ -70,12 +70,34 @@ class UcenterController extends CommonController {
         if($_POST['mobile']){
             $objError->doFunc(array("移动电话","mobile"),array("CN_MOBILE_CHECK"));
         }
+        if ($_FILES['head_image']['name']) {
+            $upload = new \Think\Upload();
+            $upload->maxSize = 3145728 ;// 设置附件上传大小
+            $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+            $upload->rootPath  =     C('public_dir'); // 设置附件上传根目录
+            $upload->savePath  =     C('user_image_dir'); // 设置附件上传（子）目录
+            $upload->saveName  =     array('uniqid','');
+            $upload->subName   =     array('date','Ymd');
+            // 上传文件
+            $info   =   $upload->uploadOne($_FILES['head_image']);
+            if ($info) {
+                $_POST['head_image'] = $info['savepath'].$info['savename'];
+            } else {
+                $objError->arrErr['head_image'] = $upload->getError();
+            }
+        }
 
         if(count($objError->arrErr) == 0){
             $model = D('User');
-            $data = $model->create();
+            $data = $model->field('head_image,nickname,sex,mobile,email')->create();
             $result = $model->where($map)->save($data);
             if($result > 0){
+                if ($_POST['head_image']) {
+                    $oldHeadImage = $_SESSION['head_image'];
+                    $filePath = C('public_dir').$oldHeadImage;
+                    @unlink($filePath);
+                    $_SESSION['head_image'] = $_POST['head_image'];
+                }
                 $this->success('数据保存成功','index');
             }else{
                 $this->error('数据保存时出错');

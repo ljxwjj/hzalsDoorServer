@@ -1,4 +1,4 @@
-﻿<form method='post' id="form1" action="__URL__/save">
+﻿<form method='post' id="form1" action="__URL__/save" enctype="multipart/form-data">
 <!--第一个wrap开始-->
 <div class="wrap">
 <h2>修改资料</h2>
@@ -18,17 +18,25 @@
 <assign name="var" value="account" />
 <tr class="row">
 	<th width="100" style="text-align:right;"><label for="">账号：</label></th>
-	<td>
+	<td><input type="hidden" class="regular-text" name="{$var}" value="{$vo.$var}">
 	{$vo.$var}
+	</td>
+</tr>
+<assign name="var" value="head_image" />
+<tr class="row">
+	<th width="100" style="text-align:right;"><label for="">头象：</label></th>
+	<td>
+	<input type="file" class="regular-text" name="{$var}">
+	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
 	</td>
 </tr>
 <assign name="var" value="nickname" />
 <tr class="row">
 	<th width="100" style="text-align:right;"><label for="">姓名：</label></th>
 	<td>
-	<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
-	<span style="color:red;">*</span>
-	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+		<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+		<span style="color:red;">*</span>
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
 	</td>
 </tr>
 <assign name="var" value="sex" />
