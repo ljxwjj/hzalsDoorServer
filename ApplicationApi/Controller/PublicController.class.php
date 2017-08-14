@@ -24,7 +24,10 @@ class PublicController extends CommonRestController {
             $companyData = M('Company')->find($user['company_id']);
             $company = $companyData?$companyData['name']:'';
 
-            $data = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company');
+            if ($head_image) {
+                $head_image = getHttpRooDir().'/Public'.$head_image;
+            }
+            $data = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company', 'head_image');
             $result = $this->createResult(200, '登录成功', $data);
 
             $model = M('UserToken');
