@@ -160,6 +160,13 @@
         * new_password       新密码
     * 返回值
         * data        null
+        
+* 编辑个人信息 /Ucenter/edit
+    
+    * 参数
+        * head_image    头像文件
+    * 返回值
+        * data        null
 
 ##用户管理
 

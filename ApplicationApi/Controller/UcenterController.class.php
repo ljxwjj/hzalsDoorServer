@@ -66,4 +66,32 @@ class UcenterController extends CommonRestController {
 
         $this->response($result,'json');
     }
+
+    public function edit() {
+        $User = M('User');
+        $user = $User->find($_REQUEST['user_id']);
+        if (!$User) {
+            $result = $this->createResult(0, '用户不存在！');
+            $this->response($result,'json');
+            return;
+        }
+
+        $upload = new \Think\Upload();
+        $upload->maxSize = 3145728 ;// 设置附件上传大小
+        $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+        $upload->rootPath  =     C('public_dir'); // 设置附件上传根目录
+        $upload->savePath  =     C('user_image_dir'); // 设置附件上传（子）目录
+        $upload->saveName  =     array('uniqid','');
+        $upload->subName   =     array('date','Ymd');
+        // 上传文件
+        $info   =   $upload->uploadOne($_FILES['head_image']);
+        if(!$info) {// 上传错误提示错误信息
+            $result = $this->createResult(0, $upload->getError());
+        }else{// 上传成功
+            $user['head_image'] = $info['savepath'].$info['savename'];
+            $User->save($user);
+            $result = $this->createResult(200, '上传成功！');
+        }
+        $this->response($result,'json');
+    }
 }

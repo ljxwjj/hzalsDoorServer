@@ -24,14 +24,15 @@
 
         <textarea name="url" style="width:500px;height: 90px;">{$url}</textarea>
         <p>
-            用户：<input name="user_id" value="{$user_id}"/> <button type="submit">提交</button>
+            用户：<input name="user_id" value="{$user_id}"/>
+            <button type="submit">提交</button>
         </p>
 
     </form>
 </div>
 <div style="width: 100%;">
     <div style="float: left; width: 45%;">
-        <iframe src="{$signurl}" width="100%" height="300px" id="frame_1"></iframe>
+        <iframe src="{$signurl}" width="100%" height="300px" id="frame_1" name="frame_1"></iframe>
     </div>
     <div style="float: left;width: 10%; height: 300px; text-align: center; margin: auto auto 0 auto;">
         <input type="button" value="转换" onclick="convertJson()"></input>
@@ -41,6 +42,10 @@
 </div>
 {$signurl}
 
+<form action="{$signurl}" method="post"  enctype="multipart/form-data" target="frame_1">
+    文件：<input type="file" name="head_image" />
+    <button type="submit">提交</button>
+</form>
 <div>
 
     {$api_doc_html}

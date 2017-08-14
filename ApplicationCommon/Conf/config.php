@@ -32,5 +32,5 @@ return array(
     'yourAccessKeyId'   => 'LTAIylWfQ2JvmsOG',
     'yourAccessKeySecret' => 'Ou3LWjUicUY3Sz1F16R9TSjCVxIgM1',
     'public_dir'          => 'C:\AppServ\www\door\Public',
-    'user_image_dir'      => '\data\image'
+    'user_image_dir'      => '/data/image/'
 );

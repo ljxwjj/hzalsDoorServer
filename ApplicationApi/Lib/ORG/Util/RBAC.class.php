@@ -125,7 +125,7 @@ class RBAC {
     static function checkParamsSign() {
         if (C('CHECK_PARAMS_SIGN')) {
             $sign_key = C('API_PARAMS_SIGN_KEY');
-            $sign = I($sign_key);
+            $sign = $_REQUEST[$sign_key];
             if (!$sign) {
                 return false;
             }
@@ -147,7 +147,7 @@ class RBAC {
     static public function AccessDecision() {
         //检查是否需要认证
         if(RBAC::checkAccess()) {
-            $user = M('User')->find(I('user_id'));
+            $user = M('User')->find($_REQUEST['user_id']);
             if ($user) {
                 session('user', $user);
                 session(C('USER_AUTH_KEY'), $user['id']);
