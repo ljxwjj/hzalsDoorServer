@@ -130,6 +130,14 @@
     * 返回值
         * data        code 200：开门成功 1：等待门禁响应  0：非法请求
         
+* 获取摄像头列表 /DoorController/cameras
+
+    * 参数 
+        * controller_id        
+        * door_id             
+    * 返回值
+        * data        array[Camera]
+        
 ##个人信息 
 
 * 个人信息  /Ucenter/detail

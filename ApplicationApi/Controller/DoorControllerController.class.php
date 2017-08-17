@@ -185,4 +185,26 @@ class DoorControllerController extends CommonRestController {
         }
         $this->response($result,'json');
     }
+
+    public function cameras() {
+        $user_id = I('user_id');
+        $controller_id = I('controller_id');
+        $door_id = I('door_id');
+
+        if (!session(C('ADMIN_AUTH_KEY'))) {
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors($user_id);
+                if (!$userDoors[$controller_id][$door_id]) {
+                    $result = $this->createResult(0, "授权失败");
+                    $this->response($result,'json');
+                    exit;
+                }
+            }
+        }
+        $map = array('controller_id'=>$controller_id, 'door_id'=>$door_id);
+        $cameras = M('Camera')->where($map)->select();
+        $result = $this->createResult(200, "", $cameras);
+        $this->response($result,'json');
+    }
 }

@@ -226,10 +226,11 @@ class PublicController extends CommonController {
             }
 
             if ($user_id) {
-                $user = D('UserToken')->where(array('user_id'=>$user_id))->find();
-                $token = $user['token'];
+                $token = D('UserToken')->where(array('user_id'=>$user_id))->getField('token');
+                $account = M('User')->where(array('id'=>$user_id))->getField('account');
+                $params['account'] = $account;
                 $params['user_id'] = $user_id;
-                $params['token'] = $user['token'];
+                $params['token'] = $token;
             }
 
             ksort($params);
@@ -239,10 +240,10 @@ class PublicController extends CommonController {
             $paramsMd5 = md5($paramsStr);
             if ($wenhao) {
                 $signurl = $url . "&sign=$paramsMd5";
-                if ($user_id) $signurl .= "&user_id=$user_id&token=$token";
+                if ($user_id) $signurl .= "&account=$account&user_id=$user_id&token=$token";
             } else {
                 $signurl = $url . ('/sign/' . $paramsMd5);
-                if ($user_id) $signurl .= "/user_id/$user_id/token/$token";
+                if ($user_id) $signurl .= "/account/$account/user_id/$user_id/token/$token";
             }
 
         }
