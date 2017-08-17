@@ -1,0 +1,81 @@
+<div class="wrap">
+    <h2>摄像头管理</h2>
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a class="button button-primary button-hero" href="__URL__/view/id/{$vo.controller_id}">返回列表</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>
+<br class="clear">
+
+<div class="formarea">
+    <table class="form-table" style="width: 50%">
+        <tr>
+            <th><label for="">控制器：</label></th>
+            <td>
+                {$door.controller_name}
+            </td>
+            <th><label for="">门：</label></th>
+            <td>
+                {$door.door_name}
+            </td>
+        </tr>
+    </table>
+    <form method='post' action="__URL__/cameraSave" name="form1">
+        <input type="hidden" name="controller_id" value="{$vo.controller_id}">
+        <input type="hidden" name="door_id" value="{$vo.door_id}">
+        <input type="hidden" name="id" value="{$vo.id}">
+
+        <!-- 查询区域 -->
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <assign name="var" value="url" />
+                <label>摄像头地址：</label>
+                <input type="text" name="{$var}" title="摄像头地址" value="{$vo.$var}">
+                <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+            </div>
+            <div class="alignleft actions">
+                <input type="submit" name="btn_search" class="button" value="<empty name="vo.id">新增<else/>保存</empty>"/>&nbsp;
+            </div>
+            <br class="clear">
+        </div>
+        <br class="clear">
+        <!-- 查询区域结束 -->
+
+    </form>
+</div>
+
+<div class="wrap">
+
+    <table class="wp-list-table widefat fixed posts">
+        <thead>
+        <tr>
+            <th class="manage-column" scope="col" width="50%">地址</th>
+            <th class="manage-column" scope="col" width="50%">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="arrList" id="vo" mod="2">
+            <assign name="id" value="$vo.id" />
+            <tr <eq name="mod" value="0">class="alternate"</eq> >
+            <td class="manage-column" scope="col">{$vo.url}</td>
+            <td class="manage-column" scope="col">
+                <a href="__URL__/cameraEdit/id/{$id}">编辑</a>&nbsp;
+                <a href="__URL__/cameraDelete/id/{$id}">删除</a>&nbsp;
+            </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+</div>
+
+<div class="wrap">
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a href="__URL__/view/id/{$vo.controller_id}" class="button button-primary button-hero">返回列表</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>
+

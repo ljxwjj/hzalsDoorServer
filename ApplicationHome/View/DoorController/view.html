@@ -98,6 +98,7 @@
         <tr>
             <th class="manage-column" scope="col" width="5%">编号</th>
             <th class="manage-column" scope="col" width="20%">名称</th>
+            <th class="manage-column" scope="col" width="10%">摄像头</th>
             <th class="manage-column" scope="col" width="50%">操作</th>
         </tr>
         </thead>
@@ -107,8 +108,10 @@
             <tr <eq name="mod" value="0">class="alternate"</eq> >
             <td class="manage-column" scope="col" >{$door.door_index}</td>
             <td class="manage-column" scope="col" name="door_name" door_index="{$door.door_index}">{$door.name}</td>
+            <td class="manage-column" scope="col">{$door.camera_count}</td>
             <td class="manage-column" scope="col">
                 <a href="javascript:openDoor('{$door.door_index}', '{$door.name}');">开门</a>&nbsp;
+                <a href="__URL__/camera/controller_id/{$door.controller_id}/door_id/{$door.door_index}">管理摄像头</a>&nbsp;
             </td>
             </tr>
         </volist>

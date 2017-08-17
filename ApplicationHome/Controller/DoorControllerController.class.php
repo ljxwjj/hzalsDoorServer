@@ -256,9 +256,16 @@ class DoorControllerController extends CommonController {
             foreach ($doors as $door) {
                 $arrList[$door['door_index']] = $door;
             }
+            $cameras = M('Camera')->group('door_id')
+                ->where(array('controller_id'=>$id))->getField('door_id, count(door_id) AS camera_count');
             for ($i = 0; $i < $vo['door_count']; $i++) {
                 if (!array_key_exists($i, $arrList)) {
                     $arrList[$i] = array('door_index'=>$i, 'controller_id'=>$id, 'name'=>$i."号门");
+                }
+                if (array_key_exists($i, $cameras)) {
+                    $arrList[$i]['camera_count'] = $cameras[$i];
+                } else {
+                    $arrList[$i]['camera_count'] = 0;
                 }
             }
             ksort($arrList);
@@ -454,4 +461,113 @@ class DoorControllerController extends CommonController {
         return false;
     }
 
+    public function camera() {
+        $controller_id = I('controller_id');
+        $door_id = I('door_id');
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $this->error("权限校验失败!", U('DoorController/index'));
+            exit;
+        }
+
+        $this->assign('vo',$_REQUEST);
+        $this->loadCameraList($controller_id, $door_id);
+        $this->loadDoorInfo($controller_id, $door_id);
+        $this->display();
+    }
+
+    public function cameraDelete() {
+        $id = I('id');
+        $CameraModel = M('Camera');
+        $vo = $CameraModel->find($id);
+        if (!$vo) {
+            $this->error("未找到要编辑的数据!", U('DoorController/index'));
+            return;
+        }
+        $controller_id = $vo['controller_id'];
+        $door_id = $vo['door_id'];
+        $params = array('controller_id'=>$controller_id,'door_id'=>$door_id);
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $this->error("权限校验失败!", U('DoorController/camera'));
+            exit;
+        }
+        $result = $CameraModel->where("id=$id")->delete();
+        if ($result) {
+            $this->success('删除成功！', U('DoorController/camera', $params));
+        } else {
+            $this->error('删除失败！', U('DoorController/camera', $params));
+        }
+    }
+
+    public function cameraEdit() {
+        $id = I('id');
+        $vo = M('Camera')->find($id);
+        if (!$vo) {
+            $this->error("未找到要编辑的数据!", U('DoorController/index'));
+            return;
+        }
+        $controller_id = $vo['controller_id'];
+        $door_id = $vo['door_id'];
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $this->error("权限校验失败!", U('DoorController/camera'));
+            exit;
+        }
+        $this->assign('vo',$vo);
+        $this->loadCameraList($controller_id, $door_id);
+        $this->loadDoorInfo($controller_id, $door_id);
+        $this->display('camera');
+    }
+
+    public function cameraSave() {
+        $controller_id = I('controller_id');
+        $door_id = I('door_id');
+        $id = I('id');
+        $params = array('controller_id'=>$controller_id,'door_id'=>$door_id);
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $this->error("权限校验失败!", U('DoorController/camera', $params));
+            exit;
+        }
+
+        $CameraModel = M('Camera');
+        $data = $CameraModel->create();
+        if (!$data) {
+            $error = $CameraModel->getError();
+            $this->assign('vo',$_REQUEST);
+            $this->assign('error',$error);
+            $this->loadCameraList($controller_id, $door_id);
+            $this->loadDoorInfo($controller_id, $door_id);
+            $this->display('camera');
+            return;
+        }
+        if ($id) {
+            $result = $CameraModel->where("id=$id")->setField('url', I('url'));
+        } else {
+            $result = $CameraModel->add();
+        }
+        if ($result) {
+            $this->success('数据保存成功！', U('DoorController/camera', $params));
+        } else {
+            $this->error('数据未保存！', U('DoorController/camera', $params));
+        }
+    }
+
+    private function loadCameraList($controller_id, $door_id) {
+        $CameraModel = M('Camera');
+        $arrList = $CameraModel->where(array('controller_id'=>$controller_id, 'door_id'=>$door_id))->select();
+        $this->assign('arrList',$arrList);
+    }
+
+    private function loadDoorInfo($controller_id, $door_id) {
+        $DoorController = M('DoorController');
+        $door = $DoorController->field('door_controller.name AS controller_name, door.name AS door_name')
+            ->join("left join door on door.controller_id = door_controller.id and door.door_index = $door_id")
+            ->where(array('door_controller.id'=>$controller_id))->find();
+        if ($door) {
+            if (!$door['door_name']) $door['door_name'] = $door_id."号门";
+            $this->assign('door',$door);
+        }
+    }
 }
