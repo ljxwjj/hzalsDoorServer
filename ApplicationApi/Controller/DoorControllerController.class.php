@@ -78,7 +78,7 @@ class DoorControllerController extends CommonRestController {
         $controllerIds = array_col_values($voList, "id");
         $doors = M('Door')->where(array('controller_id'=> array("IN", $controllerIds)))->select();
         foreach ($doors as $door) {
-            $doorMap[$door['controller_id']][$door['door_id']] = $door;
+            $doorMap[$door['controller_id']][$door['door_index']] = $door;
         }
 
         $doorList = array();
@@ -92,7 +92,7 @@ class DoorControllerController extends CommonRestController {
                     $door['controller_name'] = $vo['name'];
                     $doorList[] = $door;
                 } else {
-                    $doorList[] = array('controller_id'=>$vo['id'], 'door_id'=>$i, 'name'=>$i."号门", 'controller_name'=>$vo['name']);
+                    $doorList[] = array('controller_id'=>$vo['id'], 'door_index'=>$i, 'name'=>$i."号门", 'controller_name'=>$vo['name']);
                 }
             }
         }
