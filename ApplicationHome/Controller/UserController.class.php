@@ -242,21 +242,23 @@ class UserController extends CommonController {
         $role = (int)I('role');
         $department = (int)I('department');
 
-        $user = $model->where(array('account'=>$account, 'status'=>array("neq", -1)))->find();
-        if ($user && $user['company_id'] != I('company_id')) {
-            $this->error('该手机号已被在其它公司注册过！'.$model->getError(), $this->getReturnUrl());
-            exit;
-        }
+        if (!$id) {
+            $user = $model->where(array('account' => $account, 'status' => array("neq", -1)))->find();
+            if ($user && $user['company_id'] != $_REQUEST['company_id']) {
+                $this->error('该手机号已被在其它公司注册过！' . $model->getError(), $this->getReturnUrl());
+                exit;
+            }
 
-        $user = $model->where(array('account'=>$account, 'company_id'=>I('company_id')))->find();
-        if ($user && $user['status'] == -1) {
-            $user['status'] = empty($user['password'])?0:1;
-            $model->save($user);
-            $this->success('用户数据已恢复！', $this->getReturnUrl());
-            exit;
-        } else if ($user) {
-            $this->error('该用户已存在！'.$model->getError(), $this->getReturnUrl());
-            exit;
+            $user = $model->where(array('account' => $account, 'company_id' => $_REQUEST['company_id']))->find();
+            if ($user && $user['status'] == -1) {
+                $user['status'] = empty($user['password']) ? 0 : 1;
+                $model->save($user);
+                $this->success('用户数据已恢复！', $this->getReturnUrl());
+                exit;
+            } else if ($user) {
+                $this->error('该用户已存在！' . $model->getError(), $this->getReturnUrl());
+                exit;
+            }
         }
 
         $model->startTrans();

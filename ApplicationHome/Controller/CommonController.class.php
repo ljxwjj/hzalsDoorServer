@@ -414,4 +414,7 @@ class CommonController extends Controller {
         exit(json_encode($data));
     }
 
+    protected function success($message='',$jumpUrl='') {
+        parent::success($message, $jumpUrl,1);
+    }
 }
