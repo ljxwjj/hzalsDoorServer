@@ -140,16 +140,15 @@ class DoorControllerController extends CommonController {
      */
     public function save() {
         $this->keepSearch();
-        $is_add_tpl_file = $this->isAddTplFile();
-        $name = $this->getActionName();
-        $model = D($name);
-        $id = (int)I($model->getPk());
+        $id = I('id');
+        $serialNumber = I('serial_number', '', 'trim,strtoupper');
+        $productType = I('product_type');
+
+        $model = D('DoorController');
 
         if (empty(I('product_type'))) {
             $error['product_type'] = "请选择产品类型！";
         }
-        $serialNumber = I('serial_number', '', 'trim,strtoupper');
-        $productType = I('product_type');
         if(empty($serialNumber)) {
             $error['serial_number']='序列号不能为空！';
         } else if ($productType == "1" && strpos($serialNumber, "ALS") === 0 && strlen($serialNumber) == 11) {
@@ -178,18 +177,20 @@ class DoorControllerController extends CommonController {
                 $this->error('没有该数据的操作权限！');
                 exit;
             }
-            // 编辑时，当序列号变更时，判断序列号是否被占用
-            $data = $model->find($id);
-            if (I('serial_number') != $data['serial_number']) {
-                $map['serial_number'] = I('serial_number');
-                $map['status'] = 0;
-                if ($model->where($map)->find()) {
-                    $error['serial_number']='序列号已经被绑定！';
+            if (I('product_type') == "2") {
+                // 编辑时，当序列号变更时，判断序列号是否被占用
+                $data = $model->find($id);
+                if ($serialNumber != $data['serial_number']) {
+                    $map['serial_number'] = $serialNumber;
+                    $map['status'] = 0;
+                    if ($model->where($map)->find()) {
+                        $error['serial_number']='序列号已经被绑定！';
+                    }
                 }
             }
         } else if (I('product_type') == "2") {
             // 当新增时，判断序列号是否被占用
-            $map['serial_number'] = I('serial_number');
+            $map['serial_number'] = $serialNumber;
             $map['status'] = 0;
             $data = $model->where($map)->find();
             if ($data && $data['company_id']) {
@@ -209,7 +210,7 @@ class DoorControllerController extends CommonController {
         if ($error) {
             $this->assign('vo', $_REQUEST);
             $this->assign('error', $error);
-            if(!$id && $is_add_tpl_file){
+            if(!$id){
                 $this->display('add');
             }else{
                 $this->display('edit');
@@ -222,7 +223,7 @@ class DoorControllerController extends CommonController {
             $error = $model->getError();
             $this->assign('vo',$_REQUEST);
             $this->assign('error',$error);
-            if(!$id && $is_add_tpl_file){
+            if(!$id){
                 $this->display('add');
             }else{
                 $this->display('edit');
@@ -231,6 +232,7 @@ class DoorControllerController extends CommonController {
             $data['door_count'] = $doorCount;
             $data['last_edit_time'] = time();
             $data['last_edit_user_id'] = session(C('USER_AUTH_KEY'));
+            $data['serial_number'] = $serialNumber;
             if($id){
                 $result = $model->where(array('id'=>$id))->save($data);
             }else{
