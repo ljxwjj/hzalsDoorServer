@@ -138,6 +138,14 @@
     * 返回值
         * data        array[Camera]
         
+* 获取所有摄像头列表 /DoorController/allCameras
+
+    * 参数 
+        * page  (可选)                         页数（从1开始）
+        * company_id (可选)                    公司ID
+    * 返回值
+        * data        array[Camera]
+        
 ##个人信息 
 
 * 个人信息  /Ucenter/detail

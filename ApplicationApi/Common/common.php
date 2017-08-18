@@ -868,7 +868,11 @@ function getUserDoors($user_id = null) {
     if (!$user_id) {
         return false;
     }
-    $user = M('User')->find($user_id);
+    if ($user_id == session(C('USER_AUTH_KEY'))) {
+        $user = session('user');
+    } else {
+        $user = M('User')->find($user_id);
+    }
     if (!$user) return false;
     $userDoors = M('UserDoor')->where(array('user_id'=>$user_id))->select();
     foreach ($userDoors as $door) {

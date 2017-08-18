@@ -204,7 +204,75 @@ class DoorControllerController extends CommonRestController {
         }
         $map = array('controller_id'=>$controller_id, 'door_id'=>$door_id);
         $cameras = M('Camera')->where($map)->select();
+        if (!$cameras) $cameras = array();
         $result = $this->createResult(200, "", $cameras);
+        $this->response($result,'json');
+    }
+
+    public function allCameras() {
+        $user = session('user');
+        $user_id = I('user_id');
+        $company_id = I('company_id');
+
+        $map = array();
+        if ($user['is_admin']) {
+            if ($company_id) {
+                $controllerIds = M('DoorController')->where(array('company_id'=>$company_id))->getField('id');
+                $map['controller_id'] = array('in', $controllerIds);
+            }
+        } else {
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors($user_id);
+                foreach ($userDoors as $controllerId=>$doorIds) {
+                    foreach ($doorIds as $doorId=>$v) {
+                        $and = array();
+                        $and['controller_id'] = $controllerId;
+                        $and['door_id'] = $doorId;
+                        $map[] = $and;
+                    }
+                }
+                $map['_logic'] = "or";
+            } else {
+                $controllerIds = M('DoorController')->where(array('company_id'=>$user['company_id']))->getField('id');
+                $map['controller_id'] = array('in', $controllerIds);
+            }
+        }
+
+        $model = M('Camera');
+
+        //排序字段 默认为主键名
+        if (isset($_REQUEST ['_order'])) {
+            $order = $_REQUEST ['_order'];
+        } else {
+            $order = !empty($sortBy) ? $sortBy : $model->getPk();
+        }
+        //排序方式默认按照倒序排列
+        //接受 sost参数 0 表示倒序 非0都 表示正序
+        if (isset($_REQUEST ['_sort'])) {
+            $sort = $_REQUEST ['_sort'] ? 'asc' : 'desc';
+        } else {
+            $sort = 'asc';
+        }
+        //取得满足条件的记录数
+        $count = $model->where($map)->count($model->getPk());
+
+        if ($count > 0) {
+            //创建分页对象
+            if (!empty($_REQUEST ['_listRows'])) {
+                $listRows = $_REQUEST ['_listRows'];
+            } else {
+                $listRows = C('LIST_ROWS');
+            }
+            $nowPage = I('page')?I('page'):1;
+            $firstRow = $listRows * ($nowPage - 1);
+            //分页查询数据
+            $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($firstRow . ',' . $listRows)->select();
+        } else {
+            $voList = array();
+        }
+
+        $result = $this->createResult(200, "", $voList);
         $this->response($result,'json');
     }
 }
