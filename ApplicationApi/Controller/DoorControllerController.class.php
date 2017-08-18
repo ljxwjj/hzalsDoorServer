@@ -217,7 +217,7 @@ class DoorControllerController extends CommonRestController {
         $map = array();
         if ($user['is_admin']) {
             if ($company_id) {
-                $controllerIds = M('DoorController')->where(array('company_id'=>$company_id))->getField('id');
+                $controllerIds = M('DoorController')->where(array('company_id'=>$company_id))->getField('id', true);
                 $map['controller_id'] = array('in', $controllerIds);
             }
         } else {
