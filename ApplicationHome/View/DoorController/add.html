@@ -74,6 +74,14 @@
                     <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
                 </td>
             </tr>
+            <assign name="var" value="password" />
+            <tr class="dongtai type1">
+                <th><label for="">通讯密码：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
             <tr>
                 <td></td>
                 <td class="center">
