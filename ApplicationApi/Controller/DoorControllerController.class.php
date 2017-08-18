@@ -140,10 +140,20 @@ class DoorControllerController extends CommonRestController {
             $OpenRecord->create($openRecord);
             $addid = $OpenRecord->add();
 
-            $wait = intval($data['wait_time']);
-            $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
-            $result = $this->createResult(200, "开门成功", array("id"=>$addid));
-            $this->response($result,'json');
+            if ($data['product_type'] == 1) {
+                $rv = $this->sendOpenDoorHttp($data['ip'], $data['port'], $door_id, $data['password']);
+                if ($rv) {
+                    $result = $this->createResult(201, "开门成功");
+                } else {
+                    $result = $this->createResult(0, "开门失败");
+                }
+                $this->response($result,'json');
+            } else {
+                $wait = intval($data['wait_time']);
+                $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
+                $result = $this->createResult(200, "开门成功", array("id"=>$addid));
+                $this->response($result,'json');
+            }
         } else {
             $result = $this->createResult(0, "开门失败");
             $this->response($result,'json');
@@ -169,6 +179,24 @@ class DoorControllerController extends CommonRestController {
         $sendMsg = hex2bin($sendMsg);
         fwrite($handle, $sendMsg);
         fclose($handle);
+    }
+
+    protected function sendOpenDoorHttp($ip, $port, $doorId, $password) {
+        $opts = array(
+            'http'=>array('method'=>'GET', 'timeout'=>5)
+        );
+        //创建数据流上下文
+        $context = stream_context_create($opts);
+        if (empty($password)) {
+            $url = "http://$ip:$port/t.cgi?T,access_io,door,$doorId,1";
+        } else {
+            $url = "http://$ip:$port/t.cgi?T$password,access_io,door,$doorId,1";
+        }
+        $html =file_get_contents($url, false, $context);
+        if (strcasecmp($html, "ok") === 0) {
+            return true;
+        }
+        return false;
     }
 
     public function openDoorFeedBack() {

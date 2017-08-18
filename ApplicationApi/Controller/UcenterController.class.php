@@ -4,8 +4,13 @@ class UcenterController extends CommonRestController {
 
     public function detail()
     {
-        $_REQUEST['id'] = I('user_id');
-        parent::detail("User");
+        $user = session('user');
+        if ($user) {
+            $result = $this->createResult(200, "操作成功", $user);
+        } else {
+            $result = $this->createResult(0, "操作失败");
+        }
+        $this->response($result, "json");
     }
 
     // 显示二维码

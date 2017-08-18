@@ -357,11 +357,23 @@ class DoorControllerController extends CommonController {
             $openRecord['way'] = 1;
             $addid = M('OpenRecord')->add($openRecord);
 
-            $wait = intval($data['wait_time']);
-            $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
-            $result['code'] = 200;
-            $result['message'] = $addid;
-            $this->response($result);
+            if ($data['product_type'] == 1) {
+                $rv = $this->sendOpenDoorHttp($data['ip'], $data['port'], $door_id, $data['password']);
+                if ($rv) {
+                    $result['code'] = 201;
+                    $result['message'] = "开门成功！";
+                } else {
+                    $result['code'] = 0;
+                    $result['message'] = "开门失败！";
+                }
+                $this->response($result);
+            } else {
+                $wait = intval($data['wait_time']);
+                $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
+                $result['code'] = 200;
+                $result['message'] = $addid;
+                $this->response($result);
+            }
         }
     }
 
@@ -449,6 +461,24 @@ class DoorControllerController extends CommonController {
         $sendMsg = hex2bin($sendMsg);
         fwrite($handle, $sendMsg);
         fclose($handle);
+    }
+
+    protected function sendOpenDoorHttp($ip, $port, $doorId, $password) {
+        $opts = array(
+            'http'=>array('method'=>'GET', 'timeout'=>5)
+        );
+        //创建数据流上下文
+        $context = stream_context_create($opts);
+        if (empty($password)) {
+            $url = "http://$ip:$port/t.cgi?T,access_io,door,$doorId,1";
+        } else {
+            $url = "http://$ip:$port/t.cgi?T$password,access_io,door,$doorId,1";
+        }
+        $html =file_get_contents($url, false, $context);
+        if (strcasecmp($html, "ok") === 0) {
+            return true;
+        }
+        return false;
     }
 
     private function checkDoorControllerAccess($controller_id) {
