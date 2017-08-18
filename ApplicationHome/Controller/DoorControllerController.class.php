@@ -229,6 +229,8 @@ class DoorControllerController extends CommonController {
             }
         }else{
             $data['door_count'] = $doorCount;
+            $data['last_edit_time'] = time();
+            $data['last_edit_user_id'] = session(C('USER_AUTH_KEY'));
             if($id){
                 $result = $model->where(array('id'=>$id))->save($data);
             }else{
