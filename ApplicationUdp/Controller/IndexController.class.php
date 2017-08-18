@@ -53,6 +53,7 @@ class IndexController extends Controller\RestController {
                 $controllerData['last_connect_time'] = time();
                 $controllerData['add_time'] = time();
                 $controllerData['status'] = 0;
+                $controllerData['wait_time'] = 3;
                 $MDoorController->add($controllerData);
             }
             echo "db save ---- CRC right";

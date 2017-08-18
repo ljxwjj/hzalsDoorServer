@@ -20,6 +20,8 @@ class DoorControllerController extends CommonController {
         $company_id = session('company_id');
         if ($company_id > 1) {
             $map['company_id'] = $company_id;
+        } else {
+            $map['company_id'] = array('NEQ', 0);
         }
     }
 
@@ -233,6 +235,7 @@ class DoorControllerController extends CommonController {
             $data['last_edit_time'] = time();
             $data['last_edit_user_id'] = session(C('USER_AUTH_KEY'));
             $data['serial_number'] = $serialNumber;
+            if (I('product_type') == "2") $data['wait_time'] = 3;
             if($id){
                 $result = $model->where(array('id'=>$id))->save($data);
             }else{
