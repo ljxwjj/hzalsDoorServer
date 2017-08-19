@@ -814,6 +814,14 @@ function assignnode(key,id){
     document.form1.submit();		
 }
 
+function assignuser(key,id){
+    document.form1['mode'].value = 'userlist';
+    if(key != "" && id != "") {
+        document.form1[key].value = id;
+    }
+    document.form1.submit();
+}
+
 
 
 
