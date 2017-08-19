@@ -70,7 +70,7 @@ class UserController extends CommonController {
         $this->keepSearch();
         $model = M('UserView');
         if (!empty($model)) {
-            $this->_list($model, $map);
+            $this->_list($model, $map, 'id');
         }
         //parent::index();
         $voList = $this->voList;

@@ -44,9 +44,9 @@ class OpenRecordController extends CommonRestController {
         }
         $this->setMap($map);
 
-        $model = D("OpenRecordView");
+        $model = M("OpenRecordView");
         if ($model) {
-            $this->_list($model, $map);
+            $this->_list($model, $map, 'id');
         }
         $result = $this->createResult(200, "", $this->voList);
 

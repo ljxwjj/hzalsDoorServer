@@ -13,7 +13,18 @@ class DoorControllerController extends CommonRestController {
 
     // 公司门禁清单
     public function lists() {
-        parent::lists("DoorControllerView");
+        if (method_exists($this, '_filter')) {
+            $this->_filter($map);
+        }
+        $this->setMap($map,$search);
+
+        $model = M("DoorControllerView");
+        if (!empty($model)) {
+            $this->_list($model, $map, 'id');
+        }
+        $result = $this->createResult(200, "", $this->voList);
+
+        $this->response($result,'json');
     }
 
     public function detail(){

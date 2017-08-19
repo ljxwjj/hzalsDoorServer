@@ -75,7 +75,7 @@ class DoorControllerController extends CommonController {
         $this->keepSearch();
         $model = M('DoorControllerView');
         if (!empty($model)) {
-            $this->_list($model, $map);
+            $this->_list($model, $map, 'id');
         }
 
         //保持分页记录
