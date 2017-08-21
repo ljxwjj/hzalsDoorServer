@@ -134,7 +134,7 @@ class UserController extends CommonController {
     public function view() {
         $model = M('UserView');
         $id = I('id');
-        $vo = $model->find($id);
+        $vo = $model->where("id=$id")->find();
         if ($vo) {
             $this->assign('vo', $vo);
             $this->display();
