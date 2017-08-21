@@ -5,6 +5,9 @@ class UcenterController extends CommonRestController {
     public function detail()
     {
         $user = session('user');
+        if ($user['head_image']) {
+            $user['head_image'] = getHttpRooDir().'/Public'.$user['head_image'];
+        }
         if ($user) {
             $result = $this->createResult(200, "操作成功", $user);
         } else {
