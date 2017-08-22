@@ -15,7 +15,24 @@ class UserController extends CommonRestController {
 
     // 用户列表
     public function lists() {
-        parent::lists();
+        if (method_exists($this, '_filter')) {
+            $this->_filter($map);
+        }
+        $this->setMap($map,$search);
+
+        $model = D('User');
+        if (!empty($model)) {
+            $this->_list($model, $map);
+        }
+        $voList = $this->voList;
+        foreach ($voList as $i=>$v) {
+            if ($v['head_image']) {
+                $voList[$i]['head_image'] = getHttpRooDir().'/Public'.$v['head_image'];
+            }
+        }
+        $result = $this->createResult(200, "", $voList);
+
+        $this->response($result,'json');
     }
 
     // 用户详情
