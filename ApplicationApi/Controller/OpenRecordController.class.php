@@ -27,7 +27,7 @@ class OpenRecordController extends CommonRestController {
                 if ($field == 'open_time_start') {
                     $map['open_time'][] = array('EGT', $val + 0);
                 } else if ($field == 'open_time_end') {
-                    $map['open_time'][] = array('LT', $val + 24 * 60 * 60);
+                    $map['open_time'][] = array('ELT', $val + 0);
                 } else if ($field == 'door_controller_id') {
                     $map['controller_id'] = $val;
                 } else {
