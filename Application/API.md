@@ -123,6 +123,11 @@
     * 返回值
         * data        id: 开门请求标识
         
+>返回值 code    
+>   0： 开门请求失败    
+>   201： 一代门开门成功    
+>   200： 二代门请求开门 data中将包含id   
+        
 * 开门反馈 /DoorController/openDoorFeedBack
 
     * 参数 
