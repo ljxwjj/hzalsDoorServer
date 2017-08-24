@@ -163,7 +163,7 @@ class IndexController extends Controller\RestController {
             $record['open_password'] = sprintf("%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i]);//解析开门密码
             $record['door_actual_status'] = sprintf("%02x", $unData[++$i]);//解析门实时状态
             $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
-            $door_id = $record['door_number'];
+            $door_id = intval($record['door_number']);
 
             $MUser = M('User');
             $map = array();
