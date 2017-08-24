@@ -82,7 +82,9 @@
                     <in name="vo.status" value="0,1">
                         <a href="javascript:edit('id','{$vo.id}')">编辑</a>&nbsp;
                         <a href="javascript:forbid('id','{$vo.id}')">离职</a>&nbsp;
+                        <if condition="$vo.role_id gt 21">
                         <a href="javascript:assigndoor('id','{$vo.id}')">分配权限</a>&nbsp;
+                        </if>
                     </in>
                     <if condition="2 eq $vo['status']">
                         <a href="javascript:resume('id','{$vo.id}')">恢复</a>&nbsp;
