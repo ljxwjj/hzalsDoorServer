@@ -53,14 +53,11 @@ class PublicController extends CommonRestController {
 
         $User = M('User');
         $map['account'] = $account;
+        $map['status'] = 0;
         $user = $User->where($map)->find();
 
         if (!$user) {
-            $result = $this->createResult(1, '非系统用户');
-        } else if (!empty($user['password'])) {
-            $result = $this->createResult(2, '该手机号已注册');
-        } else if ($user['status'] === -1) {
-            $result = $this->createResult(3, '用户被禁用');
+            $result = $this->createResult(1, '该号码不存在或已注册');
         } else {
             // 核实验证码
             $MSmsCode = M('SmsCode');
