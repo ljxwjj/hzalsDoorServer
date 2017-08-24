@@ -37,7 +37,7 @@ class UcenterController extends CommonController {
      * 修改资料页面*
      *
      */
-    public function modifyProfile(){
+    public function modifyprofile(){
         load("@.Array");
         $map['id'] = $_GET['id'];
         $userList = D('user')->where($map)->select();
@@ -113,7 +113,7 @@ class UcenterController extends CommonController {
      * 修改密码*
      *
      */
-    public function modifyPwd(){
+    public function modifypwd(){
         if(!$_POST['submit']){
             $this->display();
             exit();

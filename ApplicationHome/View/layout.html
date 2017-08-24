@@ -89,7 +89,7 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
     })(jQuery);
 
 	(function(){			
-			setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟			
+			//setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟
 			$('.tab').find('a').click(function() {
 				var _index = $(this).index();
 				$(this).addClass('on').siblings('a').removeClass('on');
@@ -157,8 +157,8 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 										<span class='display-name'>{$_SESSION['account']}</span>
 									</a>
 								</li>
-								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifyProfile/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">编辑我的个人资料</a></li>
-								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifyPwd/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">修改密码</a></li>
+								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifyprofile/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">编辑我的个人资料</a></li>
+								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifypwd/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">修改密码</a></li>
 								<li id="wp-admin-bar-logout"><a class="ab-item"  href="__APP__/Public/logout.html">登出</a></li>
 							</ul>
 						</div>		
