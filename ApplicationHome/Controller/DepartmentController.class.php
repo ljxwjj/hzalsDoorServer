@@ -2,6 +2,7 @@
 namespace Home\Controller;
 
 use Lib\ORG\Util\CheckError;
+use Lib\ORG\Util\RBAC;
 
 class DepartmentController extends CommonController {
 
@@ -26,15 +27,6 @@ class DepartmentController extends CommonController {
             $company_id = session('company_id');
         }
         $id = (int)I('id');
-        if(empty($_SESSION[C('ADMIN_AUTH_KEY')]) && !empty($mode) && ($mode != 'save' || ($mode == 'save' && !$id)) && $mode != 'savenodes'){
-            import ( 'Lib.ORG.Util.RBAC' );
-            $accessList = RBAC::getAccessList($_SESSION[C('USER_AUTH_KEY')]);
-            $module = defined('P_MODULE_NAME')?  P_MODULE_NAME   :   MODULE_NAME;
-            if(!isset($accessList[strtoupper(APP_NAME)][strtoupper($module)][strtoupper($mode)])) {
-                redirect(U(C('RBAC_ERROR_PAGE')));
-                exit;
-            }
-        }
         $displaytype = 1; // 1默认，岗位列表及操作 2 用户列表及操作 3 权限操作
         switch($mode){
             case 'edit':

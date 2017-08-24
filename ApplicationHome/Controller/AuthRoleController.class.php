@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 
+use Lib\ORG\Util\RBAC;
 use Lib\ORG\Util\CheckError;
 
 class AuthRoleController extends CommonController {
@@ -23,7 +24,7 @@ class AuthRoleController extends CommonController {
         }
         $id = (int)I('id');
         if(empty($_SESSION[C('ADMIN_AUTH_KEY')]) && !empty($mode) && ($mode != 'save' || ($mode == 'save' && !$id)) && $mode != 'savenodes'){
-            import ( 'Lib.ORG.Util.RBAC' );
+            import ( '@.Lib.ORG.Util.RBAC' );
             $accessList = RBAC::getAccessList($_SESSION[C('USER_AUTH_KEY')]);
             $module = defined('P_MODULE_NAME')?  P_MODULE_NAME   :   MODULE_NAME;
             if(!isset($accessList[strtoupper(APP_NAME)][strtoupper($module)][strtoupper($mode)])) {
@@ -107,7 +108,7 @@ class AuthRoleController extends CommonController {
      */
     public function save($pid=0,$id='') {
         $Role = D('AuthRole');
-        import('Lib.ORG.Util.CheckError');
+        import('@.Lib.ORG.Util.CheckError');
         $objError = new CheckError();
         $objError->checkError();
         //验证岗位编码

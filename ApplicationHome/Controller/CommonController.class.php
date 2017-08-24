@@ -10,7 +10,7 @@ class CommonController extends Controller {
      *
      */
     public function _initialize() {
-        import('Lib.ORG.Util.RBAC');
+        import('@.Lib.ORG.Util.RBAC');
         //登陆检查
         if(!RBAC::checkLogin()){
             return;
@@ -87,7 +87,7 @@ class CommonController extends Controller {
         //取得满足条件的记录数
         $count = $model->where($map)->count('id');
         if ($count > 0) {
-            import ( '@.ORG.Util.Page' );
+            import ( '@.Lib.ORG.Util.Page' );
             //创建分页对象
             if (!empty($_REQUEST ['listRows'])) {
                 $listRows = $_REQUEST ['listRows'];

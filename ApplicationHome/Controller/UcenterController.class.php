@@ -62,7 +62,7 @@ class UcenterController extends CommonController {
     public function save(){
         $map['id'] = $_POST['id'];
         $_POST['update_time'] = time();
-        import("Lib.ORG.Util.CheckError");
+        import("@.Lib.ORG.Util.CheckError");
         $objError = new CheckError();
         $objError->checkError();
         $objError->doFunc(array("姓名","nickname",45),array("EXIST_CHECK","MAX_LENGTH_CHECK"));
@@ -123,7 +123,7 @@ class UcenterController extends CommonController {
         $password = D('User')->where($map)->getField('password');
 
         $error = array();
-        import("Lib.ORG.Util.CheckError");
+        import("@.Lib.ORG.Util.CheckError");
         $objError = new CheckError();
         $objError->checkError();
         $objError->doFunc(array("新密码","new",20),array("EXIST_CHECK","MAX_LENGTH_CHECK"));

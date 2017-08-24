@@ -37,7 +37,7 @@ class PublicController extends CommonController {
         $map["status"]	=	array('EQ', 1);
 //        $map["is_admin"]	=	array('eq',1);
 
-        import('Lib.ORG.Util.RBAC');
+        import('@.Lib.ORG.Util.RBAC');
         $authInfo = RBAC::authenticate($map);
         //使用用户名、密码和状态的方式进行认证
         if(!$error['account'] && !$authInfo) {
