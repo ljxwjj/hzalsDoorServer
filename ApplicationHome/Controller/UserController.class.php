@@ -337,12 +337,16 @@ class UserController extends CommonController {
         $map['user_id'] = array('eq',$user_id);
         $UserDoor->where($map)->delete();
 
-        foreach($node_id as $controller_id=>$doors){
-            foreach ($doors as $door_id) {
-                $data[] = array('user_id'=>$user_id, 'controller_id'=>$controller_id, 'door_id'=>intval($door_id));
+        if ($node_id) {
+            foreach ($node_id as $controller_id => $doors) {
+                foreach ($doors as $door_id) {
+                    $data[] = array('user_id' => $user_id, 'controller_id' => $controller_id, 'door_id' => intval($door_id));
+                }
             }
+            $result = $UserDoor->addAll($data);
+        } else {
+            $result = true;
         }
-        $result = $UserDoor->addAll($data);
         if ($result) {
             $this->success('数据已保存！', $this->getReturnUrl());
         } else {
