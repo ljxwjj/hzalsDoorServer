@@ -97,15 +97,19 @@
 			</a>
 			<ul class='wp-submenu wp-submenu-wrap'>
 				<li class='wp-submenu-head'>系统管理</li>
-				<li class="wp-first-item <if condition='CONTROLLER_NAME eq Company'>current</if>">
+				<li class='wp-first-item <if condition="CONTROLLER_NAME eq 'Company'">current</if>'>
 					<a href="__APP__/Company/index" class="wp-first-item current">客户管理</a>
 				</li>
-				<li class="<if condition='CONTROLLER_NAME eq AuthNode'>current</if>">
-					<a href="__APP__/AuthNode/index" class="current">权限管理</a>
-				</li>
-				<li class="<if condition='CONTROLLER_NAME eq AuthRole'>current</if>">
-					<a href="__APP__/AuthRole/index" class="current">角色管理</a>
-				</li>
+				<notempty name='_ACCESS_LIST_HOME.AUTHNODE'>
+					<li class='<if condition="CONTROLLER_NAME eq 'AuthNode'">current</notempty>'>
+						<a href="__APP__/AuthNode/index" class="current">权限管理</a>
+					</li>
+				</if>
+				<notempty name='_ACCESS_LIST_HOME.AUTHROLE'>
+					<li class='<if condition="CONTROLLER_NAME eq 'AuthRole'">current</notempty>'>
+						<a href="__APP__/AuthRole/index" class="current">角色管理</a>
+					</li>
+				</if>
 			</ul>
 		</li>
 	</if>
