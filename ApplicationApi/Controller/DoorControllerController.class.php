@@ -5,8 +5,10 @@ class DoorControllerController extends CommonRestController {
 
     public function _filter(&$map) {
         if (session(C('ADMIN_AUTH_KEY'))) {
-
+            $map['status'] = 1;
+            $map['company_id'] = array('GT', 0);
         } else {
+            $map['status'] = 1;
             $map['company_id'] = session("user")["company_id"];
         }
     }
