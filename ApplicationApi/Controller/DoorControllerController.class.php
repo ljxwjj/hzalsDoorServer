@@ -308,11 +308,18 @@ class DoorControllerController extends CommonRestController {
             $nowPage = I('page')?I('page'):1;
             $firstRow = $listRows * ($nowPage - 1);
             //分页查询数据
-            $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($firstRow . ',' . $listRows)->select();
+            $voList = $model
+                ->field("camera.id AS id,camera.controller_id AS controller_id,camera.door_id AS door_id,url,door.name AS door_name")
+                ->join("left join door on camera.controller_id=door.controller_id and camera.door_id=door.door_index")
+                ->where($map)->order("`" . $order . "` " . $sort)->limit($firstRow . ',' . $listRows)->select();
         } else {
             $voList = array();
         }
-
+        foreach ($voList as $i=>$vo) {
+            if (!$vo['door_name']) {
+                $voList[$i]['door_name'] = $vo['door_id']."号门";
+            }
+        }
         $result = $this->createResult(200, "", $voList);
         $this->response($result,'json');
     }
