@@ -50,6 +50,44 @@ class UserController extends CommonRestController {
         parent::add();
     }
 
+    public function resume(){
+        //恢复指定记录
+        $name = $this->getActionName();
+        $model = D($name);
+        $pk = $model->getPk();
+        $id = I($pk);
+        $condition = array($pk => $id);
+        $data = $model->where($condition)->find();
+        if (!$data) {
+            $this->response($this->createResult(0, "状态恢复失败！"), "json");
+            return;
+        }
+        $map = array(
+            'account'=> $data['account'],
+            'company_id' => array('neq', $data['company_id']),
+            'status' => array('in', '0,1'));
+        $others = $model->where($map)->find();
+        if ($others) {
+            $this->response($this->createResult(0, "状态恢复失败，已在其它公司帐号下使用！"), "json");
+            return;
+        }
+        if (empty($data['password'])) {
+            $data['status'] = 0;
+        } else {
+            $data['status'] = 1;
+        }
+        $result = $model->save($data);
+        if ($result) {
+            $this->response($this->createResult(200, "状态恢复成功！"), "json");
+        } else {
+            $this->response($this->createResult(0, "状态恢复失败！"), "json");
+        }
+    }
+
+    public function forbid() {
+        parent::forbid();
+    }
+
     // 用户离职
     public function del() {
         parent::del();
