@@ -216,7 +216,21 @@
     * 返回值
         * null
 
-* 用户离职 /User/del
+* 用户离职   /User/forbid
+
+    * 参数
+        * id     用户ID
+    * 返回值
+        * null
+
+* 恢复离职用户   /User/resume
+
+    * 参数
+        * id     用户ID
+    * 返回值
+        * null
+
+* 删除离职用户 /User/del
 
     * 参数
         * id     用户ID
