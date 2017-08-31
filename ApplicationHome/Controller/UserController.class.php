@@ -213,16 +213,25 @@ class UserController extends CommonController {
     {
         $is_add_tpl_file = $this->isAddTplFile();
 
+        $id = (int)I('id');
+        $company_id = I('company_id');
+        $account = I('account');
+        $role = (int)I('role');
+        $department = (int)I('department');
+
         if(empty(I('account'))) {
             $error['account']='账号不能为空！';
         }
         if (!I('role')){
             $error['role']='角色不能为空！';
         }
-        if (empty(I('company_id'))) {
+
+        if ($id) {
+            // 编辑时不能改变公司
+        } else if (empty($company_id)) {
             $_REQUEST['company_id'] = session('company_id');
         } else {
-            if (I('company_id') != session('company_id') && !session(C('ADMIN_AUTH_KEY'))) {
+            if ($company_id != session('company_id') && !session(C('ADMIN_AUTH_KEY'))) {
                 $error['company_id']='非法操作！';
             }
         }
@@ -237,10 +246,6 @@ class UserController extends CommonController {
         }
 
         $model = D('User');
-        $id = (int)I('id');
-        $account = I('account');
-        $role = (int)I('role');
-        $department = (int)I('department');
 
         if (!$id) {
             $user = $model->where(array('account' => $account, 'status' => array("neq", -1)))->find();
@@ -284,7 +289,7 @@ class UserController extends CommonController {
             }
         } else {
             if ($id) {
-                $result = $model->save($data);
+                $result = $model->field("account,nickname,sex,email,mobile")->save($data);
             } else {
                 $result = $model->add($data);
                 if ($result) $id = $result;
