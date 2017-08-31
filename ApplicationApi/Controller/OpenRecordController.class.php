@@ -7,7 +7,13 @@ class OpenRecordController extends CommonRestController {
         if (session(C('ADMIN_AUTH_KEY'))) {
 
         } else {
-            $map['company_id'] = session("user")["company_id"];
+            $user_id = session("user")["id"];
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $map['user_id'] = $user_id;
+            } else {
+                $map['company_id'] = session("user")["company_id"];
+            }
         }
     }
 
