@@ -222,26 +222,38 @@ class UserController extends CommonController {
         if(empty(I('account'))) {
             $error['account']='账号不能为空！';
         }
-        if (!I('role')){
+        if (!$role){
             $error['role']='角色不能为空！';
         }
 
         if ($id) {
             // 编辑时不能改变公司
+            $myUserId = $_SESSION[C('USER_AUTH_KEY')];
+            $myRole = M('AuthRoleUser')->where("user_id=$myUserId")->getField('role_id');
+            if ($id == $myUserId && $role != $myRole) {
+                $error['role']='不能修改自己的角色！';
+            }
         } else if (empty($company_id)) {
-            $_REQUEST['company_id'] = session('company_id');
+            $company_id = session('company_id');
+            $_REQUEST['company_id'] = $company_id;
         } else {
             if ($company_id != session('company_id') && !session(C('ADMIN_AUTH_KEY'))) {
                 $error['company_id']='非法操作！';
             }
         }
         if ($error) {
-            $this->_loadAuthRole(I('company_id'));
-            $this->_loadDepartment(I('company_id'));
+            $vo = $_REQUEST;
+            if ($id) {
+                $role_id = M("AuthRoleUser")->where(array('user_id'=>$id))->getField("role_id");
+                $vo['role_id'] = $role_id;
+                $vo['department_id'] = M('UserDepartment')->where(array('user_id'=>$id))->getField('department_id');
+            }
+            $this->_loadAuthRole($company_id);
+            $this->_loadDepartment($company_id);
 
-            $this->assign('vo', $_REQUEST);
+            $this->assign('vo', $vo);
             $this->assign('error', $error);
-            $this->display('add');
+            $this->display('edit');
             return;
         }
 

@@ -62,7 +62,8 @@
 <tr>
 	<th><label for="">角色：</label></th>
 	<td>
-		<select name="{$var}">
+		<select name="{$var}" <eq name='Think.session.lcsomauthId' value="$vo.id">disabled="disabled"</eq> >
+			<option value="0">请选择</option>
 			<foreach name="roleList" item="v" key="k">
 			<option value="{$k}" <eq name="k" value="$vo['role_id']">selected</eq> >{$v}</option>
 			</foreach>
@@ -98,6 +99,11 @@
 	<!--pk-->
 	<assign name="var" value="id" />
 	<input type="hidden" name="{$var}" value="{$vo.$var}" >
+	<assign name="var" value="company_id" />
+	<input type="hidden" name="{$var}" value="{$vo.$var}" >
+    <eq name='Think.session.lcsomauthId' value="$vo.id">
+        <input type="hidden" name="role" value="{$vo.role_id}" >
+    </eq>
 	</td>
 </tr>
 </table>
