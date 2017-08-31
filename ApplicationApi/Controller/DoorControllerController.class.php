@@ -268,15 +268,15 @@ class DoorControllerController extends CommonRestController {
                 foreach ($userDoors as $controllerId=>$doorIds) {
                     foreach ($doorIds as $doorId=>$v) {
                         $and = array();
-                        $and['controller_id'] = $controllerId;
-                        $and['door_id'] = $doorId;
+                        $and['camera.controller_id'] = $controllerId;
+                        $and['camera.door_id'] = $doorId;
                         $map[] = $and;
                     }
                 }
                 $map['_logic'] = "or";
             } else {
                 $controllerIds = M('DoorController')->where(array('company_id'=>$user['company_id']))->getField('id');
-                $map['controller_id'] = array('in', $controllerIds);
+                $map['camera.controller_id'] = array('in', $controllerIds);
             }
         }
 
