@@ -96,3 +96,26 @@
     <br class="clear">
 </div>
 <!--wrap-->
+<script>
+    function del(key,id){
+        var params = gerParams();
+        var keyValue;
+        if (id)
+        {
+            keyValue = id;
+        }else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue)
+        {
+            alert('请选择删除项！');
+            return false;
+        }
+
+        if (window.confirm('删除后不可恢复，确实要删除选择项吗？'))
+        {
+            location.href =  URL+"/del/"+key+"/"+keyValue+'/'+params;
+            //ThinkAjax.send(URL+"/delete/",key+"="+keyValue+'&ajax=1',doDelete);
+        }
+    }
+</script>
