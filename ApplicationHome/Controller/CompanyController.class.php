@@ -194,10 +194,34 @@ class CompanyController extends CommonController {
 
     public function del()
     {
-        if ((int)I('id') === 1) {
-            $this->error('系统用户，禁止删失败！');
-        } else {
-            parent::del();
+        $id = (int)I('id');
+        $model = M('Company');
+        if (!$id) {
+            $this->error('非法操作');
+            exit;
         }
+        if ($id === 1) {
+            $this->error('系统用户，禁止删失败！');
+            exit;
+        }
+        $myUserId = $_SESSION[C('USER_AUTH_KEY')];
+        $role_id = M("AuthRoleUser")->where(array('user_id'=>$myUserId))->getField("role_id");
+        if ($role_id != 18) {
+            $this->error('非超级系统管理员，禁止该删除操作！');
+            exit;
+        }
+
+        $model->startTrans();
+        $model->execute("update user set status = -1 where company_id = %d", $id);
+        $condition = array('id' => $id);
+        $list = $model->where($condition)->setField('status', -1);
+        if ($list !== false) {
+            $model->commit();
+            $this->success('删除成功！');
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
+        }
+
     }
 }
