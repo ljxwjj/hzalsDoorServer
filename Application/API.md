@@ -63,6 +63,12 @@
     * 返回值
         * data        null
 
+* 生成二维码 /Public/qrcode
+    * 参数
+        * text
+    * 返回值
+        * image file  stream
+
 #用户授权接口
 公共参数： user_id、 account、 token、sign
 
