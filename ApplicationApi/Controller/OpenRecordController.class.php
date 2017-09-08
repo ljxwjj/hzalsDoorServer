@@ -54,7 +54,13 @@ class OpenRecordController extends CommonRestController {
         if ($model) {
             $this->_list($model, $map, 'id');
         }
-        $result = $this->createResult(200, "", $this->voList);
+        $voList = $this->voList;
+        foreach ($voList as $i=>$vo) {
+            if (empty($vo['door_name'])) {
+                $voList[$i]['door_name'] = $vo['door_id']."号门";
+            }
+        }
+        $result = $this->createResult(200, "", $voList);
 
         $this->response($result,'json');
     }
