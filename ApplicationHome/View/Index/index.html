@@ -1,1 +1,21 @@
+<style>
+    /*#wpcontent {*/
+        /*margin-left: 160px;*/
+    /*}*/
+</style>
+<script type="text/javascript">
+    //iframe高度自适应
+    function IFrameReSize(iframename) {
+        var pTar = document.getElementById(iframename);
+        if (pTar) {  //ff
+            if (pTar.contentDocument && pTar.contentDocument.body.offsetHeight) {
+                pTar.height = pTar.contentDocument.body.offsetHeight;
+            } //ie
+            else if (pTar.document && pTar.document.body.scrollHeight) {
+                pTar.height = pTar.document.body.scrollHeight;
+            }
+        }
+    }
+</script>
+<iframe id="mainFrame" src="__PUBLIC__/index/index.html" width="100%" height="100%" scrolling="yes" onload="IFrameReSize('mainFrame');" target="_blank"/>
 

@@ -146,10 +146,14 @@
                 case "1":
                     $(".dongtai").hide();
                     $(".type1").show();
+                    var sn = $("input[name='serial_number']").val();
+                    if(sn == "000000000") $("input[name='serial_number']").val("");
                     break;
                 case "2":
                     $(".dongtai").hide();
                     $(".type2").show();
+                    var sn = $("input[name='serial_number']").val();
+                    if(sn == "") $("input[name='serial_number']").val("000000000");
                     break;
                 default:
                     $(".dongtai").hide();

@@ -1,0 +1,64 @@
+
+/* demo04 */
+#myController3{height:15px;line-height:15px; z-index:1003;position:absolute; bottom:18px; right:6px; z-index:500;}
+#myController3 li{float:left; width:13px; height:15px; display:inline; text-align:center;cursor:pointer;background:url(./img/ban_btn.png) no-repeat; margin:0 4px; text-indent:-222em; overflow:hidden;}
+#myController3 span.prev,#myController3 span.next{background:none; display:none;}
+#myController3 li.on{background-position:left bottom;}
+#myController3 li:hover{background-position:left bottom;}
+#slides3 img{width:1440px; height:380px; display:block; margin:0 auto;z-index:100;}
+#jFlowSlide3{z-index:100;}
+
+
+.index_scro{width:100%; height:32px; display:inline-block; background:#dfe0e4;}
+.index_scro1{float:left; width:100%; height:32px; display:inline-block; background:#a0a1a7;}
+/*热点*/
+.notice{float:left;width:360px;height:32px;padding-left:115px;overflow:hidden;background:url(./img/index_scro1bg.jpg) no-repeat top left;}
+.noticTipTxt{color:#ff7300;height:32px;line-height:32px;overflow:hidden; display:inline-block;}
+.noticTipTxt li{width:100%; height:32px;line-height:32px; display:inline-block;}
+.noticTipTxt a{float:left; width:295px; color:#fff; font:normal 12px/32px "Microsoft YaHei";text-decoration:none;}
+.noticTipTxt span{float:right; display:inline-block; font:normal 12px/32px Arial; color:#fff;}
+.noticTipTxt a:hover{color:#222;}
+
+.index_scro2{float:right; display:inline-block;}
+.index_scro2 a{float:left; width:35px; height:32px; display:inline-block; background:url(./img/index_scro2.png) no-repeat;}
+.index_scro2 .index_scro21{position:relative; float:left; width:35px; height:32px; display:inline-block; z-index:1510;}
+.index_scro2 .index_scro21 a{background:url(./img/index_scro2.png) no-repeat center;}
+.index_scro2 .index_scro21:hover a{background-color:#c30211;}
+.index_scro2 .index_scro22{background-position:right top;}
+.index_scro2 a:hover{background-color:#c30211;}
+
+.index_show{position:absolute; left:-160px; top:-160px; width:239px; padding:5px 0 16px; z-index:2000; filter:alpha(Opacity=0);-moz-opacity:0;opacity:0; display:none; background:url(./img/erbg1.png) no-repeat;}
+.index_show p{font:normal 12px/20px "Microsoft YaHei"; color:#333; display:inline-block;}
+.index_show p strong{font:600 15px/20px "Microsoft YaHei"; color:#333; display:inline-block;}
+
+
+.index_main{width:100%; display:inline-block; padding:2px 0 8px;}
+.index_con{width:500px; display:inline; position:relative; margin-left:29px;}
+.index_con1{width:385px; margin-left:36px;}
+.index_con h2{width:100%; display:inline-block; line-height:44px; border-bottom:1px solid #c4c6cb;}
+.index_con p{float:left; display:inline-block; font:400 16px/44px "Microsoft YaHei"; color:#000; padding-right:6px;}
+.index_con p font{font:400 16px/44px "Microsoft YaHei"; display:inline-block; color:#000;}
+.index_con i{float:left; font:normal 16px/20px Arial; padding-top:12px; color:#bcbcbc; display:inline; text-transform:uppercase; *padding-top:14px;}
+
+.index_pro{width:100%; display:inline-block;overflow:hidden; padding-top:12px;}
+.index_ul{width:108%;}
+.index_li{float:left; width:262px; display:inline-block; padding-right:3px;}
+.index_li span{width:28px; height:28px; display:inline-block; font:italic bold 16px/28px Arial; color:#fff; margin-left:2px; text-align:center; background:url(./img/index_li1.jpg) no-repeat left bottom; margin-top:2px;}
+.index_li a{font:normal 12px/18px Arial; color:#666; display:inline-block;}
+.index_li a strong{width:165px; height:36px; overflow:hidden; font:400 13px/18px  "Microsoft YaHei"; display:inline-block; color:#000;}
+.index_li .index_li1{font:normal 12px/16px "Microsoft YaHei"; color:#000; display:inline-block;}
+
+.index_cur a strong{color:#b90211;}
+.index_cur .index_li1{color:#b90211;}
+
+/* 4格 */
+.wall{min-width: 1000px;width: auto !important;height: 466px; margin-top:0px; margin-bottom:37px;}
+.home_view{width:1000px;margin: 0 auto;height:498px; background-color:#fff; text-align:left;}
+.home_view .fxbox_l{ width:490px; height:233px; float:left; margin-top:10px; margin-right:8px; margin-bottom:8px; border:1px solid #eee}
+.home_view .fxbox_r{ width:490px; height:233px; float:left; margin-top:10px; margin-left:8px; margin-bottom:8px;  border:1px solid #eee}
+.hv_tit{width:205px;margin-left:15px;font-size:14px; margin-top:10px;font-weight:bold;height:30px;position:relative}
+.hv_tit p{position:absolute; bottom:0px; padding:0px; margin:0px}
+.hv_con{width:254px;margin-left:15px; margin-top:15px; line-height:22px;}
+.home_but{margin-left:22px;margin-top:28px;}
+
+/*首页*/
