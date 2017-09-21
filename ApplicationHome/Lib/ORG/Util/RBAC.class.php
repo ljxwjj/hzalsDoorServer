@@ -130,6 +130,7 @@ class RBAC {
         // 判断session 是否过期
         if (session('?session_refresh_time') && C('SESSION_OPTIONS.expire')) {
             if (session('session_refresh_time') + C('SESSION_OPTIONS.expire') < time()) {
+                session(null);
                 session_destroy();
             } else {
                 session('session_refresh_time', time());
