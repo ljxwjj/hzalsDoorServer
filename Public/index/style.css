@@ -9,7 +9,7 @@
 #jFlowSlide3{z-index:100;}
 
 
-.index_scro{width:100%; height:32px; display:inline-block; background:#dfe0e4;}
+.index_scro{width:100%; height:32px; background:#dfe0e4;}
 .index_scro1{float:left; width:100%; height:32px; display:inline-block; background:#a0a1a7;}
 /*热点*/
 .notice{float:left;width:360px;height:32px;padding-left:115px;overflow:hidden;background:url(./img/index_scro1bg.jpg) no-repeat top left;}
@@ -27,7 +27,7 @@
 .index_scro2 .index_scro22{background-position:right top;}
 .index_scro2 a:hover{background-color:#c30211;}
 
-.index_show{position:absolute; left:-160px; top:-160px; width:239px; padding:5px 0 16px; z-index:2000; filter:alpha(Opacity=0);-moz-opacity:0;opacity:0; display:none; background:url(./img/erbg1.png) no-repeat;}
+.index_show{position:absolute; left:-160px; top:-160px; width:239px; padding:5px 0 16px; z-index:2000; filter:alpha(Opacity=0);-moz-opacity:0;opacity:0; display:none;}
 .index_show p{font:normal 12px/20px "Microsoft YaHei"; color:#333; display:inline-block;}
 .index_show p strong{font:600 15px/20px "Microsoft YaHei"; color:#333; display:inline-block;}
 

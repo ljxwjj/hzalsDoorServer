@@ -218,7 +218,7 @@ a.zc{ background:url(./img/v3.gif) no-repeat; width:102px; height:36px; line-hei
 /*header*/
 
 /*mainbody*/
-.mainbody{width:100%; display:inline-block;}
+.mainbody{width:100%;}
 /*bannerͼ*/
 .product_banner{display:inline-block; width:100%; height:259px; border-bottom:1px solid #c4c6cb;background: url(./img/loading.gif) no-repeat center center}
 .product_banner a{display:inline-block; width:100%; height:259px;}

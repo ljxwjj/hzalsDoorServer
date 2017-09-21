@@ -2,3 +2,6 @@ ApplicationRuntime/*
 ApplicationRuntime/Cache/*
 ApplicationRuntime/Cache/Home/*
 .idea/workspace.xml
+.idea/php.xml
+ApplicationCommon/Common/index.html
+qrcode.patch
