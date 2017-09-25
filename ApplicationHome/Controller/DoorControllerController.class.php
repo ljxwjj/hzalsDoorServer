@@ -357,16 +357,18 @@ class DoorControllerController extends CommonController {
 
         $data = M('DoorController')->find($controller_id);
         if ($data) {
+            $OpenRecordModel = M('OpenRecord');
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();
             $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
             $openRecord['way'] = 1;
-            $addid = M('OpenRecord')->add($openRecord);
+            $addid = $OpenRecordModel->add($openRecord);
 
             if ($data['product_type'] == 1) {
                 $rv = $this->sendOpenDoorHttp($data['ip'], $data['port'], $door_id, $data['password']);
                 if ($rv) {
+                    $OpenRecordModel->where("id=$addid")->setField("feedback_time",time());
                     $result['code'] = 201;
                     $result['message'] = "开门成功！";
                 } else {
