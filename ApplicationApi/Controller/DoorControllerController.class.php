@@ -156,6 +156,7 @@ class DoorControllerController extends CommonRestController {
             if ($data['product_type'] == 1) {
                 $rv = $this->sendOpenDoorHttp($data['ip'], $data['port'], $door_id, $data['password']);
                 if ($rv) {
+                    $OpenRecord->where("id=$addid")->setField("feedback_time",time());
                     $result = $this->createResult(201, "开门成功");
                 } else {
                     $result = $this->createResult(0, "开门失败");
