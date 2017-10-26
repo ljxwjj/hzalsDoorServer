@@ -324,4 +324,53 @@ class DoorControllerController extends CommonRestController {
         $result = $this->createResult(200, "", $voList);
         $this->response($result,'json');
     }
+
+    // 开门
+    public function openDoorBySecret() {
+//        $user_id = I('user_id');
+        $serial_number = I('serial_number');
+        $door_id = I('door_id');
+        $secret = I('secret_key');
+//        $controller_id = I('controller_id');
+//        $door_id = I('door_id');
+        $company_id = M('Company')->where(array('secret_key'=>$secret))->getField("id");
+        if (!$company_id) {
+            $result = $this->createResult(0, "用户密钥错误");
+            $this->response($result,'json');
+            exit;
+        }
+
+        $map = array(
+            'serial_number'=>$serial_number,
+            'status'=>0,
+            'company_id' => $company_id,
+        );
+        $controller_id = M('DoorController')->where($map)->getField('id');
+        if (!$controller_id) {
+            $result = $this->createResult(0, "序列号不存在");
+            $this->response($result,'json');
+            exit;
+        }
+
+        $data = M('DoorController')->find($controller_id);
+        if ($data) {
+            $openRecord['controller_id'] = $controller_id;
+            $openRecord['door_id'] = $door_id;
+            $openRecord['open_time'] = time();
+            $openRecord['user_id'] = -999;
+            $openRecord['way'] = 3;
+            $OpenRecord = M('OpenRecord');
+            $OpenRecord->create($openRecord);
+            $addid = $OpenRecord->add();
+
+            $wait = intval($data['wait_time']);
+            $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
+            $result = $this->createResult(200, "开门成功", array("id"=>$addid));
+            $this->response($result,'json');
+        } else {
+            $result = $this->createResult(0, "开门失败");
+            $this->response($result,'json');
+        }
+
+    }
 }

@@ -1,0 +1,98 @@
+<tagLib name="html" />
+<div class="wrap">
+    <h2>APP配置</h2>
+</div>
+<br class="clear">
+
+<div class="formarea">
+    <form method='POST' id="form1" action="{:U('AppSetting/saveSplash')}" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <th><label style="font-size: large">闪屏图片</label></th>
+            </tr>
+            <tr>
+                <td>
+                    <img src="__PUBLIC__{$splashImage['code_value']}" width="auto" height="250"/>
+                </td>
+            </tr>
+            <if condition="$error['splash_image']">
+                <tr>
+                    <td>
+                        <span class="description">{$error['splash_image']}</span>
+                    </td>
+                </tr>
+            </if>
+            <tr>
+                <td>
+                    图片：<input type="file" name="splash_image"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input name="btn_submit" class="button" value="提交" type="submit">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <br class="clear">
+    <form method='POST' id="form2" action="{:U('AppSetting/saveLunbo')}" enctype="multipart/form-data">
+        <table width="500px">
+            <tr>
+                <th><label style="font-size: large">轮播图片</label></th>
+            </tr>
+            <tr>
+                <td width="70%"></td>
+                <td width="10%">排序</td>
+                <td width="20%">操作</td>
+            </tr>
+            <volist name="lunboImage" id="vo">
+                <tr>
+                    <td>
+                        <img src="__PUBLIC__{$vo['code_value']}" height="100" width="auto" />
+                    </td>
+                    <td>
+                        {$vo['weight']}
+                    </td>
+                    <td>
+                        <a href="javascript:fnFormModeSubmit('form3','delete','id', {$vo['id']})">删除</a>
+                    </td>
+                </tr>
+            </volist>
+            <if condition="$error['lunbo_image']">
+                <tr>
+                    <td colspan="3">
+                        <span class="description">{$error['lunbo_image']}</span></if>
+                    </td>
+                </tr>
+            <tr>
+                <td colspan="3">
+                    图片：<input type="file" name="lunbo_image"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    排序：<input name="weight"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input name="btn_submit" class="button" value="添加" type="submit"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <form method='POST' id="form3" action="{:U('AppSetting/delLunbo')}">
+        <input type="hidden" name="mode"/>
+        <input type="hidden" name="id"/>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+

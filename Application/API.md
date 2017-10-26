@@ -128,6 +128,15 @@
         * door\_id         门ID
     * 返回值
         * data        id: 开门请求标识
+
+* 开门 /DoorController/openDoorBySecret
+
+    * 参数 
+        * serial\_number   控制器ID
+        * door\_id         门ID
+        * secret\_key      用户秘钥
+    * 返回值
+        * data        id: 开门请求标识
         
 >返回值 code    
 >   0： 开门请求失败    

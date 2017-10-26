@@ -8,6 +8,7 @@ if (DIRECTORY_SEPARATOR === "/") {
 require_once './ApplicationUdp/Common/function.php';
 
 use Workerman\Worker;
+use Workerman\Connection\AsyncUdpConnection;
 
 // 将屏幕打印输出到Worker::$stdoutFile指定的文件中
 Worker::$stdoutFile = './log/stdout.log';
@@ -199,7 +200,7 @@ function paresLocalMessage($data) {
         echo "open door cmd:".$msg.$crc;
         $msg = hex2bin($msg.$crc);
 
-        global $udpConnectionsCache;
+        /*global $udpConnectionsCache;
         if (array_key_exists($addr, $udpConnectionsCache)) {
             $connection = $udpConnectionsCache[$addr];
             if ($connection) {
@@ -208,7 +209,18 @@ function paresLocalMessage($data) {
             }
         } else {
             _log("door is not on line!!! \n");
+        }*/
+
+        // TODO: 待验证
+        try {
+            $connection = new AsyncUdpConnection("udp://$ip:$port");
+            $connection->send($msg);
+            $connection->close();
+            _log( "open door cmd sended \n");
+        } catch (\Exception $e) {
+            _log("door is not on line!!! \n");
         }
+        // TODO: 待验证
     }
 }
 

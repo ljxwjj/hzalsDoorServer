@@ -87,8 +87,8 @@
 	</if>
 
 	<if condition='$_ACCESS_LIST_HOME.COMPANY neq null'>
-		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
-			<a href='__APP__/Company/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode,AppSetting))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/Company/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode,AppSetting))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -108,6 +108,11 @@
 				<notempty name='_ACCESS_LIST_HOME.AUTHROLE'>
 					<li class='<if condition="CONTROLLER_NAME eq 'AuthRole'">current</notempty>'>
 						<a href="__APP__/AuthRole/index" class="current">角色管理</a>
+					</li>
+				</if>
+				<notempty name='_ACCESS_LIST_HOME.APPSETTING'>
+					<li class='<if condition="CONTROLLER_NAME eq 'AppSetting'">current</notempty>'>
+						<a href="__APP__/AppSetting/index" class="current">APP配置</a>
 					</li>
 				</if>
 			</ul>
