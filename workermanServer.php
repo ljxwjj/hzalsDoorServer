@@ -200,7 +200,7 @@ function paresLocalMessage($data) {
         echo "open door cmd:".$msg.$crc;
         $msg = hex2bin($msg.$crc);
 
-        /*global $udpConnectionsCache;
+        global $udpConnectionsCache;
         if (array_key_exists($addr, $udpConnectionsCache)) {
             $connection = $udpConnectionsCache[$addr];
             if ($connection) {
@@ -209,9 +209,10 @@ function paresLocalMessage($data) {
             }
         } else {
             _log("door is not on line!!! \n");
-        }*/
+        }
 
         // TODO: 待验证
+        /*
         try {
             $connection = new AsyncUdpConnection("udp://$ip:$port");
             $connection->send($msg);
@@ -220,6 +221,7 @@ function paresLocalMessage($data) {
         } catch (\Exception $e) {
             _log("door is not on line!!! \n");
         }
+        */
         // TODO: 待验证
     }
 }
