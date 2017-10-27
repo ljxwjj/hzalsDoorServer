@@ -8,7 +8,7 @@ return array(
     'ADMIN_AUTH_KEY'			=>  'administrator',
     'API_PARAMS_SIGN_KEY'       => 'sign',
     'API_PARAMS_SIGN_VALUE'     => '8djUK*014kJ',
-    'PUBLIC_APIS'               => array('Public'=>'*', 'DoorController'=>array('openDoorBySecret')),   // 免登录接口清单
+    'PUBLIC_APIS'               => array('Public'=>'*', 'DoorController'=>array('openDoorBySecret'), 'AppSetting'=>'*'),   // 免登录接口清单
     'LIST_ROWS'                 => 20,
 
     'AUTOLOAD_NAMESPACE'        => array(
