@@ -19,7 +19,7 @@ class UcenterController extends CommonRestController {
     // 显示二维码
     public function qrCode() {
         $user_id = I("user_id");
-        $token = createToeken(8);
+        $token = createUCenterQR();
         $update_time = time();
         $model = D('UserQrcode');
         $data = $model->find($user_id);
@@ -34,6 +34,49 @@ class UcenterController extends CommonRestController {
         if ($result) {
             $tokenNumber = hexdec($token);
 //            $url = "http://qr.topscan.com/api.php?text=$tokenNumber";
+            $this->response($this->createResult(200, "", $tokenNumber), "json");
+        } else {
+            $this->response($this->createResult(0, "系统错误"), "json");
+        }
+    }
+
+    // 显示分享二维码
+    public function shareQRCode() {
+        $user_id = I("user_id");
+        $validity_time = I("validity_time", 0, "int");
+        $controller_id = I("controller_id", -1, "int");
+        $door_id = I("door_id", -1, "int");
+        $times = array(5*60, 10*60, 20*60);//5分钟、10分钟、20分钟
+        if (!in_array($validity_time, $times)) {
+            $validity_time = $times[0];
+        }
+
+        if (!session(C('ADMIN_AUTH_KEY')) && $controller_id > -1) {
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors($user_id);
+                if (!$userDoors[$controller_id]) {
+                    $result = $this->createResult(0, "无权操作此控制器，授权失败");
+                    $this->response($result,'json');
+                    exit;
+                }
+                if ($door_id > -1 && !$userDoors[$controller_id][$door_id]) {
+                    $result = $this->createResult(0, "无权操作此门，授权失败");
+                    $this->response($result,'json');
+                    exit;
+                }
+            }
+        }
+
+        $token = createShareQR();
+        $create_time = time();
+        $expiry_time = $create_time + $validity_time;
+        $model = D('UserShareQrcode');
+        $data = compact('user_id', 'token', 'controller_id', 'door_id', 'create_time', 'expiry_time', 'validity_time');
+        $result = $model->add($data);
+
+        if ($result) {
+            $tokenNumber = hexdec($token);
             $this->response($this->createResult(200, "", $tokenNumber), "json");
         } else {
             $this->response($this->createResult(0, "系统错误"), "json");

@@ -182,6 +182,15 @@
      * 返回值
          * data        二维码链接
 
+* 分享开门二维码 /Ucenter/shareQRCode
+
+    * 参数
+         * validity_time           二维码有效期（秒）[300|600|1200]
+         * controller_id  (可选)   授权控制器ID
+         * door_id  (可选)      授权门ID
+     * 返回值
+         * data        二维码链接
+
 * 我的授权  /Ucenter/authAccess
 
     * 参数
@@ -268,6 +277,22 @@
    
 > _search\_user\_id not null（当前用户拥有管理页限）,可获得指定用户的出入记录_   
 > _search\_user\_id is  null 可获得当前用户的出入记录_
+
+##APP配置
+
+* 闪屏页图片 /AppSetting/splashImage
+    
+    * 参数 无
+    
+    * 返回值
+        * data        image_url
+        
+* 轮播页图片 /AppSetting/lunboImages
+    
+    * 参数 无
+    
+    * 返回值
+        * data        array[image_url]
 
 #sign加密算法
 

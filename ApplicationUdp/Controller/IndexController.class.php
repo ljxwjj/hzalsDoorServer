@@ -165,64 +165,147 @@ class IndexController extends Controller\RestController {
             $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
             $door_id = intval($record['door_number']);
 
-            $MUser = M('User');
-            $map = array();
-//            $map['company_id'] = $company_id;
-            $map['status'] = 1;
-            $map['token'] = $record['carad_number'];
-            $tokenData = $MUser
-                ->field("user.id AS user_id, user.company_id AS company_id, user.is_admin AS is_admin, user_qrcode.update_time AS update_time")
-                ->join("join user_qrcode on user.id = user_qrcode.user_id")
-                ->where($map)->find();
-            if ($tokenData) {
-                if ($tokenData['update_time'] + 30 >= time()) {
-                    $user_id = $tokenData['user_id'];
-                    $user_company = $tokenData['company_id'];
-
-                    if (!$tokenData['is_admin']) {
-                        // 非系统管理员，验证权限
-                        if ($user_company != $company_id) {
-                            // 非系统管理员不能操作非本公司门禁
-                            $message = "Non system admin, non operating, non company door ";
-                            echo $message;
-                            \Think\Log::record("刷卡请求 处理结果：$message");
-                            exit;
-                        }
-                        $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
-                        if ($role_id > 21) { // > 21即非管理员用户
-                            // 非公司管理员，验证权限
-                            $userDoors = getUserDoors($user_id);
-                            if (!$userDoors[$controller_id][$door_id]) {
-                                $message = "Open door authorization failed ";
-                                echo $message;
-                                \Think\Log::record("刷卡请求 处理结果：$message");
-                                exit;
-                            }
-                        }
-                    }
-
-                    $openRecord['controller_id'] = $controller_id;
-                    $openRecord['door_id'] = $door_id;
-                    $openRecord['open_time'] = time();
-                    $openRecord['user_id'] = $user_id;
-                    $openRecord['way'] = 2;
-                    M('OpenRecord')->add($openRecord);
-
-                    $wait = intval($controllerData['wait_time']);
-                    $this->sendOpenDoorUdpCode($controllerData['ip'], $controllerData['port'], $controllerData['serial_number'], $record['door_number'], $wait);
-
-                    $message = "check success, send open door";
-                } else {
-                    $message = "The verification code has expired";
-                }
-            } else {
-                $message = "unfond qrcode data OR user is left office";
+            $qrcode = $record['carad_number'];
+            $codeType = hexdec($qrcode)&0b11;
+            if ($codeType === 0) {
+                $message = $this->swingQRCode($record, $controllerData, $door_id);
+            } else if($codeType === 1) {
+                $message = $this->swingShareQRCode($record, $controllerData, $door_id);
             }
         } else {
             $message = "unfond door contooler serial_number";
         }
         echo $message;
         \Think\Log::record("刷卡请求 处理结果：$message");
+    }
+
+    private function swingQRCode($record, $controllerData, $door_id) {
+        $controller_id = $controllerData['id'];
+        $company_id = $controllerData['company_id'];
+
+        $MUser = M('User');
+        $map = array();
+        $map['status'] = 1;
+        $map['token'] = $record['carad_number'];
+        $tokenData = $MUser
+            ->field("user.id AS user_id, user.company_id AS company_id, user.is_admin AS is_admin, user_qrcode.update_time AS update_time")
+            ->join("join user_qrcode on user.id = user_qrcode.user_id")
+            ->where($map)->find();
+        if ($tokenData) {
+            if ($tokenData['update_time'] + 30 >= time()) {
+                $user_id = $tokenData['user_id'];
+                $user_company = $tokenData['company_id'];
+
+                if (!$tokenData['is_admin']) {
+                    // 非系统管理员，验证权限
+                    if ($user_company != $company_id) {
+                        // 非系统管理员不能操作非本公司门禁
+                        $message = "Non system admin, non operating, non company door ";
+                        echo $message;
+                        \Think\Log::record("刷卡请求 处理结果：$message");
+                        exit;
+                    }
+                    $role_id = M('AuthRoleUser')->where(array('user_id' => $user_id))->getField('role_id');
+                    if ($role_id > 21) { // > 21即非管理员用户
+                        // 非公司管理员，验证权限
+                        $userDoors = getUserDoors($user_id);
+                        if (!$userDoors[$controller_id][$door_id]) {
+                            $message = "Open door authorization failed ";
+                            echo $message;
+                            \Think\Log::record("刷卡请求 处理结果：$message");
+                            exit;
+                        }
+                    }
+                }
+
+                $openRecord['controller_id'] = $controller_id;
+                $openRecord['door_id'] = $door_id;
+                $openRecord['open_time'] = time();
+                $openRecord['user_id'] = $user_id;
+                $openRecord['way'] = 2;
+                M('OpenRecord')->add($openRecord);
+
+                $wait = intval($controllerData['wait_time']);
+                $this->sendOpenDoorUdpCode($controllerData['ip'], $controllerData['port'], $controllerData['serial_number'], $record['door_number'], $wait);
+
+                $message = "check success, send open door";
+            } else {
+                $message = "The verification code has expired";
+            }
+        } else {
+            $message = "unfond qrcode data OR user is left office";
+        }
+        return $message;
+    }
+
+    private function swingShareQRCode($record, $controllerData, $door_id) {
+        $controller_id = $controllerData['id'];
+        $company_id = $controllerData['company_id'];
+
+        $MUser = M('User');
+        $map = array();
+        $map['status'] = 1;
+        $map['token'] = $record['carad_number'];
+        $map['expiry_time'] = array("EGT", time());
+        $tokenData = $MUser
+            ->field("user.id AS user_id, user.company_id AS company_id, user.is_admin AS is_admin, user_share_qrcode.controller_id AS controller_id, user_share_qrcode.door_id AS door_id")
+            ->join("join user_share_qrcode on user.id = user_share_qrcode.user_id")
+            ->where($map)->find();
+        if ($tokenData) {
+            $user_id = $tokenData['user_id'];
+            $user_company = $tokenData['company_id'];
+
+            if ($tokenData['controller_id'] > -1 && $tokenData['controller_id'] != $controller_id) {
+                // 未对此控制器授权
+                $message = "Non authorize controller ";
+                echo $message;
+                \Think\Log::record("分享码刷卡请求 处理结果：$message");
+                exit;
+            }
+            if ($tokenData['controller_id'] > -1 && $tokenData['door_id'] > -1 && $tokenData['door_id'] != $door_id) {
+                // 未对此门授权
+                $message = "Non authorize the door ";
+                echo $message;
+                \Think\Log::record("分享码刷卡请求 处理结果：$message");
+                exit;
+            }
+            if (!$tokenData['is_admin']) {
+                // 非系统管理员，验证权限
+                if ($user_company != $company_id) {
+                    // 非系统管理员不能操作非本公司门禁
+                    $message = "Non system admin, non operating, non company door ";
+                    echo $message;
+                    \Think\Log::record("分享码刷卡请求 处理结果：$message");
+                    exit;
+                }
+                $role_id = M('AuthRoleUser')->where(array('user_id' => $user_id))->getField('role_id');
+                if ($role_id > 21) { // > 21即非管理员用户
+                    // 非公司管理员，验证权限
+                    $userDoors = getUserDoors($user_id);
+                    if (!$userDoors[$controller_id][$door_id]) {
+                        $message = "Open door authorization failed ";
+                        echo $message;
+                        \Think\Log::record("分享码刷卡请求 处理结果：$message");
+                        exit;
+                    }
+                }
+            }
+
+            $openRecord['controller_id'] = $controller_id;
+            $openRecord['door_id'] = $door_id;
+            $openRecord['open_time'] = time();
+            $openRecord['user_id'] = $user_id;
+            $openRecord['way'] = 4;
+            M('OpenRecord')->add($openRecord);
+
+            $wait = intval($controllerData['wait_time']);
+            $this->sendOpenDoorUdpCode($controllerData['ip'], $controllerData['port'], $controllerData['serial_number'], $record['door_number'], $wait);
+
+            $message = "check success, send open door";
+        } else {
+            $message = "unfond qrcode data OR user is left office OR qrcode has expired";
+        }
+        return $message;
     }
 
     protected function sendOpenDoorUdpCode($ip, $port, $serialNumber, $doorId, $wait) {

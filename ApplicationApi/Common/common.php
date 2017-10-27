@@ -855,6 +855,23 @@ function createToeken($length = 32) {
     return substr(str_shuffle($token), 0, $length);;
 }
 
+function createUCenterQR() {
+    $token = createToeken(8);
+    $token = hexdec($token);
+    $token = $token>>2;
+    $token = $token<<2;
+    return dechex($token);
+}
+
+function createShareQR() {
+    $token = createToeken(8);
+    $token = hexdec($token);
+    $token = $token>>2;
+    $token = $token<<2;
+    $token = $token | 0b01;
+    return dechex($token);
+}
+
 function generate_code($length = 6) {
     return substr(str_shuffle("012345678901234567890123456789"), 0, $length);
 }
