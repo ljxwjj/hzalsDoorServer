@@ -609,4 +609,75 @@ class DoorControllerController extends CommonController {
             $this->assign('door',$door);
         }
     }
+
+    public function setDoorPassword() {
+        $controller_id = I('controller_id');
+        $door_id = I('door_id');
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $this->error("权限校验失败!", U('DoorController/index'));
+            exit;
+        }
+
+        $this->assign('vo',$_REQUEST);
+        $this->loadDoorInfo($controller_id, $door_id);
+        $this->display();
+    }
+
+    /**
+     * ajax
+     */
+    public function saveDoorPassword() {
+        $controller_id = I('controller_id');
+        $door_id = I('door_id');
+        $password = I('password');
+        if ($controller_id == null) {
+            $error = "请选择控制器";
+        }
+        if ($door_id == null) {
+            $error = "请选择门";
+        }
+        if ($error) {
+            $result['code'] = 0;
+            $result['message'] = $error;
+            $this->response($result);
+            exit;
+        }
+
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $result['code'] = 0;
+            $result['message'] = "权限校验失败!";
+            $this->response($result);
+            exit;
+        }
+
+        if (!session(C('ADMIN_AUTH_KEY'))) {
+            $user_id = session(C('USER_AUTH_KEY'));
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors();
+                if (!$userDoors[$controller_id][$door_id]) {
+                    $result['code'] = 0;
+                    $result['message'] = "授权失败!";
+                    $this->response($result);
+                    exit;
+                }
+            }
+        }
+
+        $data = M('DoorController')->find($controller_id);
+        if ($data) {
+            $UdpOperationModel = M('UdpOperation');
+            $udpOperation['serial_number'] = $data['serial_number'];
+            $udpOperation['command'] = '';
+            $udpOperation['command_key'] = 'setDoorPassword';
+            $addid = $UdpOperationModel->add($udpOperation);
+
+            $this->sendSetDoorPasswordUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $password);
+            $result['code'] = 200;
+            $result['message'] = $addid;
+            $this->response($result);
+            // TODO: 未完成
+        }
+    }
 }
