@@ -630,12 +630,15 @@ class DoorControllerController extends CommonController {
     public function saveDoorPassword() {
         $controller_id = I('controller_id');
         $door_id = I('door_id');
-        $password = I('password');
+        $password = I('password', '', 'int');
         if ($controller_id == null) {
             $error = "请选择控制器";
         }
         if ($door_id == null) {
             $error = "请选择门";
+        }
+        if (strlen($password) != 6) {
+            $error = "请输入6位数字密码";
         }
         if ($error) {
             $result['code'] = 0;
@@ -667,17 +670,55 @@ class DoorControllerController extends CommonController {
 
         $data = M('DoorController')->find($controller_id);
         if ($data) {
+            $command = $this->sendSetDoorPasswordUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $password);
             $UdpOperationModel = M('UdpOperation');
             $udpOperation['serial_number'] = $data['serial_number'];
-            $udpOperation['command'] = '';
+            $udpOperation['command'] = $command;
             $udpOperation['command_key'] = 'setDoorPassword';
+            $udpOperation['create_time'] = time();
             $addid = $UdpOperationModel->add($udpOperation);
 
-            $this->sendSetDoorPasswordUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $password);
+
             $result['code'] = 200;
             $result['message'] = $addid;
             $this->response($result);
             // TODO: 未完成
         }
+    }
+
+    private function sendSetDoorPasswordUdpCode($ip, $port, $serialNumber, $doorId, $password) {
+        $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
+        if( !$handle ){
+            die("ERROR: {$errno} - {$errstr}\n");
+        }
+        $sendMsg = "30030002"; // local cmd 设置开门密码
+        $ips = explode(".", $ip);
+        foreach ($ips as $i) {
+            $sendMsg .= sprintf("%02x", $i);
+        }
+        $sendMsg .= sprintf("%04x", $port);
+        $sendMsg .= "01";
+        $sendMsg .= $serialNumber;
+        $sendMsg .= sprintf("%02x", $doorId);
+        $sendMsg .= sprintf("%-'f6d", $password); // 密码格式化 BCD格式
+        $binMsg = hex2bin($sendMsg);
+        fwrite($handle, $binMsg);
+        fclose($handle);
+        return $sendMsg;
+    }
+
+    public function udpOperationFeedBack() {
+        $id = I('id');
+        if ($id) {
+            $feedbackTime = M('UdpOperation')->where(array('id'=>$id))->getField('feedback_time');
+            if ($feedbackTime > 0) {
+                $result['code'] = 200;
+            } else {
+                $result['code'] = 1;
+            }
+        } else {
+            $result['code'] = 0;
+        }
+        $this->response($result);
     }
 }
