@@ -1,0 +1,64 @@
+<div class="wrap">
+    <h2>设置卡片</h2>
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a class="button button-primary button-hero" href="javascript:returnIndex();">返回列表</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>
+<br class="clear">
+
+<div class="formarea">
+    卡号：<input name="card_number" type="text"/>
+    <input type="button" value="提交" onclick="completeInput()"/>
+</div>
+
+
+
+<script>
+    function completeInput() {
+        var card_number = $("input[name='card_number']").val();
+        $.post("__URL__/loadCardSetting",{
+            controller_id:"{$vo.id}",
+            card_number: card_number,
+        }, function(data){
+            if (data.code == 200) {
+                onLoadSendSuccess(data.message);
+            } else {
+                alert(data.message);
+            }
+        }, "json");
+    }
+
+    function onLoadSendSuccess(id) {
+        var retryTimes = 3;
+        var tmid;
+
+        function checkLoadFeedback() {
+            if (retryTimes-- <= 0) {
+                window.clearInterval(tmid);
+                alert("连接超时");
+                return;
+            }
+            $.post("__CONTROLLER__/loadCardSettingFeedBack", {
+                'id': id
+            }, function(data){
+                if(data.code == 1) {
+                    // 继续等待
+                } else if (data.code == 200) {
+                    window.clearInterval(tmid);
+                    showSettingForm(data);
+                } else { // code == 0 错误请求
+                    window.clearInterval(tmid);
+                }
+            }, 'JSON')
+        }
+
+        tmid = window.setInterval(checkLoadFeedback, 300);
+    }
+
+    function showSettingForm(data) {
+
+    }
+</script>

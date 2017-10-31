@@ -246,6 +246,36 @@ function paresLocalMessage($data) {
         } else {
             _log("door is not on line!!! \n");
         }
+    } else if (strcmp($command, "0003") === 0) {//加载卡片设置  300300037F000001270E015209150810000026010000
+        _log( "received load door card command ");
+        $ip = sprintf("%d.%d.%d.%d", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        $port = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+        $port = hexdec($port);
+        $ptrol = sprintf("%02x", $unData[++$i]);
+        if ($ptrol === '01') {
+            $addr = sprintf("%02x%02x%02x%02x%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        }
+        $cardNumber = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+
+        $cmd = "";// 设置门禁密码 0292
+        $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
+
+        _log( "++3 serial_number ：$addr  ++3 ");
+        $crc = strCRCHex($msg);
+
+        echo "load door card cmd:".$msg.$crc;
+        $msg = hex2bin($msg.$crc);
+
+        global $udpConnectionsCache;
+        if (array_key_exists($addr, $udpConnectionsCache)) {
+            $connection = $udpConnectionsCache[$addr];
+            if ($connection) {
+                $connection->send($msg);
+                _log( "load door card cmd sended \n");
+            }
+        } else {
+            _log("door is not on line!!! \n");
+        }
     }
 }
 

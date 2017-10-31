@@ -112,7 +112,9 @@
             <td class="manage-column" scope="col">
                 <a href="javascript:openDoor('{$door.door_index}', '{$door.name}');">开门</a>&nbsp;
                 <a href="__URL__/camera/controller_id/{$door.controller_id}/door_id/{$door.door_index}">管理摄像头</a>&nbsp;
-                <a href="__URL__/setDoorPassword/controller_id/{$door.controller_id}/door_id/{$door.door_index}">设置密码</a>&nbsp;
+                <if condition="$vo['product_type'] eq 2">
+                    <a href="__URL__/setDoorPassword/controller_id/{$door.controller_id}/door_id/{$door.door_index}">设置密码</a>&nbsp;
+                </if>
             </td>
             </tr>
         </volist>
@@ -125,6 +127,9 @@
         <div class="alignleft actions">
             <a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
             <input name="btn_submit" class="button button-primary button-hero" value="编 辑" type="button" onclick="edit('id','{$vo.id}');">
+            <if condition="$vo['product_type'] eq 2">
+                <input name="btn_submit" class="button button-primary button-hero" value="卡片授权" type="button" onclick="card();">
+            </if>
         </div>
         <br class="clear">
     </div>
@@ -247,6 +252,10 @@
                 alert(data.message);
             }
         }, "json");
+    }
+
+    function card() {
+        location.href = "__URL__/settingCard/id/{$vo.id}";
     }
 </script>
 

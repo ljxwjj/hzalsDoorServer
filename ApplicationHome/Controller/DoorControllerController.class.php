@@ -721,4 +721,88 @@ class DoorControllerController extends CommonController {
         }
         $this->response($result);
     }
+
+    public function settingCard() {
+        $this->keepSearch();
+        $name = $name ? $name : $this->getActionName();
+        $model = D($name);
+        $id = (int)I($model->getPk());
+        if (empty($id)) {
+            $this->error('请选择要编辑的数据！');
+            exit;
+        }
+        if (!$this->checkDoorControllerAccess($id)) {
+            $this->error('没有该数据的操作权限！');
+            exit;
+        }
+        $vo = $model->getById($id);
+        if($vo){
+            $this->assign('vo', $vo);
+            $this->display();
+        }else{
+            $this->error('没有找到要编辑的数据！');
+        }
+    }
+
+    /**
+     * ajax
+     */
+    public function loadCardSetting() {
+        $model = M("DoorController");
+        $id = (int)I("controller_id");
+        $cardNumber = I("card_number");
+        if (empty($id)) {
+            $error = '请选择要编辑的数据！';
+        } else if (!$this->checkDoorControllerAccess($id)) {
+            $error = '没有该数据的操作权限！';
+        } else {
+            $vo = $model->getById($id);
+            if(!$vo){
+                $error = '没有找到要编辑的数据！';
+            }
+        }
+        if (empty($cardNumber)) {
+            $error = '请输入正确的卡号！';
+        }
+
+        if ($error) {
+            $result['code'] = 0;
+            $result['message'] = $error;
+            $this->response($result);
+            exit;
+        }
+
+        $command = $this->sendLoadCardSettingUdpCode($vo['ip'], $vo['port'], $vo['serial_number'], $cardNumber);
+        $UdpOperationModel = M('UdpOperation');
+        $udpOperation['serial_number'] = $vo['serial_number'];
+        $udpOperation['command'] = $command;
+        $udpOperation['command_key'] = 'setDoorPassword';
+        $udpOperation['create_time'] = time();
+        $addid = $UdpOperationModel->add($udpOperation);
+
+
+        $result['code'] = 200;
+        $result['message'] = $addid;
+        $this->response($result);
+    }
+
+    private function sendLoadCardSettingUdpCode($ip, $port, $serialNumber, $cardNumber) {
+        $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
+        if( !$handle ){
+            die("ERROR: {$errno} - {$errstr}\n");
+        }
+        $sendMsg = "30030003"; // local cmd 加载卡片设置
+        $ips = explode(".", $ip);
+        foreach ($ips as $i) {
+            $sendMsg .= sprintf("%02x", $i);
+        }
+        $sendMsg .= sprintf("%04x", $port);
+        $sendMsg .= "01";
+        $sendMsg .= $serialNumber;
+        $sendMsg .= sprintf("%08x", $cardNumber);
+        $binMsg = hex2bin($sendMsg);
+        fwrite($handle, $binMsg);
+        fclose($handle);
+        return $sendMsg;
+    }
 }
