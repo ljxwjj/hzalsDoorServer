@@ -18,7 +18,7 @@ function isWorkDay($day) {
         } else {
             $jiari = file_get_contents("http://tool.bitefu.net/jiari/data/".$year.".txt");
             $GLOBALS["jiari_data"][$year]["jiari"] = $jiari;
-            file_put_contents($jiariFile, $jiari);
+            if (!empty($jiari)) file_put_contents($jiariFile, $jiari);
         }
         $gongzuoFile = dirname(__FILE__)."/jiari/".$year."_w.txt";
         if (file_exists($gongzuoFile)) {
@@ -27,7 +27,7 @@ function isWorkDay($day) {
         } else {
             $gongzuo = file_get_contents("http://tool.bitefu.net/jiari/data/".$year."_w.txt");
             $GLOBALS["jiari_data"][$year]["gongzuo"] = $gongzuo;
-            file_put_contents($gongzuoFile, $gongzuo);
+            if (!empty($gongzuo)) file_put_contents($gongzuoFile, $gongzuo);
         }
     }
 
