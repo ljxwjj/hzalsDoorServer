@@ -1,0 +1,75 @@
+<script>
+    function attendance() {
+        var params = gerParams();
+        location.href =  APP+"/OpenRecord/attendance/" + params;
+        return false;
+    }
+</script>
+<div class="wrap">
+    <h2>{$vo.nickname} ({$Think.request.search_time_start}~{$Think.request.search_time_end}) 考勤详情</h2>
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a class="button button-primary button-hero" href="javascript:attendance();">返回列表</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>
+<br class="clear">
+
+<div class="wrap">
+    <form name="form1" method='POST' action="__SELF__">
+
+        <!-- 列表显示区域  -->
+        <table class="wp-list-table widefat fixed posts">
+            <thead>
+            <tr>
+                <th scope='col'  class='manage-column ' width="10%">日期</th>
+                <th scope='col'  class='manage-column ' width="10%">星期</th>
+                <th scope='col'  class='manage-column ' width="10%">上班打卡时间</th>
+                <th scope='col'  class='manage-column ' width="10%">下班打卡时间</th>
+                <th scope='col'  class='manage-column ' width="10%">旷工</th>
+                <th scope='col'  class='manage-column ' width="10%">迟到</th>
+                <th scope='col'  class='manage-column ' width="10%">早退</th>
+                <th scope='col'  class='manage-column ' width="10%">加班</th>
+            </tr>
+            </thead>
+            <volist name="list" id="vo" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> >
+                <td class="manage-column" scope="col">{$key}</td>
+                <td class="manage-column" scope="col">{$key|dateToWeek}</td>
+                <td class="manage-column" scope="col">{$vo.begin|toDate='H#i'}</td>
+                <td class="manage-column" scope="col">{$vo.end|toDate='H#i'}</td>
+                <td class="manage-column" scope="col">{$vo.absenteeism}</td>
+                <td class="manage-column" scope="col">{$vo.late}</td>
+                <td class="manage-column" scope="col">{$vo.leave}</td>
+                <td class="manage-column" scope="col">{$vo.overtime|toWorkHours}</td>
+                </tr>
+            </volist>
+        </table>
+        <!-- 列表显示区域结束  -->
+
+
+        <!--保持搜索部分-->
+        <php>
+            foreach($search as $k=>$v){
+            echo '<input type="hidden" name="'.$k.'" value="'.$v.'" id="'.$k.'" usefor="search">';
+            }
+        </php>
+        <!--保持搜索部分结束-->
+        <!--pk-->
+        <assign name="var" value="id" />
+        <input type="hidden" name="{$var}" value="{$vo.$var}" >
+    </form>
+
+    <div id="ajax-response"></div>
+    <br class="clear">
+</div>
+
+<div class="wrap">
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a href="javascript:attendance();" class="button button-primary button-hero">返回列表</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>

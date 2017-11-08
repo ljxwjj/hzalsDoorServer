@@ -1,0 +1,107 @@
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.mouse.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.slider.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.css" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/i18n/jquery-ui-timepicker-addon-i18n.min.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-sliderAccess.js" />
+<tagLib name="html" />
+<div class="wrap">
+    <h2>考勤参数配置</h2>
+</div>
+<br class="clear">
+
+<form method='POST' id="form1" action="{:U('OpenRecord/attendanceConfig')}">
+    <div class="formarea">
+        <table class="form-table">
+            <tr>
+                <th><label for="">工作时间：</label></th>
+                <td>
+                    <assign name="var" value="attendance_1" />
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" style="width: 50px;" readonly="readonly"> 至
+                    <assign name="var" value="attendance_2" />
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" style="width: 50px;" readonly="readonly">
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_3" />
+            <tr>
+                <th><label for="">允许晚到：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">分钟，不算迟到
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_4" />
+            <tr>
+                <th><label for="">允许提前：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">分钟，不算早退
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_5" />
+            <tr>
+                <th><label for="">迟到早退超过：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">分钟，算旷工
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_6" />
+            <tr>
+                <th><label for="">下班时间推迟：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">分钟，算加班
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <div class="wrap">
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <input type="hidden" name="mode" value="save"/>
+                <input name="btn_submit" class="button button-primary button-hero" value="保 存" type="submit">
+            </div>
+            <br class="clear">
+        </div>
+    </div>
+</form>
+<script>
+    var startTimeTextBox = $("input[name='attendance_1']");
+    var endTimeTextBox = $("input[name='attendance_2']");
+
+    $.timepicker.timeRange(
+        startTimeTextBox,
+        endTimeTextBox,
+        {
+            minInterval: (1000*60*60), // 1hr
+            timeFormat: 'HH:mm',
+            start: {hour:9}, // start picker options
+            end: {hour:17} // end picker options
+        }
+    );
+
+
+</script>
+
+<if condition="$save_success">
+    <script>
+    $(function(){
+    alert("数据保存成功！");
+    });
+    </script>
+</if>
+
+
+
+
+

@@ -1,0 +1,192 @@
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.menu.js" />
+<load href="__PUBLIC__/Js/jqueryui/jstree/jstree.min.js" />
+<load href="__PUBLIC__/Js/jqueryui/jstree/themes/default/style.min.css" />
+<script type="text/javascript">
+    $(function(){
+        var dateFormat = "yy-mm-dd",
+            from = $( "#search_time_start" )
+                .datepicker({
+                    defaultDate: "-3m",
+                    changeMonth: true,
+                    numberOfMonths: 3,
+                    maxDate: new Date(),
+                })
+                .on( "change", function() {
+                    to.datepicker( "option", "minDate", getDate( this ) );
+                }),
+            to = $( "#search_time_end" ).datepicker({
+                defaultDate: "-1m",
+                changeMonth: true,
+                numberOfMonths: 3,
+                maxDate: new Date(),
+            })
+                .on( "change", function() {
+                    from.datepicker( "option", "maxDate", getDate( this ) );
+                });
+
+        function getDate( element ) {
+            var date;
+            try {
+                date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+                date = null;
+            }
+
+            return date;
+        }
+
+        $("#tree").jstree({
+            'core': {
+                'data':{
+                    'url': "{:U('OpenRecord/allUserTree')}",
+                    'dataType': "json"
+                }
+            },
+            "types": {
+                "user": {
+                    "icon": "__PUBLIC__/Images/duser.png",
+                },
+            },
+            "checkbox" : {
+                "keep_selected_style" : false
+            },
+            "plugins" : [ "wholerow", "checkbox", "types"]
+        }).bind("loaded.jstree", function () {
+            var ids = $("input[name='search_user_ids']").val();
+            if (ids.length > 0) {
+                var selectedUser = ids.split(",");
+                var instance = $('#tree').jstree(true);
+                instance.deselect_all();
+                instance.select_node(selectedUser);
+            }
+        });
+        $("input[name='search_user_nickname']").click(function(){
+            $("#dialog").dialog({
+                "title": "选择人员",
+                "modal": true,
+                "buttons": {
+                    "确定": selectUsers,
+                }
+            });
+        });
+    })
+
+    function selectUsers() {
+        $("#dialog").dialog( "close" );
+        var instance = $('#tree').jstree(true);
+        var selected = instance.get_selected();
+        var selectedUser = new Array();
+        var selecteduserIds = new Array();
+        for (var i in selected) {
+            var id = selected[i];
+            if (id.indexOf("u") == 0) {
+                var text = instance.get_node(id).text;
+                selectedUser.push(text)
+                selecteduserIds.push(id);
+            }
+        }
+        $("input[name='search_user_nickname']").val(selectedUser.join(","));
+        $("input[name='search_user_ids']").val(selecteduserIds.join(","));
+    }
+
+    function attendanceDetail(id) {
+        var params = gerParams();
+        var keyValue;
+        keyValue = id;
+        if (!keyValue)
+        {
+            alert('请选择编辑项！');
+            return false;
+        }
+        location.href =  APP+"/OpenRecord/attendanceDetail/id/"+id + '/' + params;
+    }
+</script>
+<div class="wrap">
+    <h2>考勤统计 &nbsp;
+    </h2>
+
+    <form name="form1" method='POST' action="{:U('OpenRecord/attendance')}">
+        <!-- 查询区域 -->
+        <div class="tablenav top">
+            <!--单个查询条件-->
+            <div class="alignleft actions">
+                <assign name="var" value="search_time_start" />
+                <label>考勤日期</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="开始日期" value="{$search.$var}" class="medium"  />
+
+                <assign name="var" value="search_time_end" />
+                <label>~</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="截止日期" value="{$search.$var}" class="medium"  />
+            </div>
+            <div class="alignleft actions">
+                <label>考勤人员</label>
+                <assign name="var" value="search_user_nickname" />
+                <input type="text" usefor="search" name="{$var}" title="考勤人员" value="{$search.$var}" />
+                <assign name="var" value="search_user_ids" />
+                <input type="hidden" usefor="search" name="{$var}" value="{$search.$var}"/>
+            </div>
+
+            <!--单个查询条件结束-->
+            <div class="alignleft actions">
+                <input class="button" type="submit" value="查询" name="btn_search">
+            </div>
+        </div>
+        <br class="clear">
+        <!-- 查询区域结束 -->
+
+        <!-- 列表显示区域  -->
+        <table class="wp-list-table widefat fixed posts">
+            <thead>
+            <tr>
+                <th scope='col'  class='manage-column ' width="5%">编号</th>
+                <th scope='col'  class='manage-column ' width="10%">用户</th>
+                <th scope='col'  class='manage-column ' width="10%">出勤天数</th>
+                <th scope='col'  class='manage-column ' width="10%">迟到天数</th>
+                <th scope='col'  class='manage-column ' width="10%">早退天数</th>
+                <th scope='col'  class='manage-column ' width="10%">旷工天数</th>
+                <th scope='col'  class='manage-column ' width="10%">加班天数</th>
+                <th scope='col'  class='manage-column ' width="10%">加班时间</th>
+            </tr>
+            </thead>
+            <volist name="list" id="vo" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> onclick="attendanceDetail('{$vo.user_id}')">
+                <td class="manage-column" scope="col" >{$vo.user_id}</td>
+                <td class="manage-column" scope="col">{$vo.user_nickname}</td>
+                <td class="manage-column" scope="col">{$vo.work_day_count}</td>
+                <td class="manage-column" scope="col">{$vo.late_day_count}</td>
+                <td class="manage-column" scope="col">{$vo.leave_day_count}</td>
+                <td class="manage-column" scope="col">{$vo.absenteeism_day_count}</td>
+                <td class="manage-column" scope="col">{$vo.overtime_day_count}</td>
+                <td class="manage-column" scope="col">{$vo.overtime_day_time|toWorkHours}</td>
+                </tr>
+            </volist>
+        </table>
+        <!-- 列表显示区域结束  -->
+
+
+        <!--  分页显示区域 -->
+        <div class="tablenav bottom">
+            <div class="alignleft actions"></div>
+            <div class="tablenav-pages">
+                <div class="page">{$page}</div>
+                <input type="hidden" usefor="search" name="search_p" value="{$nowpage}"  >
+            </div>
+            <br class="clear">
+        </div>
+        <!--  分页显示区域结束 -->
+        <!-- 列表显示区域结束 -->
+    </form>
+
+    <div id="ajax-response"></div>
+    <br class="clear">
+</div>
+<!--wrap-->
+<div id="dialog" style="display: none;">
+    <div id="tree"></div>
+</div>

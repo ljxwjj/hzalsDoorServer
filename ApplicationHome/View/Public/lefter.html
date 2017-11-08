@@ -71,6 +71,22 @@
 				<div class='wp-menu-image dashicons-before dashicons dashicons-portfolio'><br /></div>
 				<div class='wp-menu-name'>出入记录</div>
 			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>出入记录</li>
+				<li class='wp-first-item <if condition="(CONTROLLER_NAME eq 'OpenRecord') and (ACTION_NAME eq 'index')">current</if>'>
+					<a href="__APP__/OpenRecord/index" class="wp-first-item current">出入记录</a>
+				</li>
+				<notempty name='_ACCESS_LIST_HOME.AUTHNODE'>
+				<li class='<if condition="(CONTROLLER_NAME eq 'OpenRecord') and (ACTION_NAME eq 'attendance')">current</if>'>
+					<a href="__APP__/OpenRecord/attendance" class="current">考勤查询</a>
+				</li>
+				</notempty>
+				<notempty name='_ACCESS_LIST_HOME.AUTHROLE'>
+				<li class='<if condition="(CONTROLLER_NAME eq 'OpenRecord') and (ACTION_NAME eq 'attendanceConfig')">current</if>'>
+					<a href="__APP__/OpenRecord/attendanceConfig" class="current">考勤设置</a>
+				</li>
+				</notempty>
+			</ul>
 		</li>
 	</if>
 
@@ -101,20 +117,20 @@
 					<a href="__APP__/Company/index" class="wp-first-item current">客户管理</a>
 				</li>
 				<notempty name='_ACCESS_LIST_HOME.AUTHNODE'>
-					<li class='<if condition="CONTROLLER_NAME eq 'AuthNode'">current</notempty>'>
+					<li class='<if condition="CONTROLLER_NAME eq 'AuthNode'">current</if>'>
 						<a href="__APP__/AuthNode/index" class="current">权限管理</a>
 					</li>
-				</if>
+				</notempty>
 				<notempty name='_ACCESS_LIST_HOME.AUTHROLE'>
-					<li class='<if condition="CONTROLLER_NAME eq 'AuthRole'">current</notempty>'>
+					<li class='<if condition="CONTROLLER_NAME eq 'AuthRole'">current</if>'>
 						<a href="__APP__/AuthRole/index" class="current">角色管理</a>
 					</li>
-				</if>
+				</notempty>
 				<notempty name='_ACCESS_LIST_HOME.APPSETTING'>
-					<li class='<if condition="CONTROLLER_NAME eq 'AppSetting'">current</notempty>'>
+					<li class='<if condition="CONTROLLER_NAME eq 'AppSetting'">current</if>'>
 						<a href="__APP__/AppSetting/index" class="current">APP配置</a>
 					</li>
-				</if>
+				</notempty>
 			</ul>
 		</li>
 	</if>
