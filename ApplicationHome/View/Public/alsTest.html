@@ -23,6 +23,8 @@
         </p>
 
         <textarea name="url" style="width:500px;height: 90px;">{$url}</textarea>
+
+        生成验证码：<textarea name="serial_numbers" style="width:500px;height: 90px;">{$url}</textarea>
         <p>
             用户：<input name="user_id" value="{$user_id}"/>
             <button type="submit">提交</button>
@@ -37,7 +39,7 @@
     <div style="float: left;width: 10%; height: 300px; text-align: center; margin: auto auto 0 auto;">
         <input type="button" value="转换" onclick="convertJson()"></input>
     </div>
-    <div style="float: left;width: 45%; height: 300px;" id="div_1">你好</div>
+    <div style="float: left;width: 45%; height: 300px;" id="div_1"><defined name="serial_number_encode_result">{serial_number_encode_result}<else/>你好</defined></div>
     <div style="clear: both;"></div>
 </div>
 {$signurl}

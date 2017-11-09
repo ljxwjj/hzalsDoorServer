@@ -472,4 +472,7 @@ class UserController extends CommonController {
         }
     }
 
+    public function settingCard() {
+        $this->display();
+    }
 }

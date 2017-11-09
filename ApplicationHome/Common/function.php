@@ -62,3 +62,14 @@ function toWorkHours($time) {
     else if ($i > 0) return $i."分";
     else return "";
 }
+
+function serialNumberToEncoded($serialNumber, $length) {
+    $encoded = md5($serialNumber.$length);
+    $salt = substr($encoded, $length, 2);
+    for ($i = 0; $i < $length; $i++) {
+        $encoded = crypt($encoded, $salt);
+        $encoded = md5($encoded);
+        $resultArray[] = substr($encoded, $i, 1);
+    }
+    return implode("", $resultArray);
+}

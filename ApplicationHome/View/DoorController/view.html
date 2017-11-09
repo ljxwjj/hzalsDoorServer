@@ -127,9 +127,6 @@
         <div class="alignleft actions">
             <a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
             <input name="btn_submit" class="button button-primary button-hero" value="编 辑" type="button" onclick="edit('id','{$vo.id}');">
-            <if condition="$vo['product_type'] eq 2">
-                <input name="btn_submit" class="button button-primary button-hero" value="卡片授权" type="button" onclick="card();">
-            </if>
         </div>
         <br class="clear">
     </div>
@@ -254,9 +251,6 @@
         }, "json");
     }
 
-    function card() {
-        location.href = "__URL__/settingCard/id/{$vo.id}";
-    }
 </script>
 
 

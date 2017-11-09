@@ -145,6 +145,7 @@ class DoorControllerController extends CommonController {
         $id = I('id');
         $serialNumber = I('serial_number', '', 'trim,strtoupper');
         $productType = I('product_type');
+        $vCode = I('v_code');
 
         $model = D('DoorController');
 
@@ -159,6 +160,16 @@ class DoorControllerController extends CommonController {
             $doorCount = substr($serialNumber, 9, 1);
         } else {
             $error['serial_number']='序列号格式错误！';
+        }
+        if ($productType == "2") {
+            if (empty($vCode)) {
+                $error['v_code'] = "请输入验证码！";
+            } else {
+                $encoded = serialNumberToEncoded($serialNumber, 6);
+                if (strcasecmp($encoded, $vCode) !== 0) {
+                    $error['v_code'] = "验证码错误！";
+                }
+            }
         }
 
         if ($doorCount) {

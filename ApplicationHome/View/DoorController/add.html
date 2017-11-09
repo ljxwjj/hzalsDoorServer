@@ -50,6 +50,15 @@
                     <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
                 </td>
             </tr>
+            <assign name="var" value="v_code" />
+            <tr class="dongtai type2">
+                <th><label for="">验证码：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+                    <span style="color:red;">*</span>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
             <assign name="var" value="model" />
             <tr class="dongtai type1">
                 <th><label for="">型号：</label></th>

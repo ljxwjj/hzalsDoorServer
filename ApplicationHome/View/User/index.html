@@ -10,6 +10,18 @@
         }
         location.href =  URL+"/doorlist/"+key+"/"+keyValue + '/' + params;
     }
+
+    function assigncard(key, id) {
+        var params = gerParams();
+        var keyValue;
+        keyValue = id;
+        if (!keyValue)
+        {
+            alert('请选择编辑项！');
+            return false;
+        }
+        location.href =  URL+"/settingCard/"+key+"/"+keyValue + '/' + params;
+    }
 </script>
 <div class="wrap">
     <h2>用户管理 &nbsp;<a class="add-new-h2" href="#" onclick="add('company_id', '{$company_id}')">新增</a>
@@ -85,6 +97,8 @@
                         <if condition="$vo.role_id gt 21">
                         <a href="javascript:assigndoor('id','{$vo.id}')">分配权限</a>&nbsp;
                         </if>
+
+                        <!--<a href="javascript:assigncard('id','{$vo.id}')">卡片授权</a>&nbsp;-->
                     </in>
                     <if condition="2 eq $vo['status']">
                         <a href="javascript:resume('id','{$vo.id}')">恢复</a>&nbsp;

@@ -262,6 +262,20 @@ class PublicController extends CommonController {
         $this->display();
     }
 
+    public function serialNumberEncoded() {
+
+        $serial_numbers = I("serial_numbers");
+        if ($serial_numbers) {
+            $serialArray = explode("\r\n", $serial_numbers);
+            foreach ($serialArray as $serialNumber) {
+                $resultArray[] = serialNumberToEncoded($serialNumber, 6);
+            }
+            $this->assign('serial_numbers', $serial_numbers);
+            $this->assign('serial_number_encode_result',implode("\r\n", $resultArray));
+        }
+        $this->display();
+    }
+
     private function getKeyValue($url) {
         $result = array();
         $mr = preg_match_all('/(\?|&)(.+?)=([^&?]*)/i', $url, $matchs);
