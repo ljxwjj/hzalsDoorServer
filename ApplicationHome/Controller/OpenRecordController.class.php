@@ -141,6 +141,7 @@ class OpenRecordController extends CommonController {
         }
 
         $smap['code_name'] = array('LIKE', 'attendance_%');
+        $smap['company_id'] = session('company_id');
         $setting = M('AppSetting')->where($smap)->getField('code_name,code_value');
         $ONE_DAY = 24*60*60;
         $WORK_TIME = hitotime($setting['attendance_1']);
@@ -242,6 +243,7 @@ class OpenRecordController extends CommonController {
         }
 
         $smap['code_name'] = array('LIKE', 'attendance_%');
+        $smap['company_id'] = session('company_id');
         $setting = M('AppSetting')->where($smap)->getField('code_name,code_value');
         $ONE_DAY = 24*60*60;
         $WORK_TIME = hitotime($setting['attendance_1']);
@@ -337,6 +339,7 @@ class OpenRecordController extends CommonController {
 
     private function loadAttendanceConfig() {
         $map['code_name'] = array('LIKE', 'attendance_%');
+        $map['company_id'] = session('company_id');
         $vo = M('AppSetting')->where($map)->getField('code_name,code_value');
         if (empty($vo['attendance_1'])) $vo['attendance_1'] = "09:00";
         if (empty($vo['attendance_2'])) $vo['attendance_2'] = "17:00";
@@ -344,13 +347,14 @@ class OpenRecordController extends CommonController {
     }
 
     private function saveAttendanceConfig($key, $value) {
+        $companyId = session('company_id');
         $model = M('AppSetting');
-        $item = $model->where(array("code_name"=>$key))->find();
+        $item = $model->where(array("code_name"=>$key, "company_id"=>$companyId))->find();
         if ($item) {
             $item["code_value"] = $value;
             $model->save($item);
         } else {
-            $item = array("code_name"=>$key, "code_value"=>$value);
+            $item = array("code_name"=>$key, "code_value"=>$value, "company_id"=>$companyId);
             $model->add($item);
         }
     }
