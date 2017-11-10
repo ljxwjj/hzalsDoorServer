@@ -188,7 +188,7 @@
          * validity_time           二维码有效期（秒）[300|600|1200]
          * controller_id  (可选)   授权控制器ID
          * door_id  (可选)      授权门ID
-     * 返回值
+    * 返回值
          * data        二维码链接
 
 * 我的授权  /Ucenter/authAccess
