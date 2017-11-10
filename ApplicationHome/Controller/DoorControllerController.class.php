@@ -648,7 +648,7 @@ class DoorControllerController extends CommonController {
         if ($door_id == null) {
             $error = "请选择门";
         }
-        if (strlen($password) != 6) {
+        if (strlen($password) != 0 && strlen($password) != 6) {
             $error = "请输入6位数字密码";
         }
         if ($error) {
@@ -711,7 +711,11 @@ class DoorControllerController extends CommonController {
         $sendMsg .= "01";
         $sendMsg .= $serialNumber;
         $sendMsg .= sprintf("%02x", $doorId);
-        $sendMsg .= sprintf("%-'f6d", $password); // 密码格式化 BCD格式
+        if (empty($password)) {
+            $sendMsg .= "ffffff";
+        } else {
+            $sendMsg .= sprintf("%-'f6d", $password); // 密码格式化 BCD格式
+        }
         $binMsg = hex2bin($sendMsg);
         fwrite($handle, $binMsg);
         fclose($handle);
