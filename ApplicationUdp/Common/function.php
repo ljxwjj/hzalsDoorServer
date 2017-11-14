@@ -87,3 +87,23 @@ function getUserDoors($user_id = null) {
     }
     return $doorMap;
 }
+
+function getArrayPart($array, $keys) {
+    $result = array();
+    foreach ($keys as $key) {
+        $result[$key] = $array[$key];
+    }
+    return $result;
+}
+
+function saveCardItem($cardItem, $model) {
+    if (!$model) $model = M("DoorControllerUserCard");
+    $whereMap = getArrayPart($cardItem, array("controller_id","user_id","card_number"));
+    return $model->where($whereMap)->save($cardItem);
+}
+
+function delCardItem($cardItem, $model) {
+    if (!$model) $model = M("DoorControllerUserCard");
+    $whereMap = getArrayPart($cardItem, array("controller_id","user_id","card_number"));
+    return $model->where($whereMap)->delete();
+}

@@ -316,6 +316,7 @@ class DoorControllerController extends CommonController {
                 $condition = array($pk => array('in', explode(',', $id)));
                 $list = $model->where($condition)->setField('status', -1);
                 if ($list !== false) {
+                    checkUserCardsByController($id);
                     $this->success('删除成功！');
                 } else {
                     $this->error('删除失败！');

@@ -9,11 +9,38 @@
 </div>
 <br class="clear">
 
-<div class="formarea">
-    卡号：<input name="card_number" type="text"/>
-    <input type="button" value="提交" onclick="completeInput()"/>
-</div>
+<div id="welcome-panel" class="welcome-panel">
+    <div class="welcome-panel-content">
+        <div style="float:left;width:80%;">
+            <form method='post' id="form1" action="__URL__/settingCardSave" name="form1">
+                卡号：<input name="card_number" type="text" value="{$user.card_number}"/>
+                <input type="hidden" name="id" value="{$user.id}">
+                <volist name="arrList" id="data">
+                    <div>
+                        {$data.cate_namepre}
+                        <input type="checkbox" name="node_id[{$data.controller_id}][]" value="{$data.door_index}"  <if condition="$data.checked eq 1">checked</if> >
+                        {$data.controller_name}-{$data.name}
+                    </div>
+                </volist>
+            </form>
 
+        </div>
+        <!-- 列表显示区域  -->
+    </div>
+</div>
+<br class="clear">
+
+
+
+<div class="wrap">
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+            <input name="btn_submit" class="button button-primary button-hero" value="保 存" type="button" onclick="save('form1','settingCardSave');">
+        </div>
+        <br class="clear">
+    </div>
+</div>
 
 
 <script>

@@ -789,4 +789,233 @@ function getUserDoors($user_id = null) {
     }
     return $doorMap;
 }
+
+function getUserDoors2($user) {
+    $role_id = M('AuthRoleUser')->where(array('user_id'=>$user['id']))->getField('role_id');
+
+    if ($role_id > 21) { // > 21即非管理员用户
+        $joinStr = "door_controller on door_controller.id=user_door.controller_id and door_controller.product_type=2";
+        $userDoors = M('UserDoor')->join($joinStr)->where(array('user_id'=>$user['id']))->select();
+        foreach ($userDoors as $door) {
+            $doorMap[$door['controller_id']][$door['door_id']] = 1;
+        }
+
+        $department = M('UserDepartment')->where(array('user_id'=>$user['id']))
+            ->getField('department_id');
+        while ($department) {
+            $joinStr = "door_controller on door_controller.id=department_door.controller_id and door_controller.product_type=2";
+            $departmentDoors = M('DepartmentDoor')->join($joinStr)->where(array('department_id'=>$department))
+                ->select();
+            foreach ($departmentDoors as $door) {
+                $doorMap[$door['controller_id']][$door['door_id']] = 1;
+            }
+            $department = M('Department')->where(array('id'=>$department))
+                ->getField('pid');
+        }
+    } else {
+        $map = array('status'=> 0, 'company_id'=>$user['company_id'], 'product_type'=>2);
+        $controllers = D('DoorController')->where($map)->select();
+        foreach ($controllers as $value) {
+            for ($j = 0; $j < $value['door_count']; $j++) {
+                $doorMap[$value['id']][$j] = 1;
+            }
+        }
+    }
+
+    return $doorMap;
+}
+
+function updateUserCards($userId, $cardNumber, $controllerDoors) {
+    $model = M("DoorControllerUserCard");
+    $allCards = $model->where(array('user_id'=>$userId))->select();
+    $oldCardNumber = M("User")->where("id=$userId")->getField("card_number");
+
+    $result = true;
+    $model->startTrans();
+    foreach ($allCards as $cardItem) {
+        $controllerId = $cardItem["controller_id"];
+        $allCardMap[$cardItem['card_number']][$controllerId] = $cardItem["doors"];
+
+        if (strcmp($cardItem['card_number'], $cardNumber) === 0) {
+            if (is_array($controllerDoors[$controllerId])) {
+                $doosStr = implode(",", $controllerDoors[$controllerId]);
+                if (strcmp($doosStr, $cardItem["doors"]) !== 0) {// 权限发生改变的
+                    $cardItem["doors"] = $doosStr;
+                    $cardItem["last_sync_time"] = 0;
+                    $cardItem["status"] = 0;
+                    $result = saveCardItem($cardItem, $model);
+                }
+            } else {
+                if (!empty($cardItem["doors"])) {// 被删除的权限同步
+                    $cardItem["doors"] = "";
+                    $cardItem["last_sync_time"] = 0;
+                    $cardItem["status"] = 0;
+                    $result = saveCardItem($cardItem, $model);
+                }
+            }
+        } else { // 卡号发生改变
+            if (!empty($cardItem["doors"])) {
+                $cardItem["doors"] = "";
+                $cardItem["last_sync_time"] = 0;
+                $cardItem["status"] = 0;
+                $result = saveCardItem($cardItem, $model);
+            }
+        }
+        if (!$result) break;
+    }
+    if ($result) {
+        if (!empty($cardNumber)) {// 新增名单
+            foreach ($controllerDoors as $controllerId=>$doors) {
+                if (!isset($allCardMap[$cardNumber][$controllerId])) {
+                    $cardItem = array('controller_id'=>$controllerId, 'user_id'=>$userId, 'card_number'=>$cardNumber, 'doors'=>implode(",", $doors));
+                    $result = $model->add($cardItem);
+                }
+                if (!$result) break;
+            }
+        }
+        if ($result && strcmp($oldCardNumber, $cardNumber) !== 0) {// 修改用户信息
+            $result = $model->execute("update user set card_number='%s' where id=%d", $cardNumber, $userId);
+        }
+    }
+    if ($result) {
+        $model->commit();
+    } else {
+        $model->rollback();
+    }
+    return $result;
+}
+
+function merge_door($a1, $a2) {
+    $result = array();
+    foreach ($a1 as $item) {
+        $controllerId = $item['controller_id'];
+        $doorId = $item['door_id'];
+        $result[$controllerId][] = $doorId;
+    }
+    foreach ($a2 as $item) {
+        $controllerId = $item['controller_id'];
+        $doorId = $item['door_id'];
+        if (!in_array($doorId, $result[$controllerId])) {
+            $result[$controllerId][] = $doorId;
+        }
+    }
+    return $result;
+}
+
+function checkUserCardByDepartment($departmentId) {// 当部门权限发生变化时
+    $departmentDoors = M("DepartmentDoor")->field("controller_id,door_id")->where(array('department_id'=>$departmentId))->select();
+    $departmentUsers = M("UserDepartment")->where(array('department_id'=>$departmentId))->getField("user_id", true);
+    $userRoleMap = M('AuthRoleUser')->where(array('user_id'=>array('in', $departmentUsers)))->getField('user_id,role_id');
+    $userCardMap = M('User')->where(array('id'=>array('in', $departmentUsers)))->getField("id,card_number");
+    foreach ($departmentUsers as $userId) {
+        if ($userRoleMap[$userId] > 21) {// 普通用户
+            $userDoors = M("UserDoor")->field("controller_id,door_id")->where(array('user_id'=>$userId))->select();
+            $userDoors = merge_door($departmentDoors, $userDoors);
+            $userCards = M("DoorControllerUserCard")->where(array('user_id'=>$userId, 'card_number'=>$userCardMap[$userId]))->select();
+            foreach ($userCards as $cardItem) {
+                $controllerId = $cardItem["controller_id"];
+                if (!is_array($userDoors[$controllerId])) {
+                    $cardItem["doors"] = "";
+                    $cardItem["status"] = 0;
+                    $cardItem["last_sync_time"] = 0;
+                    saveCardItem($cardItem);
+                } else {
+                    $doors = explode(",", $cardItem["doors"]);
+                    $needUpdate = false;
+                    foreach ($doors as $k=>$doorId) {
+                        if (!in_array($doorId, $userDoors[$controllerId])) {
+                            unset($doors[$k]);
+                            $needUpdate = true;
+                        }
+                    }
+                    if ($needUpdate) {
+                        $cardItem["doors"] = implode(",", $doors);
+                        $cardItem["status"] = 0;
+                        $cardItem["last_sync_time"] = 0;
+                        saveCardItem($cardItem);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function checkUserCardsByUser($userId) {// 当用户权限发生变化时
+    $user = M("User")->where("id=$userId")->find();
+    if ($user["status"] != 1) {// 离职等情况
+        $userCards = M("DoorControllerUserCard")->where(array('user_id'=>$userId))->select();
+        foreach ($userCards as $cardItem) {
+            if (strlen($cardItem["doors"]) > 0) {
+                $cardItem["doors"] = "";
+                $cardItem["status"] = 0;
+                $cardItem["last_sync_time"] = 0;
+                saveCardItem($cardItem);
+            }
+        }
+    } else {// 修改部门，修改权限
+        $departmentId = M("UserDepartment")->where("user_id=$userId")->getField("department_id");
+        if ($departmentId) {
+            $departmentDoors = M("DepartmentDoor")->field("controller_id,door_id")->where(array('department_id'=>$departmentId))->select();
+        } else {
+            $departmentDoors = array();
+        }
+        $roleId = M('AuthRoleUser')->where("user_id=$userId")->getField('role_id');
+        if ($roleId > 21) {
+            $userDoors = M("UserDoor")->field("controller_id,door_id")->where(array('user_id'=>$userId))->select();
+            $userDoors = merge_door($departmentDoors, $userDoors);
+            $userCards = M("DoorControllerUserCard")->where(array('user_id'=>$userId, 'card_number'=>$user["card_number"]))->select();
+            foreach ($userCards as $cardItem) {
+                $controllerId = $cardItem["controller_id"];
+                if (!is_array($userDoors[$controllerId])) {
+                    $cardItem["doors"] = "";
+                    $cardItem["status"] = 0;
+                    $cardItem["last_sync_time"] = 0;
+                    saveCardItem($cardItem);
+                } else {
+                    $doors = explode(",", $cardItem["doors"]);
+                    $needUpdate = false;
+                    foreach ($doors as $k=>$doorId) {
+                        if (!in_array($doorId, $userDoors[$controllerId])) {
+                            unset($doors[$k]);
+                            $needUpdate = true;
+                        }
+                    }
+                    if ($needUpdate) {
+                        $cardItem["doors"] = implode(",", $doors);
+                        $cardItem["status"] = 0;
+                        $cardItem["last_sync_time"] = 0;
+                        $result = saveCardItem($cardItem);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function getArrayPart($array, $keys) {
+    $result = array();
+    foreach ($keys as $key) {
+        $result[$key] = $array[$key];
+    }
+    return $result;
+}
+
+function saveCardItem($cardItem, $model) {
+    if (!$model) $model = M("DoorControllerUserCard");
+    $whereMap = getArrayPart($cardItem, array("controller_id","user_id","card_number"));
+    return $model->where($whereMap)->save($cardItem);
+}
+
+function checkUserCardsByController($controllerId) {// 当控制器权限发生变化时
+    $controller = M("DoorController")->where("id=$controllerId")->find();
+    if ($controller["status"] == -1) {
+        $userCards = M("DoorControllerUserCard")->where(array('controller_id'=>$controllerId, 'doors'=>array('neq',"")))->select();
+        foreach ($userCards as $cardItem) {
+            $cardItem["doors"] = "";
+            $cardItem["status"] = 0;
+            $cardItem["last_sync_time"] = 0;
+            saveCardItem($cardItem);
+        }
+    }
+}
 ?>

@@ -835,6 +835,15 @@ function fnFormModeSubmit(form, mode, keyname, keyid) {
 
 
 
-
+function deleteusers(key1,value1,key2,value2){
+    document.form1['mode'].value = 'deleteusers';
+    if(key1 != "" && value1 != "") {
+        document.form1[key1].value = value1;
+    }
+    if(key2 != "" && value2 != "") {
+        document.form1[key2].value = value2;
+    }
+    document.form1.submit();
+}
 
 

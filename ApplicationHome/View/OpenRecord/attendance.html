@@ -107,6 +107,13 @@
         location.href =  APP+"/OpenRecord/attendanceDetail/id/"+id + '/' + params;
     }
 </script>
+<style type="text/css">
+    tr.change:hover
+    {
+        background-color:#eeeeee;
+        cursor:pointer;
+    }
+</style>
 <div class="wrap">
     <h2>考勤统计 &nbsp;
     </h2>
@@ -152,10 +159,11 @@
                 <th scope='col'  class='manage-column ' width="10%">旷工天数</th>
                 <th scope='col'  class='manage-column ' width="10%">加班天数</th>
                 <th scope='col'  class='manage-column ' width="10%">加班时间</th>
+                <th scope='col'  class='manage-column ' width="5%">详情</th>
             </tr>
             </thead>
             <volist name="list" id="vo" mod="2">
-                <tr <eq name="mod" value="0"> class="alternate" </eq> onclick="attendanceDetail('{$vo.user_id}')">
+                <tr class="change <eq name="mod" value="0"> alternate</eq>" onclick="attendanceDetail('{$vo.user_id}')">
                 <td class="manage-column" scope="col" >{$vo.user_id}</td>
                 <td class="manage-column" scope="col">{$vo.user_nickname}</td>
                 <td class="manage-column" scope="col">{$vo.work_day_count}</td>
@@ -164,6 +172,7 @@
                 <td class="manage-column" scope="col">{$vo.absenteeism_day_count}</td>
                 <td class="manage-column" scope="col">{$vo.overtime_day_count}</td>
                 <td class="manage-column" scope="col">{$vo.overtime_day_time|toWorkHours}</td>
+                <td class="manage-column" scope="col"><a href="javascript:attendanceDetail('{$vo.user_id}');">详情</a></td>
                 </tr>
             </volist>
         </table>

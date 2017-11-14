@@ -321,10 +321,26 @@ class UserController extends CommonController {
 
         if ($roleSaveFlag && $departmentSaveFlag && $result) {
             $model->commit();
+            checkUserCardsByUser($id);
             $this->success('数据已保存！', $this->getReturnUrl());
         } else {
             $model->rollback();
             $this->error('数据未保存！'.$model->getError(), $this->getReturnUrl());
+        }
+    }
+
+    public function forbid($name='') {
+        $name = $name ? $name : $this->getActionName();
+        $model = D($name);
+        $pk = $model->getPk();
+        $id = I($pk);
+        $condition = array($pk => array('in', $id));
+        $list = $model->forbid($condition);
+        if ($list !== false) {
+            checkUserCardsByUser($id);
+            $this->success('状态禁用成功',$this->getReturnUrl());
+        } else {
+            $this->error('状态禁用失败！',$this->getReturnUrl());
         }
     }
 
@@ -365,6 +381,7 @@ class UserController extends CommonController {
             $result = true;
         }
         if ($result) {
+            checkUserCardsByUser($id);
             $this->success('数据已保存！', $this->getReturnUrl());
         } else {
             $this->error('数据未保存！'.$UserDoor->getError(), $this->getReturnUrl());
@@ -473,6 +490,99 @@ class UserController extends CommonController {
     }
 
     public function settingCard() {
+        $id = I('id');
+
+        if (empty($id)) {
+            $this->error('请选择要分配权限的用户！');
+            exit;
+        }
+        $user = M('User')->find($id);
+        $this->assign('user', $user);
+
+        if (!$user) {
+            $this->error('非法操作');
+            return;
+        }
+
+        $doorMap = getUserDoors2($user);
+
+        //取得所有门禁
+        $Node = D('DoorController');
+        $map = array();
+        $map['status'] = 0;
+        $map['id'] = array('in', array_keys($doorMap));
+        $controllers = $Node->where($map)->getField("id,name,door_count");
+
+        $cid = array_keys($controllers);
+        $map = array('controller_id'=>array('in', $cid));
+        $doors = M('Door')->where($map)->select();
+        foreach ($doors as $door) {
+            $doorsMap[$door['controller_id']][$door['door_index']] = $door;
+        }
+
+        $arrTree = array();
+        foreach ($controllers as $value) {
+            for ($j = 0; $j < $value['door_count']; $j++) {
+                if ($doorMap[$value['id']][$j]) {
+                    $door = $doorsMap[$value['id']][$j];
+                    if (!$door) {
+                        $door = array();
+                        $door['controller_id'] = $value['id'];
+                        $door['door_index'] = $j;
+                        $door['name'] = $j . "号门";
+                    }
+                    $door['cate_lv'] = 0;
+                    $door['cate_namepre'] = '';
+                    $door['controller_name'] = $value['name'];
+                    $arrTree[] = $door;
+                }
+            }
+        }
+
+        // 加载已选中项
+        $cardNumber = $user['card_number'];
+        if ($cardNumber) {
+            $map = array('card_number'=>$cardNumber, 'user_id'=>$id);
+            $userCards = M("DoorControllerUserCard")->where($map)->getField("controller_id, doors");
+            foreach ($arrTree as $k=>$v) {
+                $pos = strpos($userCards[$v['controller_id']], $v['door_index']."");
+                if ($pos !== false) {
+                    $arrTree[$k]['checked'] = 1;
+                }
+            }
+        }
+        $this->assign('arrList', $arrTree);
         $this->display();
+    }
+
+    public function settingCardSave() {
+        $user_id = I('id', '', 'int');
+        $card_number = I('card_number');
+        $node_id = I('node_id');
+
+        $user = M("User")->where("id=$user_id")->find();
+        $userDoors = getUserDoors2($user);
+        foreach ($node_id as $controllerId=>$doors) {
+            if (is_array($userDoors[$controllerId])) {
+                $doors = is_array($doors)?$doors:array($doors);
+                foreach ($doors as $doorId) {
+                    if (!$userDoors[$controllerId][$doorId]) {
+                        $this->error('门未授权，数据未保存！', $this->getReturnUrl());
+                        return;
+                    }
+                }
+            } else {
+                $this->error('控制器未授权，数据未保存！', $this->getReturnUrl());
+                return;
+            }
+        }
+
+        $result = updateUserCards($user_id, $card_number, $node_id);
+
+        if ($result) {
+            $this->success('数据已保存！', $this->getReturnUrl());
+        } else {
+            $this->error('数据未保存！', $this->getReturnUrl());
+        }
     }
 }

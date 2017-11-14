@@ -152,6 +152,18 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
                         $info = array();
                         exec("php door/udp.php /Index/swingCord/serial_number/$addr/data/$swingData", $info);
                         _log($info[0]);
+                    } else if ($record['event_name'] == '01') { // 0x01 正常刷卡事件
+                        _log('discovered swing card2');
+                        $swingData = implode("", $record);
+                        $info = array();
+                        exec("php door/udp.php /Index/swingCord2/serial_number/$addr/data/$swingData", $info);
+                        _log($info[0]);
+                    } else if ($record['event_name'] == '06') { // 0x06 密码开门事伯
+                        _log('discovered swing card3');
+                        $swingData = implode("", $record);
+                        $info = array();
+                        exec("php door/udp.php /Index/swingCord3/serial_number/$addr/data/$swingData", $info);
+                        _log($info[0]);
                     }
                 }
             } else {
@@ -166,6 +178,11 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             _log("set door password success feedback \n");
             $info = array();
             exec("php door/udp.php /Index/setDoorPasswordFeedback/ip/$ip/port/$port/data/$data", $info);
+            _log($info[0]);
+        } else if ($command == "05c4") {
+            _log("set user card success feedback \n");
+            $info = array();
+            exec("php door/udp.php /Index/setUserCardFeedback/ip/$ip/port/$port/data/$data", $info);
             _log($info[0]);
         } else {
             _log("unknow command !!!\n");
@@ -246,7 +263,7 @@ function paresLocalMessage($data) {
         } else {
             _log("door is not on line!!! \n");
         }
-    } else if (strcmp($command, "0003") === 0) {//加载卡片设置  300300037F000001270E015209150810000026010000
+    } else if (strcmp($command, "0003") === 0) {//下发名单  300300037F000001270E015209150810000026010000
         _log( "received load door card command ");
         $ip = sprintf("%d.%d.%d.%d", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
         $port = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
@@ -255,9 +272,14 @@ function paresLocalMessage($data) {
         if ($ptrol === '01') {
             $addr = sprintf("%02x%02x%02x%02x%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
         }
-        $cardNumber = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        $cardCount = sprintf("%02x", $unData[++$i]);
+        $cardLength = sprintf("%02x", $unData[++$i]);
+        $cardContent = "";
+        for ($i = 0; $i < $cardCount; $i++) {
+            for ($j = 0; $j < 16; $j) $cardContent .= sprintf("%02x", $unData[++$i]);
+        }
 
-        $cmd = "";// 设置门禁密码 0292
+        $cmd = "05c4".$cardCount.$cardLength.$cardContent;// 设置卡片开门 05c4
         $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
 
         _log( "++3 serial_number ：$addr  ++3 ");

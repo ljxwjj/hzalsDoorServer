@@ -365,10 +365,10 @@ class DoorControllerController extends CommonRestController {
 
             $wait = intval($data['wait_time']);
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
-            $result = $this->createResult(200, "开门成功", array("id"=>$addid));
+            $result = $this->createResult(200, "操作成功", array("id"=>$addid));
             $this->response($result,'json');
         } else {
-            $result = $this->createResult(0, "开门失败");
+            $result = $this->createResult(0, "操作失败");
             $this->response($result,'json');
         }
 

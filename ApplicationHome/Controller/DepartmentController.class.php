@@ -306,6 +306,8 @@ class DepartmentController extends CommonController {
             }
         }
         $DepartmentDoor->addall($data);
+
+        checkUserCardByDepartment($id);
     }
 
     /**
@@ -447,6 +449,8 @@ class DepartmentController extends CommonController {
         $map['department_id'] = array('eq',$id);
         $map['user_id'] = array('eq',$user_id);
         $RoleUser->where($map)->delete();
+
+        checkUserCardsByUser($user_id);
     }
 
     /**

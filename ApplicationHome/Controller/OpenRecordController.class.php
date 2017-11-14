@@ -133,6 +133,7 @@ class OpenRecordController extends CommonController {
     private function _attendance_list($model, $map, $timeStart, $timeEnd) {
         $dateStart = strtotime($timeStart);
         $dateEnd = strtotime($timeEnd);
+        $companyId = session('company_id');
         $dateLine = array();
         while ($dateStart <= $dateEnd) {
             $dateLine[$timeStart] = isWorkDay($timeStart);
@@ -141,7 +142,7 @@ class OpenRecordController extends CommonController {
         }
 
         $smap['code_name'] = array('LIKE', 'attendance_%');
-        $smap['company_id'] = session('company_id');
+        $smap['company_id'] = $companyId;
         $setting = M('AppSetting')->where($smap)->getField('code_name,code_value');
         $ONE_DAY = 24*60*60;
         $WORK_TIME = hitotime($setting['attendance_1']);
@@ -160,6 +161,14 @@ class OpenRecordController extends CommonController {
             } else {
                 $attendance[$userId]['work_day'][$day] = array('begin'=>$record['open_time'], 'end'=>$record['open_time']);
             }
+        }
+        $userModel = M("User");
+        $attendanceUsers = array_keys($attendance);
+        $unAttendanceUsers = $userModel->where(array("company_id"=>$companyId, "id"=>array("not in", $attendanceUsers), "status"=>1))->select();
+        foreach ($unAttendanceUsers as $user) {
+            $userId = $user["id"];
+            $attendance[$userId]['user_id'] = $user["id"];
+            $attendance[$userId]['user_nickname'] = $user['nickname'];
         }
         foreach ($attendance as $userId=>$detail) {
             $attendance[$userId]['work_day_count'] = count($detail['work_day']);  // 出勤
