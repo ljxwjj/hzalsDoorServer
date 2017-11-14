@@ -76,16 +76,12 @@
 				<li class='wp-first-item <if condition="(CONTROLLER_NAME eq 'OpenRecord') and (ACTION_NAME eq 'index')">current</if>'>
 					<a href="__APP__/OpenRecord/index" class="wp-first-item current">出入记录</a>
 				</li>
-				<notempty name='_ACCESS_LIST_HOME.AUTHNODE'>
 				<li class='<if condition="(CONTROLLER_NAME eq 'OpenRecord') and (ACTION_NAME eq 'attendance')">current</if>'>
 					<a href="__APP__/OpenRecord/attendance" class="current">考勤查询</a>
 				</li>
-				</notempty>
-				<notempty name='_ACCESS_LIST_HOME.AUTHROLE'>
 				<li class='<if condition="(CONTROLLER_NAME eq 'OpenRecord') and (ACTION_NAME eq 'attendanceConfig')">current</if>'>
 					<a href="__APP__/OpenRecord/attendanceConfig" class="current">考勤设置</a>
 				</li>
-				</notempty>
 			</ul>
 		</li>
 	</if>
