@@ -90,6 +90,7 @@
                 <th scope='col'  class='manage-column ' width="10%">控制器名称</th>
                 <th scope='col'  class='manage-column ' width="10%">门名称（编号）</th>
                 <th scope='col'  class='manage-column ' width="10%">时间</th>
+                <th scope='col'  class='manage-column ' width="10%">开门方式</th>
                 <th scope='col'  class='manage-column ' width="10%">公司</th>
                 <th scope='col'  class='manage-column ' width="5%">结果</th>
             </tr>
@@ -105,6 +106,7 @@
                 </td>
                 <td class="manage-column" scope="col">{$vo.door_name}({$vo.door_id})</td>
                 <td class="manage-column" scope="col">{$vo.open_time|toDate='Y-m-d H#i#s'}</td>
+                <td class="manage-column" scope="col">{$vo.way|showOpenDoorWay}</td>
                 <td class="manage-column" scope="col">{$vo.company_name}</td>
                 <td class="manage-column" scope="col">{$vo['feedback_time']?'成功':'不成功'}</td>
                 </tr>

@@ -51,8 +51,21 @@ function dateToWeek($date) {
     }
 }
 
-function hitotime($hi) {
-    return strtotime($hi)%(24*60*60);
+function showOpenDoorWay($way) {
+    switch ($way) {
+        case 1: return "远程";
+        case 2: return "二维码";
+        case 3: return "代理商授权";
+        case 4: return "分享码";
+        case 5: return "刷卡";
+        case 6: return "密码";
+    }
+}
+
+function timeToTimeLong($hi) {// 时间转当天时长
+    $hiTime = strtotime($hi);
+    $todayTime = strtotime(date("Y-m-d", $hiTime));
+    return $hiTime - $todayTime;
 }
 
 function toWorkHours($time) {

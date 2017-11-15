@@ -144,9 +144,8 @@ class OpenRecordController extends CommonController {
         $smap['code_name'] = array('LIKE', 'attendance_%');
         $smap['company_id'] = $companyId;
         $setting = M('AppSetting')->where($smap)->getField('code_name,code_value');
-        $ONE_DAY = 24*60*60;
-        $WORK_TIME = hitotime($setting['attendance_1']);
-        $CLOSING_TIME = hitotime($setting['attendance_2']);
+        $WORK_TIME = timeToTimeLong($setting['attendance_1']);
+        $CLOSING_TIME = timeToTimeLong($setting['attendance_2']);
 
         //分页查询数据
         $voList = $model->where($map)->order("`open_time` asc")->select();
@@ -179,22 +178,22 @@ class OpenRecordController extends CommonController {
             $attendance[$userId]['overtime_day_time'] = 0;            // 加班时长
             foreach ($detail['work_day'] as $day=>$dayInfo) {
                 if (isWorkDay($day)) {
-                    if ($dayInfo['begin'] % $ONE_DAY - $WORK_TIME > $setting['attendance_5'] * 60) {// 上班旷工
+                    if (timeToTimeLong($dayInfo['begin']) - $WORK_TIME > $setting['attendance_5'] * 60) {// 上班旷工
                         $attendance[$userId]['absenteeism_day_count'] += 1;
-                    } else if ($CLOSING_TIME - $dayInfo['end'] % $ONE_DAY > $setting['attendance_5'] * 60) {// 下班旷工
+                    } else if ($CLOSING_TIME - timeToTimeLong($dayInfo['end']) > $setting['attendance_5'] * 60) {// 下班旷工
                         $attendance[$userId]['absenteeism_day_count'] += 1;
                     } else {
-                        if ($dayInfo['begin'] % $ONE_DAY - $WORK_TIME > $setting['attendance_3'] * 60) {// 迟到
+                        if (timeToTimeLong($dayInfo['begin']) - $WORK_TIME > $setting['attendance_3'] * 60) {// 迟到
                             $attendance[$userId]['late_day_count'] += 1;
                         }
-                        if ($CLOSING_TIME - $dayInfo['end'] % $ONE_DAY > $setting['attendance_5'] * 60) {// 早退
+                        if ($CLOSING_TIME - timeToTimeLong($dayInfo['end']) > $setting['attendance_5'] * 60) {// 早退
                             $attendance[$userId]['leave_day_count'] += 1;
                         }
                     }
 
-                    if ($dayInfo['end'] % $ONE_DAY - $CLOSING_TIME > $setting['attendance_6'] * 60) {// 加班
+                    if (timeToTimeLong($dayInfo['end']) - $CLOSING_TIME > $setting['attendance_6'] * 60) {// 加班
                         $attendance[$userId]['overtime_day_count'] += 1;
-                        $attendance[$userId]['overtime_day_time'] += ($dayInfo['end'] % $ONE_DAY - $CLOSING_TIME);
+                        $attendance[$userId]['overtime_day_time'] += (timeToTimeLong($dayInfo['end']) - $CLOSING_TIME);
                     }
                 } else {
                     $attendance[$userId]['overtime_day_count'] += 1;
@@ -254,9 +253,8 @@ class OpenRecordController extends CommonController {
         $smap['code_name'] = array('LIKE', 'attendance_%');
         $smap['company_id'] = session('company_id');
         $setting = M('AppSetting')->where($smap)->getField('code_name,code_value');
-        $ONE_DAY = 24*60*60;
-        $WORK_TIME = hitotime($setting['attendance_1']);
-        $CLOSING_TIME = hitotime($setting['attendance_2']);
+        $WORK_TIME = timeToTimeLong($setting['attendance_1']);
+        $CLOSING_TIME = timeToTimeLong($setting['attendance_2']);
 
         //分页查询数据
         $voList = $model->where($map)->order("`open_time` asc")->select();
@@ -271,21 +269,21 @@ class OpenRecordController extends CommonController {
         }
         foreach ($attendance as $day=>$dayInfo) {
             if (isWorkDay($day)) { // 工作日打卡
-                if (($dayInfo['begin']%$ONE_DAY) - $WORK_TIME > $setting['attendance_5'] * 60) {// 上班旷工
+                if (timeToTimeLong($dayInfo['begin']) - $WORK_TIME > $setting['attendance_5'] * 60) {// 上班旷工
                     $attendance[$day]['absenteeism'] = "旷工";
-                } else if ($CLOSING_TIME - ($dayInfo['end']%$ONE_DAY) > $setting['attendance_5'] * 60) {// 下班旷工
+                } else if ($CLOSING_TIME - timeToTimeLong($dayInfo['end']) > $setting['attendance_5'] * 60) {// 下班旷工
                     $attendance[$day]['absenteeism'] = "旷工";
                 } else {
-                    if ($dayInfo['begin']%$ONE_DAY - $WORK_TIME > $setting['attendance_3'] * 60) {// 迟到
+                    if (timeToTimeLong($dayInfo['begin']) - $WORK_TIME > $setting['attendance_3'] * 60) {// 迟到
                         $attendance[$day]['late'] = "迟到";
                     }
-                    if ($CLOSING_TIME - $dayInfo['end']%$ONE_DAY > $setting['attendance_5'] * 60) {// 早退
+                    if ($CLOSING_TIME - timeToTimeLong($dayInfo['end']) > $setting['attendance_5'] * 60) {// 早退
                         $attendance[$day]['leave'] = "早退";
                     }
                 }
 
-                if ($dayInfo['end']%$ONE_DAY - $CLOSING_TIME > $setting['attendance_6'] * 60) {
-                    $attendance[$day]['overtime'] = ($dayInfo['end']%$ONE_DAY - $CLOSING_TIME);
+                if (timeToTimeLong($dayInfo['end']) - $CLOSING_TIME > $setting['attendance_6'] * 60) {
+                    $attendance[$day]['overtime'] = (timeToTimeLong($dayInfo['end']) - $CLOSING_TIME);
                 }
             } else { // 非工作日打卡
                 $attendance[$day]['overtime'] = ($dayInfo['end'] - $dayInfo['begin']);
