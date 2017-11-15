@@ -373,4 +373,28 @@ class DoorControllerController extends CommonRestController {
         }
 
     }
+
+    public function openDoorFeedBackBySecret() {
+        $id = I('id');
+        $secret = I('secret_key');
+
+        $company_id = M('Company')->where(array('secret_key'=>$secret))->getField("id");
+        if (!$company_id) {
+            $result = $this->createResult(0, "用户密钥错误");
+            $this->response($result,'json');
+            exit;
+        }
+
+        if ($id) {
+            $feedbackTime = M('OpenRecord')->where(array('id'=>$id))->getField('feedback_time');
+            if ($feedbackTime > 0) {
+                $result = $this->createResult(200, "开门成功");
+            } else {
+                $result = $this->createResult(1, "开门中");
+            }
+        } else {
+            $result = $this->createResult(0, "非法请求");
+        }
+        $this->response($result,'json');
+    }
 }

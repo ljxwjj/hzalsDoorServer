@@ -147,6 +147,14 @@
 
     * 参数 
         * id          开门请求标识
+        * secret\_key      用户秘钥
+    * 返回值
+        * data        code 200：开门成功 1：等待门禁响应  0：非法请求
+             
+* 开门反馈 /DoorController/openDoorFeedBackBySecret
+
+    * 参数 
+        * id          开门请求标识
     * 返回值
         * data        code 200：开门成功 1：等待门禁响应  0：非法请求
         

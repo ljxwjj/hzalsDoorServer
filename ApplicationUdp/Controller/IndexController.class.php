@@ -443,7 +443,7 @@ class IndexController extends Controller\RestController {
                             delCardItem($cardItem, $userCardModel);
                         } else {
                             $cardItem["status"] = 1;
-                            saveCardItem($cardItem);
+                            saveCardItem($cardItem, $userCardModel);
                         }
                     }
                 }
