@@ -117,6 +117,9 @@ class RBAC {
     static function AccessToken() {
         $user_id = I('user_id');
         $token = I('token');
+        if (empty($user_id) || empty($token)) {
+            return false;
+        }
         $model = M('UserToken');
         $result = $model->where(compact('user_id'))->find();
         return strcmp($token, $result['token']) === 0;
