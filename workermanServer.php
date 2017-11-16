@@ -95,6 +95,22 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
         } else if ($command == "0902") { // 心跳包
             _log("budong budong budong ..... \n");
 
+            $now = time();
+            $cmd = "090201";// 心跳应答(返回系统时间)
+            $cmd .= sprintf("%04x", date("Y", $now)); // 年 2字节
+            $cmd .= sprintf("%02x", date("m", $now)); // 月 2字节
+            $cmd .= sprintf("%02x", date("d", $now)); // 日 2字节
+            $cmd .= sprintf("%02x", date("H", $now)); // 时 2字节
+            $cmd .= sprintf("%02x", date("i", $now)); // 分 2字节
+            $cmd .= sprintf("%02x", date("s", $now)); // 秒 2字节
+            $cmd .= sprintf("%02x", date("w", $now)); // 周 2字节
+            $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
+            $crc = strCRCHex($msg);
+            echo "\n";echo "budong budong feedback cmd: ".$msg.$crc;echo "\n";
+            $msg = hex2bin($msg.$crc);
+            $connection->send($msg);
+            _log("budong budong feedback success sended \n") ;
+
             $info = array();
             exec("php door/udp.php /Index/index/ip/$ip/port/$port/data/$data", $info);
             _log($info[0]);
