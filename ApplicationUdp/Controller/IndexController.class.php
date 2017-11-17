@@ -660,14 +660,16 @@ class IndexController extends Controller\RestController {
         $map['company_id'] = $company_id;
         $userData = $MUser->where($map)->find();
         if ($userData) {
+            $openTime = sprintf("%d-%d-%d %d:%d:%d", hexdec($record['year']), hexdec($record['month']), hexdec($record['day']), hexdec($record['hour']), hexdec($record['minute']), hexdec($record['second']));
             $now = time();
             $user_id = $userData['id'];
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
-            $openRecord['open_time'] = $now;
+            $openRecord['open_time'] = strtotime($openTime);
             $openRecord['feedback_time'] = $now;
             $openRecord['user_id'] = $user_id;
             $openRecord['way'] = 5;
+            $openRecord['mark'] = $record['carad_number'];
             M('OpenRecord')->add($openRecord);
 
             $message = "record swing user card success";
@@ -681,10 +683,12 @@ class IndexController extends Controller\RestController {
     private function swingDoorPwd($record, $controllerData, $door_id) {// 记录输密码数据上报
         $controller_id = $controllerData['id'];
         $company_id = $controllerData['company_id'];
+        $openTime = sprintf("%d-%d-%d %d:%d:%d", hexdec($record['year']), hexdec($record['month']), hexdec($record['day']), hexdec($record['hour']), hexdec($record['minute']), hexdec($record['second']));
 
         $openRecord['controller_id'] = $controller_id;
         $openRecord['door_id'] = $door_id;
-        $openRecord['open_time'] = time();
+        $openRecord['open_time'] = strtotime($openTime);
+        $openRecord['feedback_time'] = time();
         $openRecord['user_id'] = -999;
         $openRecord['way'] = 6;
         M('OpenRecord')->add($openRecord);
