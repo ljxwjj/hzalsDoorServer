@@ -84,7 +84,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $cmd = "090100";// 登录成功
             $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
             $crc = strCRCHex($msg);
-            echo "\n";echo "login feedback cmd: ".$msg.$crc;echo "\n";
+//            echo "\n";echo "login feedback cmd: ".$msg.$crc;echo "\n";
             $msg = hex2bin($msg.$crc);
             try {
                 $connection->send($msg);
