@@ -8,7 +8,7 @@ if (DIRECTORY_SEPARATOR === "/") {
 require_once './ApplicationUdp/Common/function.php';
 
 use Workerman\Worker;
-use Workerman\Connection\AsyncUdpConnection;
+//use Workerman\Connection\AsyncUdpConnection;
 
 // 将屏幕打印输出到Worker::$stdoutFile指定的文件中
 Worker::$stdoutFile = './log/stdout.log';
@@ -86,7 +86,11 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $crc = strCRCHex($msg);
             echo "\n";echo "login feedback cmd: ".$msg.$crc;echo "\n";
             $msg = hex2bin($msg.$crc);
-            $connection->send($msg);
+            try {
+                $connection->send($msg);
+            } catch (Exception $e) {
+                _log("send exception >>".$e->getMessage());
+            }
             _log("login success sended \n") ;
 
             $info = array();
