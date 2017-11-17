@@ -657,7 +657,7 @@ class IndexController extends Controller\RestController {
 
         $MUser = M('User');
         $map = array();
-        $map['card_number'] = $record['carad_number'];
+        $map['card_number'] = hexdec($record['carad_number']);
         $map['company_id'] = $company_id;
         $userData = $MUser->where($map)->find();
         if ($userData) {
