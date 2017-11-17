@@ -510,10 +510,10 @@ class IndexController extends Controller\RestController {
                 $sendMsg .= sprintf("%02x", $this->convertDoors($doorCount, $cardItem["doors"]));// doors 1个字节
                 $sendMsg .= "00"; // 普通权限卡组别0
                 $sendMsg .= "0000000000000000"; // 8字节 8个读头日期段
-                $sendMsg .= sprintf("%02x", date("Y", $now) - 2000 + 50); // 节假日有效
-                $sendMsg .= "01"; // 失效年份
+                $sendMsg .= "00"; // 节假日有效
+                $sendMsg .= sprintf("%02x", date("Y", $now) - 2000 + 50); // 失效年份
                 $sendMsg .= "01"; // 失效月份
-                $sendMsg .= "00"; // 失效日
+                $sendMsg .= "01"; // 失效日
                 $sendMsg .= "00"; // 失效小时
                 $sendMsg .= "00"; // 失效分钟
                 $sendMsg .= "FFFFFFFFFFFF"; // 剩余补足 6个字节 全F
