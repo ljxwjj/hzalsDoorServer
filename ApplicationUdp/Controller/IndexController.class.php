@@ -416,7 +416,7 @@ class IndexController extends Controller\RestController {
             $UdpOperationModel = M('UdpOperation');
             $map['serial_number'] = $addr;
             $map['command_key'] = 'setUserCard';
-            $map['create_time'] = array('GT', time()-2);
+            $map['create_time'] = array('GT', time()-5);
             $operation = $UdpOperationModel->where($map)->find();
             if ($operation) {
                 $operation['result'] = $data;
