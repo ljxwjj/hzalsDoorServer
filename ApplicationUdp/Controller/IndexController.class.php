@@ -543,6 +543,7 @@ class IndexController extends Controller\RestController {
                 $result .= "0";
             }
         }
+        $result = strrev($result);
         return bindec($result);
     }
 
