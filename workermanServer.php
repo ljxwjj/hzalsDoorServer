@@ -296,7 +296,7 @@ function paresLocalMessage($data) {
         $cardLength = sprintf("%02x", $unData[++$i]);
         $cardContent = "";
         for ($i = 0; $i < $cardCount; $i++) {
-            for ($j = 0; $j < 16; $j) $cardContent .= sprintf("%02x", $unData[++$i]);
+            for ($j = 0; $j < 16; $j++) $cardContent .= sprintf("%02x", $unData[++$i]);
         }
 
         $cmd = "05c4".$cardCount.$cardLength.$cardContent;// 设置卡片开门 05c4
