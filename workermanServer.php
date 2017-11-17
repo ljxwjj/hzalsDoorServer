@@ -295,8 +295,8 @@ function paresLocalMessage($data) {
         $cardCount = sprintf("%02x", $unData[++$i]);
         $cardLength = sprintf("%02x", $unData[++$i]);
         $cardContent = "";
-        for ($i = 0; $i < $cardCount; $i++) {
-            for ($j = 0; $j < 16; $j++) $cardContent .= sprintf("%02x", $unData[++$i]);
+        for ($ii = 0; $ii < $cardCount; $ii++) {
+            for ($j = 0; $j < 32; $j++) $cardContent .= sprintf("%02x", $unData[++$i]);
         }
 
         $cmd = "05c4".$cardCount.$cardLength.$cardContent;// 设置卡片开门 05c4
@@ -306,6 +306,7 @@ function paresLocalMessage($data) {
         $crc = strCRCHex($msg);
 
 //        echo "load door card cmd:".$msg.$crc;
+        _log($msg.$crc);
         $msg = hex2bin($msg.$crc);
 
         global $udpConnectionsCache;
