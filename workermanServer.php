@@ -110,7 +110,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $cmd .= sprintf("%02x", date("w", $now)); // 周 2字节
             $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
             $crc = strCRCHex($msg);
-            echo "\n";echo "budong budong feedback cmd: ".$msg.$crc;echo "\n";
+//            echo "\n";echo "budong budong feedback cmd: ".$msg.$crc;echo "\n";
             $msg = hex2bin($msg.$crc);
             $connection->send($msg);
             _log("budong budong feedback success sended \n") ;
@@ -160,7 +160,7 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
                 $cmd .= "00"; // 成功
                 $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
                 $crc = strCRCHex($msg);
-                echo "\n";echo "data upload feedback cmd: ".$msg.$crc;echo "\n";
+//                echo "\n";echo "data upload feedback cmd: ".$msg.$crc;echo "\n";
                 $msg = hex2bin($msg.$crc);
                 $connection->send($msg);
                 _log("data upload feedback send success \n") ;
@@ -239,7 +239,7 @@ function paresLocalMessage($data) {
         _log( "++ serial_number ：$addr  ++ ");
         $crc = strCRCHex($msg);
 
-        echo "open door cmd:".$msg.$crc;
+//        echo "open door cmd:".$msg.$crc;
         $msg = hex2bin($msg.$crc);
 
         global $udpConnectionsCache;
@@ -270,7 +270,7 @@ function paresLocalMessage($data) {
         _log( "++2 serial_number ：$addr  ++2 ");
         $crc = strCRCHex($msg);
 
-        echo "set door password cmd:".$msg.$crc;
+//        echo "set door password cmd:".$msg.$crc;
         $msg = hex2bin($msg.$crc);
 
         global $udpConnectionsCache;
@@ -305,7 +305,7 @@ function paresLocalMessage($data) {
         _log( "++3 serial_number ：$addr  ++3 ");
         $crc = strCRCHex($msg);
 
-        echo "load door card cmd:".$msg.$crc;
+//        echo "load door card cmd:".$msg.$crc;
         $msg = hex2bin($msg.$crc);
 
         global $udpConnectionsCache;
