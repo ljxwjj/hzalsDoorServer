@@ -514,8 +514,8 @@ class IndexController extends Controller\RestController {
                 $sendMsg .= sprintf("%02x", date("Y", $now) - 2000 + 50); // 失效年份
                 $sendMsg .= "01"; // 失效月份
                 $sendMsg .= "01"; // 失效日
-                $sendMsg .= "00"; // 失效小时
-                $sendMsg .= "00"; // 失效分钟
+                $sendMsg .= "01"; // 失效小时
+                $sendMsg .= "01"; // 失效分钟
                 $sendMsg .= "FFFFFFFFFFFF"; // 剩余补足 6个字节 全F
             }
             $sendMsg = hex2bin($sendMsg);
