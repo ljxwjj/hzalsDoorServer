@@ -161,7 +161,7 @@ class DoorControllerController extends CommonController {
         } else {
             $error['serial_number']='序列号格式错误！';
         }
-        if ($productType == "2") {
+        if (empty($id) && $productType == "2") {// 新增二代板子，添加验证码判断
             if (empty($vCode)) {
                 $error['v_code'] = "请输入验证码！";
             } else {
