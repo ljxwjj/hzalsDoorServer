@@ -511,7 +511,7 @@ class UserController extends CommonController {
         $map = array();
         $map['status'] = 0;
         $map['id'] = array('in', array_keys($doorMap));
-        $controllers = $Node->where($map)->getField("id,name,door_count");
+        $controllers = $Node->where($map)->getField("id,serial_number,name,door_count");
 
         $cid = array_keys($controllers);
         $map = array('controller_id'=>array('in', $cid));
@@ -533,7 +533,7 @@ class UserController extends CommonController {
                     }
                     $door['cate_lv'] = 0;
                     $door['cate_namepre'] = '';
-                    $door['controller_name'] = $value['name'];
+                    $door['controller_name'] = $value['name']?$value['name']:$value['serial_number'];
                     $arrTree[] = $door;
                 }
             }
@@ -551,7 +551,17 @@ class UserController extends CommonController {
                 }
             }
         }
+        // 加载控制器同步状态
+        $map = array("user_id"=>$id, "status"=>0);
+        $unSyncControllerIds = M("DoorControllerUserCard")->where($map)->distinct(true)->getField("controller_id", true);
+        $unSyncControllers = array();
+        foreach ($controllers as $value) {
+            if (in_array($value['id'], $unSyncControllerIds)) {
+                $unSyncControllers[] = $value;
+            }
+        }
         $this->assign('arrList', $arrTree);
+        $this->assign("unSyncControllers", $unSyncControllers);
         $this->display();
     }
 

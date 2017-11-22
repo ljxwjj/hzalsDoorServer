@@ -24,6 +24,18 @@
                 </volist>
             </form>
 
+            <notempty name="unSyncControllers">
+            <br class="clear">
+            <div>
+            <label style="color: #FF0000;">以下控制器数据未同步</label>
+            <div>
+                <volist name="unSyncControllers" id="data">
+                    <div>{$data["name"]?$data["name"]:$data["serial_number"]} 正在同步中...</div>
+                </volist>
+            </div>
+            </div>
+            <br class="clear">
+            </notempty>
         </div>
         <!-- 列表显示区域  -->
     </div>

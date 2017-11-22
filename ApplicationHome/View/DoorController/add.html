@@ -168,6 +168,12 @@
                     $(".dongtai").hide();
             }
         });
+        $("input[name='serial_number']").keyup(function(){
+            var type = $("select[name='product_type']").val();
+            if (type == "2") {
+                if ($(this).val().length < 9) $(this).val("000000000")
+            }
+        });
     });
 </script>
 
