@@ -127,7 +127,12 @@ class OpenRecordController extends CommonController {
             $voList = $this->voList;
             $this->assign('list', $voList);
         }
-        $this->display();
+        if (I('mode') == "download") {
+            $data = $this->fetch("attendance_csv");
+            $this->export_csv("考勤统计$timeStart - $timeEnd.csv", $data);
+        } else {
+            $this->display();
+        }
     }
 
     private function _attendance_list($model, $map, $timeStart, $timeEnd) {

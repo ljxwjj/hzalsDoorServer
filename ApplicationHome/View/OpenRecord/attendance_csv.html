@@ -1,0 +1,7 @@
+{__NOLAYOUT__}
+编号,用户,出勤天数,迟到天数,早退天数,旷工天数,加班天数,加班时间
+<volist name="list" id="vo">
+{$vo.user_id},{$vo.user_nickname},{$vo.work_day_count},{$vo.late_day_count},{$vo.leave_day_count},{$vo.absenteeism_day_count},{$vo.overtime_day_count},{$vo.overtime_day_time|toWorkHours}
+<php>echo "\r\n";</php>
+</volist>
+

@@ -141,7 +141,11 @@
 
             <!--单个查询条件结束-->
             <div class="alignleft actions">
-                <input class="button" type="submit" value="查询" name="btn_search">
+                <input type="hidden" name="mode"/>
+                <input class="button" type="button" value="查询" name="btn_search" onclick="fnFormModeSubmit('form1', 'view', '', '')">&nbsp;&nbsp;
+                <present name="list">
+                <input class="button" type="button" value="导出CSV" name="btn_export" onclick="fnFormModeSubmit('form1', 'download', '', '')">
+                </present>
             </div>
         </div>
         <br class="clear">

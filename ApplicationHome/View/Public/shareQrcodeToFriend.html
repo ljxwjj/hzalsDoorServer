@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{__NOLAYOUT__}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>{$Think.get.name}邀请你进入房间</title>
+    <link rel="stylesheet" href="__PUBLIC__/Css/qr_weui.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Css/qr_style.css">
+    <script type="text/javascript" src="__PUBLIC__/Js/jquery.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Js/qrcode.min.js"></script>
+    <script>
+        $(function(){
+            var width = $("#qr_container").width();
+            var height = $("#qr_container").height();
+            var qrcode = new QRCode("qr_container", {width: width*0.8, height:height*0.8});
+            qrcode.makeCode("{$Think.get.text}");
+        });
+    </script>
+
+</head>
+<body ontouchstart class="invite-page">
+<div class="container">
+    <p class="invite-word">{$Think.get.name}邀请你进入他的房间！</p>
+    <div class="room-qrcode-container">
+        <p class="room-qrcode-title">⬇️对准门禁读头扫描开门⬇️</p>
+        <!--
+        <img src="http://139.196.97.237/door/api.php/Public/qrcode/text/bd017f766/sign/e21a8e71a8ccc72aa1e1d8785fe79e2d" alt="" class="room-qrcode">
+        -->
+        <div id="qr_container" style="margin:auto;background-color:#FFF; width: 10rem; height: 10rem;justify-content:center;align-items:center;display:-webkit-flex;">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

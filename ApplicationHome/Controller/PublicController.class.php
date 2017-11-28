@@ -262,6 +262,10 @@ class PublicController extends CommonController {
         $this->display();
     }
 
+    public function shareQrcodeToFriend() {
+        $this->display();
+    }
+
     public function serialNumberEncoded() {
 
         $serial_numbers = I("serial_numbers");

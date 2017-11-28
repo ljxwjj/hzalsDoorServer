@@ -417,4 +417,14 @@ class CommonController extends Controller {
     protected function success($message='',$jumpUrl='') {
         parent::success($message, $jumpUrl,1);
     }
+
+    protected function export_csv($filename, $data){
+        header("Content-type:text/csv; charset=GB2312");
+        header("Content-Disposition:attachment;filename=".$filename);
+        header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
+        header('Expires:0');
+        header('Pragma:public');
+        echo iconv('UTF-8', 'GB2312', $data);
+        exit;
+    }
 }
