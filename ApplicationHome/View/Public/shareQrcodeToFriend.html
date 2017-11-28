@@ -11,12 +11,24 @@
     <script type="text/javascript" src="__PUBLIC__/Js/jquery.js"></script>
     <script type="text/javascript" src="__PUBLIC__/Js/qrcode.min.js"></script>
     <script>
+        var endTime = parseInt('{$Think.get.time}');
         $(function(){
             var width = $("#qr_container").width();
             var height = $("#qr_container").height();
             var qrcode = new QRCode("qr_container", {width: width*0.8, height:height*0.8});
             qrcode.makeCode("{$Think.get.text}");
+            refreshTime();
+            setInterval(refreshTime, 1000);
         });
+        function refreshTime() {
+            var current = new Date().getTime()/1000;
+            var diff = parseInt(endTime - current);
+            if (diff > 0) {
+                $("#dajishi").html(diff + "秒");
+            } else {
+                $("#dajishi").html("已过期");
+            }
+        }
     </script>
 
 </head>
@@ -30,6 +42,7 @@
         -->
         <div id="qr_container" style="margin:auto;background-color:#FFF; width: 10rem; height: 10rem;justify-content:center;align-items:center;display:-webkit-flex;">
         </div>
+        <p class="room-qrcode-title"><label style="color: #ff0000">倒计时：</label><label id="dajishi" style="color: #ff0000"></label></p>
     </div>
 </div>
 
