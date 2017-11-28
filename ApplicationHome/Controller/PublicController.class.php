@@ -5,14 +5,15 @@ namespace Home\Controller;
 
 use Lib\ORG\Util\RBAC;
 use Michelf\Markdown;
+use Lib\ORG\Util\Cookie;
 
 class PublicController extends CommonController {
 
 
     public function login() {
 
-        $vo['account'] = cookie("account");
-        $vo['password'] = cookie("password");
+        $vo['account'] = Cookie::get("account");
+        $vo['password'] = Cookie::get("password");
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->assign("vo",$vo);
             $this->display();
