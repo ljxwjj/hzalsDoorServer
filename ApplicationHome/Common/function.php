@@ -68,6 +68,11 @@ function timeToTimeLong($hi) {// 时间转当天时长
     return $hiTime - $todayTime;
 }
 
+function dateToTimeLong($date) {
+    $todayTime = strtotime(date("Y-m-d", $date));
+    return $date - $todayTime;
+}
+
 function toWorkHours($time) {
     $h = intval($time/60/60);
     $i = intval(($time%(60*60))/60);
