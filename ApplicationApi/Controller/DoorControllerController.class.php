@@ -195,6 +195,26 @@ class DoorControllerController extends CommonRestController {
         fclose($handle);
     }
 
+    protected function sendCloseDoorUdpCode($ip, $port, $serialNumber, $doorId) {
+        $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
+        if( !$handle ){
+            die("ERROR: {$errno} - {$errstr}\n");
+        }
+        $sendMsg = "30030004"; // 关门指令
+        $ips = explode(".", $ip);
+        foreach ($ips as $i) {
+            $sendMsg .= sprintf("%02x", $i);
+        }
+        $sendMsg .= sprintf("%04x", $port);
+        $sendMsg .= "01";
+        $sendMsg .= $serialNumber;
+        $sendMsg .= sprintf("%02x", $doorId);
+        $sendMsg .= sprintf("%04x", 0);
+        $sendMsg = hex2bin($sendMsg);
+        fwrite($handle, $sendMsg);
+        fclose($handle);
+    }
+
     protected function sendOpenDoorHttp($ip, $port, $doorId, $password) {
         $opts = array(
             'http'=>array('method'=>'GET', 'timeout'=>5)
@@ -363,7 +383,7 @@ class DoorControllerController extends CommonRestController {
             $OpenRecord->create($openRecord);
             $addid = $OpenRecord->add();
 
-            $wait = intval($data['wait_time']);
+            $wait = 0;
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
             $result = $this->createResult(200, "操作成功", array("id"=>$addid));
             $this->response($result,'json');
@@ -371,7 +391,6 @@ class DoorControllerController extends CommonRestController {
             $result = $this->createResult(0, "操作失败");
             $this->response($result,'json');
         }
-
     }
 
     public function openDoorFeedBackBySecret() {
@@ -397,4 +416,119 @@ class DoorControllerController extends CommonRestController {
         }
         $this->response($result,'json');
     }
+
+    // 开门
+    public function openDoorDelayCloseBySecret() {
+        $serial_number = I('serial_number');
+        $door_id = I('door_id');
+        $secret = I('secret_key');
+        $company_id = M('Company')->where(array('secret_key'=>$secret))->getField("id");
+        if (!$company_id) {
+            $result = $this->createResult(0, "用户密钥错误");
+            $this->response($result,'json');
+            exit;
+        }
+
+        $map = array(
+            'serial_number'=>$serial_number,
+            'status'=>0,
+            'company_id' => $company_id,
+        );
+        $controller_id = M('DoorController')->where($map)->getField('id');
+        if (!$controller_id) {
+            $result = $this->createResult(0, "序列号不存在");
+            $this->response($result,'json');
+            exit;
+        }
+
+        $data = M('DoorController')->find($controller_id);
+        if ($data) {
+            $openRecord['controller_id'] = $controller_id;
+            $openRecord['door_id'] = $door_id;
+            $openRecord['open_time'] = time();
+            $openRecord['user_id'] = -999;
+            $openRecord['way'] = 3;
+            $OpenRecord = M('OpenRecord');
+            $OpenRecord->create($openRecord);
+            $addid = $OpenRecord->add();
+
+            $wait = intval($data['wait_time']);
+            $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
+            $result = $this->createResult(200, "操作成功", array("id"=>$addid));
+            $this->response($result,'json');
+        } else {
+            $result = $this->createResult(0, "操作失败");
+            $this->response($result,'json');
+        }
+    }
+
+    // 关门
+    public function closeDoorBySecret() {
+        $serial_number = I('serial_number');
+        $door_id = I('door_id');
+        $secret = I('secret_key');
+        $company_id = M('Company')->where(array('secret_key'=>$secret))->getField("id");
+        if (!$company_id) {
+            $result = $this->createResult(0, "用户密钥错误");
+            $this->response($result,'json');
+            exit;
+        }
+
+        $map = array(
+            'serial_number'=>$serial_number,
+            'status'=>0,
+            'company_id' => $company_id,
+        );
+        $controller_id = M('DoorController')->where($map)->getField('id');
+        if (!$controller_id) {
+            $result = $this->createResult(0, "序列号不存在");
+            $this->response($result,'json');
+            exit;
+        }
+
+        $data = M('DoorController')->find($controller_id);
+        if ($data) {
+            $openRecord['controller_id'] = $controller_id;
+            $openRecord['door_id'] = $door_id;
+            $openRecord['open_time'] = time();
+            $openRecord['user_id'] = -999;
+            $openRecord['way'] = 7; // 关门
+            $OpenRecord = M('OpenRecord');
+            $OpenRecord->create($openRecord);
+            $addid = $OpenRecord->add();
+
+            $this->sendCloseDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id);
+            $result = $this->createResult(200, "操作成功", array("id"=>$addid));
+            $this->response($result,'json');
+        } else {
+            $result = $this->createResult(0, "操作失败");
+            $this->response($result,'json');
+        }
+
+    }
+
+    public function closeDoorFeedBackBySecret() {
+        $id = I('id');
+        $secret = I('secret_key');
+
+        $company_id = M('Company')->where(array('secret_key'=>$secret))->getField("id");
+        if (!$company_id) {
+            $result = $this->createResult(0, "用户密钥错误");
+            $this->response($result,'json');
+            exit;
+        }
+
+        if ($id) {
+            $feedbackTime = M('OpenRecord')->where(array('id'=>$id))->getField('feedback_time');
+            if ($feedbackTime > 0) {
+                $result = $this->createResult(200, "关门成功");
+            } else {
+                $result = $this->createResult(1, "关门中");
+            }
+        } else {
+            $result = $this->createResult(0, "非法请求");
+        }
+        $this->response($result,'json');
+    }
+
 }

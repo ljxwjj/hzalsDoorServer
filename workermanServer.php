@@ -319,6 +319,36 @@ function paresLocalMessage($data) {
         } else {
             _log("door is not on line!!! \n");
         }
+    } else if (strcmp($command, "0004") === 0) {//关门指令  300300047F000001270E015209150810000026010000
+        _log( "received close door command ");
+        $ip = sprintf("%d.%d.%d.%d", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        $port = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+        $port = hexdec($port);
+        $ptrol = sprintf("%02x", $unData[++$i]);
+        if ($ptrol === '01') {
+            $addr = sprintf("%02x%02x%02x%02x%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        }
+        $doorId = sprintf("%02x", $unData[++$i]);
+        $openTime = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+
+        $cmd = "02C004".$doorId.$openTime;// 关门
+        $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
+
+        _log( "++ serial_number ：$addr  ++ ");
+        $crc = strCRCHex($msg);
+
+        $msg = hex2bin($msg.$crc);
+
+        global $udpConnectionsCache;
+        if (array_key_exists($addr, $udpConnectionsCache)) {
+            $connection = $udpConnectionsCache[$addr];
+            if ($connection) {
+                $connection->send($msg);
+                _log( "open door cmd sended \n");
+            }
+        } else {
+            _log("door is not on line!!! \n");
+        }
     }
 }
 

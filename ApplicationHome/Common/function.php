@@ -59,6 +59,7 @@ function showOpenDoorWay($way) {
         case 4: return "分享码";
         case 5: return "刷卡";
         case 6: return "密码";
+        case 7: return "代理商授权-关门";
     }
 }
 
