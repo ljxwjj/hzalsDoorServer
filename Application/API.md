@@ -129,7 +129,16 @@
     * 返回值
         * data        id: 开门请求标识
 
-* 开门 /DoorController/openDoorBySecret
+* 开门(不延时关门) /DoorController/openDoorBySecret
+
+    * 参数 
+        * serial\_number   控制器ID
+        * door\_id         门ID
+        * secret\_key      用户秘钥
+    * 返回值
+        * data        id: 开门请求标识
+        
+* 开门(延时3秒关门) /DoorController/openDoorDelayCloseBySecret
 
     * 参数 
         * serial\_number   控制器ID
@@ -157,6 +166,23 @@
         * secret\_key      用户秘钥
     * 返回值
         * data        code 200：开门成功 1：等待门禁响应  0：非法请求
+        
+* 关门 /DoorController/closeDoorBySecret
+
+    * 参数 
+        * serial\_number   控制器ID
+        * door\_id         门ID
+        * secret\_key      用户秘钥
+    * 返回值
+        * data        id: 关门请求标识
+        
+* 关门反馈 /DoorController/closeDoorFeedBackBySecret
+
+    * 参数 
+        * id          关门请求标识
+        * secret\_key      用户秘钥
+    * 返回值
+        * data        code 200：关门成功 1：等待门禁响应  0：非法请求
         
 * 获取摄像头列表 /DoorController/cameras
 
