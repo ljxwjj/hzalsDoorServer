@@ -1,6 +1,5 @@
-
-{__NOLAYOUT__}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{__NOLAYOUT__}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,10 +8,49 @@
 
     <load href='__PUBLIC__/Css/login2.css' />
     <load href='__PUBLIC__/Css/login2base.css' />
-    </script>
+    <style>
+        .login_box {
+            width: 488px;
+            padding-top: 50px;
+            margin: 0 auto;
+            position: relative;
+            top: 50%;
+        }
+
+        .request_main_1_la {
+            height: 41px;
+            width: 49px;
+            background: url(__PUBLIC__/Images/company.jpg);
+            float: left;
+        }
+        .request_main_1_lb {
+            height: 41px;
+            width: 49px;
+            background: url(__PUBLIC__/Images/user.jpg);
+            float: left;
+        }
+        .request_main_1_lc {
+            height: 41px;
+            width: 49px;
+            background: url(__PUBLIC__/Images/phone.jpg);
+            float: left;
+        }
+        .request_main_1_ld {
+            height: 41px;
+            width: 49px;
+            background: url(__PUBLIC__/Images/email.jpg);
+            float: left;
+        }
+        .request_main_1_le {
+             height: 41px;
+             width: 49px;
+             background: url(__PUBLIC__/Images/order_number.jpg);
+             float: left;
+         }
+    </style>
+
 </head>
 
-<body>
 <body>
 <div class="top w-p-100">
     <div class="logo"><img height="34" src="__ROOT__/Public/Images/logo.png"></div>
@@ -40,7 +78,7 @@
                 <div style="clear:both;"></div>
             </if>
             <div class="login_main_1">
-                <div class="login_main_1_la"></div>
+                <div class="request_main_1_la"></div>
                 <div class="login_main_1_r">
                     <input check="Require" warning="请输入购机单位" name="{$key}" type="text" value="{$vo.$key}" placeholder='输入购机单位' />
                 </div>
@@ -53,7 +91,7 @@
                 <div style="clear:both;"></div>
             </if>
             <div class="login_main_1">
-                <div class="login_main_1_lb"></div>
+                <div class="request_main_1_lb"></div>
                 <div class="login_main_1_r">
                     <input check="Require" warning="请输入联系人姓名" name="{$key}"  value="{$vo.$key}" placeholder="输入联系人姓名"/>
                 </div>
@@ -66,7 +104,7 @@
                 <div style="clear:both;"></div>
             </if>
             <div class="login_main_1">
-                <div class="login_main_1_lb"></div>
+                <div class="request_main_1_lc"></div>
                 <div class="login_main_1_r">
                     <input check="Require" warning="请输入联系人电话" name="{$key}"  value="{$vo.$key}" placeholder="输入联系人电话"/>
                 </div>
@@ -79,7 +117,7 @@
                 <div style="clear:both;"></div>
             </if>
             <div class="login_main_1">
-                <div class="login_main_1_lb"></div>
+                <div class="request_main_1_ld"></div>
                 <div class="login_main_1_r">
                     <input check="Require" warning="请输入联系邮箱" name="{$key}"  value="{$vo.$key}" placeholder="输入联系人邮箱"/>
                 </div>
@@ -92,7 +130,7 @@
                 <div style="clear:both;"></div>
             </if>
             <div class="login_main_1">
-                <div class="login_main_1_lb"></div>
+                <div class="request_main_1_le"></div>
                 <div class="login_main_1_r">
                     <input check="Require" warning="请输入订单号" name="{$key}"  value="{$vo.$key}" placeholder="输入订单号"/>
                 </div>
@@ -105,7 +143,6 @@
                 <div class="login_btn"><a class="button_kv" onclick="document.login.submit();">提交</a></div>
             </div>
             <div style="height:auto;width:448px;text-align:center;position:absolute;bottom:20px;font-size:11pt;">
-                <!--开发单位:<a href="http://www.runlan.net" target="_blank">上海润蓝企业管理咨询有限公司</a>-->
             </div>
         </div>
     </div>
