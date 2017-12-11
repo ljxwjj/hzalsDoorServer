@@ -383,7 +383,7 @@ class DoorControllerController extends CommonRestController {
             $OpenRecord->create($openRecord);
             $addid = $OpenRecord->add();
 
-            $wait = 0;
+            $wait = intval($data['wait_time']);
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
             $result = $this->createResult(200, "操作成功", array("id"=>$addid));
             $this->response($result,'json');
