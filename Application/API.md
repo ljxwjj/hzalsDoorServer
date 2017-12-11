@@ -129,7 +129,7 @@
     * 返回值
         * data        id: 开门请求标识
 
-* 开门(不延时关门) /DoorController/openDoorBySecret
+* 开门(延时3秒关门) /DoorController/openDoorBySecret
 
     * 参数 
         * serial\_number   控制器ID
@@ -138,7 +138,7 @@
     * 返回值
         * data        id: 开门请求标识
         
-* 开门(延时3秒关门) /DoorController/openDoorDelayCloseBySecret
+* 开门(不延时关门) /DoorController/openDoorKeepBySecret
 
     * 参数 
         * serial\_number   控制器ID
