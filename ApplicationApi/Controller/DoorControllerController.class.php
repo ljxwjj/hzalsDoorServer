@@ -418,7 +418,7 @@ class DoorControllerController extends CommonRestController {
     }
 
     // 开门
-    public function openDoorDelayCloseBySecret() {
+    public function openDoorKeepBySecret() {
         $serial_number = I('serial_number');
         $door_id = I('door_id');
         $secret = I('secret_key');
@@ -452,7 +452,7 @@ class DoorControllerController extends CommonRestController {
             $OpenRecord->create($openRecord);
             $addid = $OpenRecord->add();
 
-            $wait = intval($data['wait_time']);
+            $wait = 0;
             $this->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
             $result = $this->createResult(200, "操作成功", array("id"=>$addid));
             $this->response($result,'json');
