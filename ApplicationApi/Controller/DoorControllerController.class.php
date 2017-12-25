@@ -286,15 +286,17 @@ class DoorControllerController extends CommonRestController {
             $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
             if ($role_id > 21) { // > 21即非管理员用户
                 $userDoors = getUserDoors($user_id);
-                foreach ($userDoors as $controllerId=>$doorIds) {
-                    foreach ($doorIds as $doorId=>$v) {
-                        $and = array();
-                        $and['camera.controller_id'] = $controllerId;
-                        $and['camera.door_id'] = $doorId;
-                        $map[] = $and;
+                if ($userDoors) {
+                    foreach ($userDoors as $controllerId => $doorIds) {
+                        foreach ($doorIds as $doorId => $v) {
+                            $and = array();
+                            $and['camera.controller_id'] = $controllerId;
+                            $and['camera.door_id'] = $doorId;
+                            $map[] = $and;
+                        }
                     }
+                    $map['_logic'] = "or";
                 }
-                $map['_logic'] = "or";
             } else {
                 $controllerIds = M('DoorController')->where(array('company_id'=>$user['company_id'], 'status'=>0))->getField('id', true);
                 $map['camera.controller_id'] = array('in', $controllerIds);
