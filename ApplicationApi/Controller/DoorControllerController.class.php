@@ -280,7 +280,7 @@ class DoorControllerController extends CommonRestController {
         if ($user['is_admin']) {
             if ($company_id) {
                 $controllerIds = M('DoorController')->where(array('company_id'=>$company_id))->getField('id', true);
-                $map['controller_id'] = array('in', $controllerIds);
+                $map['camera.controller_id'] = array('in', $controllerIds);
             }
         } else {
             $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
