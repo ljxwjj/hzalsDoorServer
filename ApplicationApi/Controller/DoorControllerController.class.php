@@ -296,7 +296,7 @@ class DoorControllerController extends CommonRestController {
                 }
                 $map['_logic'] = "or";
             } else {
-                $controllerIds = M('DoorController')->where(array('company_id'=>$user['company_id']))->getField('id');
+                $controllerIds = M('DoorController')->where(array('company_id'=>$user['company_id'], 'status'=>0))->getField('id', true);
                 $map['camera.controller_id'] = array('in', $controllerIds);
             }
         }
@@ -317,7 +317,9 @@ class DoorControllerController extends CommonRestController {
             $sort = 'asc';
         }
         //取得满足条件的记录数
-        $count = $model->where($map)->count($model->getPk());
+        if ($map) {
+            $count = $model->where($map)->count($model->getPk());
+        }
 
         if ($count > 0) {
             //创建分页对象
