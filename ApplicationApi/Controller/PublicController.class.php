@@ -105,6 +105,7 @@ class PublicController extends CommonRestController {
         } else {
             // 核实验证码
             $MSmsCode = M('SmsCode');
+            $map = array();
             $map["mobile"] = $account;
             $map["use_to"] = 'register';
             $map["check_time"] = array("EXP", "is null");
