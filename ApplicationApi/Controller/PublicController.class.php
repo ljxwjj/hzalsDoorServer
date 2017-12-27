@@ -115,6 +115,7 @@ class PublicController extends CommonRestController {
                 $sms['check_time'] = time();
                 $MSmsCode->save($sms);
                 $user['password'] = $password;
+                $user['update_time'] = time();
                 $saveFlag = $User->save($user);
 
                 if ($saveFlag) {
