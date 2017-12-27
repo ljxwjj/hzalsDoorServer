@@ -111,9 +111,10 @@ class PublicController extends CommonRestController {
             $map["check_time"] = array("EQ", 0);
             $sms = $MSmsCode->where($map)->order('send_time desc')->find();
             if ($sms && ($sms["send_time"] + $sms["delay"]) > time() && $sms["code"] === $smsCode) {
-                $MSmsCode->setField("check_time", time());
-                $data['password'] = $password;
-                $saveFlag = $User->save($data);
+                $sms['check_time'] = time();
+                $MSmsCode->save($sms);
+                $user['password'] = $password;
+                $saveFlag = $User->save($user);
 
                 if ($saveFlag) {
                     $result = $this->createResult(200, '找回成功');
