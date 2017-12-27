@@ -94,7 +94,7 @@ class PublicController extends CommonRestController {
 
         $User = M('User');
         $map['account'] = $account;
-        $map['status'] = 0;
+        $map['status'] = 1;
         $user = $User->where($map)->find();
 
         if (!$user) {
