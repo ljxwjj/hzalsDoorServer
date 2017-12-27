@@ -107,7 +107,7 @@ class PublicController extends CommonRestController {
             $MSmsCode = M('SmsCode');
             $map = array();
             $map["mobile"] = $account;
-            $map["use_to"] = 'register';
+            $map["use_to"] = 'findPassword';
             $map["check_time"] = array("EXP", "is null");
             $sms = $MSmsCode->where($map)->order('send_time desc')->find();
             if ($sms && ($sms["send_time"] + $sms["delay"]) > time() && $sms["code"] === $smsCode) {
