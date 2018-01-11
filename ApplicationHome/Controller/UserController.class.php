@@ -570,6 +570,11 @@ class UserController extends CommonController {
         $card_number = I('card_number');
         $node_id = I('node_id');
 
+        if (floatval($card_number) > 0xffffffff) {
+            $this->error('卡号超长，最大值为 4294967295 ！', $this->getReturnUrl());
+            return;
+        }
+
         $user = M("User")->where("id=$user_id")->find();
         $userDoors = getUserDoors2($user);
         foreach ($node_id as $controllerId=>$doors) {
