@@ -854,7 +854,7 @@ function updateUserCards($userId, $cardNumber, $controllerDoors) {
                 }
             }
         } else { // 卡号发生改变
-            if (!empty($cardItem["doors"])) {
+            if (strlen($cardItem["doors"])) {
                 $cardItem["doors"] = "";
                 $cardItem["last_sync_time"] = 0;
                 $cardItem["status"] = 0;
@@ -868,6 +868,8 @@ function updateUserCards($userId, $cardNumber, $controllerDoors) {
             foreach ($controllerDoors as $controllerId=>$doors) {
                 if (!isset($allCardMap[$cardNumber][$controllerId])) {
                     $cardItem = array('controller_id'=>$controllerId, 'user_id'=>$userId, 'card_number'=>$cardNumber, 'doors'=>implode(",", $doors));
+                    $cardItem["last_sync_time"] = 0;
+                    $cardItem["status"] = 0;
                     $result = $model->add($cardItem);
                 }
                 if (!$result) break;
