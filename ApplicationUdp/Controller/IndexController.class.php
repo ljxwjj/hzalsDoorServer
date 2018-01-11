@@ -505,7 +505,7 @@ class IndexController extends Controller\RestController {
             $sendMsg .= sprintf("%02x", 32);// 名单长度
             foreach ($userCards as $cardItem) {
                 $sendMsg .= "0DFFFF"; // 名单内部标识，白名单
-                $sendMsg .= sprintf("%08x", $cardItem["card_number"]);// 卡号
+                $sendMsg .= sprintf("%08x", floatval($cardItem["card_number"]));// 卡号
                 $sendMsg .= "000000";// 密码
                 $sendMsg .= sprintf("%02x", $this->convertDoors($doorCount, $cardItem["doors"]));// doors 1个字节
                 $sendMsg .= "00"; // 普通权限卡组别0
