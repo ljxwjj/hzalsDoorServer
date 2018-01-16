@@ -312,6 +312,26 @@
 > _search\_user\_id not null（当前用户拥有管理页限）,可获得指定用户的出入记录_   
 > _search\_user\_id is  null 可获得当前用户的出入记录_
 
+* 考勤列表 /OpenRecord/attendance
+
+    * 参数
+        * search\_user\_ids (可选)       用户ID
+        * search\_time\_start            起始时间
+        * search\_time\_end              结束时间
+    * 返回值
+        * data        array[Attendance]
+        
+> search\_user\_ids is null 查询公司所有人的考勤记录
+
+* 员工考勤详情 /OpenRecord/attendanceDetail
+
+    * 参数
+        * id                             用户ID
+        * search\_time\_start            起始时间
+        * search\_time\_end              结束时间
+    * 返回值
+        * data        array[Attendance]
+
 ##APP配置
 
 * 闪屏页图片 /AppSetting/splashImage
