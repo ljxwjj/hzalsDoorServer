@@ -113,6 +113,7 @@ class PublicController extends CommonController {
 
         $User = M('User');
         $map['account'] = $account;
+        $map['status'] = 0;
         $user = $User->where($map)->find();
 
         if (!$user) {
