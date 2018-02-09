@@ -293,7 +293,7 @@ class OpenRecordController extends CommonRestController {
                 $attendance[$day]['absenteeism'] = "旷工";
             }
         }
-
+        ksort($attendance);
         return $attendance;
     }
 }

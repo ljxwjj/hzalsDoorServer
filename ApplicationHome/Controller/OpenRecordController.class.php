@@ -300,7 +300,7 @@ class OpenRecordController extends CommonController {
                 $attendance[$day]['absenteeism'] = "旷工";
             }
         }
-
+        ksort($attendance);
         $this->voList = $attendance;
         cookie('_currentUrl_', __SELF__);
         return;
