@@ -146,8 +146,24 @@ class OpenRecordController extends CommonRestController {
             }
         }
         $userModel = M("User");
-        $attendanceUsers = array_keys($attendance);
-        $unAttendanceUsers = $userModel->where(array("company_id"=>$companyId, "id"=>array("not in", $attendanceUsers), "status"=>1))->select();
+        if (is_array($map["user_id"])) {
+            if ($attendance) {
+                $attendanceUsers = array_keys($attendance);
+                $attendanceUsers = array_diff($map["user_id"][1], $attendanceUsers);
+                $attendanceUsers = array_values($attendanceUsers);
+                $unAttendanceUsers = $userModel->where(array("company_id"=>$companyId, "id"=>array("in", $attendanceUsers), "status"=>1))->select();
+            } else {
+                $unAttendanceUsers = $userModel->where(array("company_id"=>$companyId, "id"=>array("in", $map["user_id"][1]), "status"=>1))->select();
+            }
+        } else {
+            if ($attendance) {
+                $attendanceUsers = array_keys($attendance);
+                $unAttendanceUsers = $userModel->where(array("company_id"=>$companyId, "id"=>array("not in", $attendanceUsers), "status"=>1))->select();
+            } else {
+                $unAttendanceUsers = $userModel->where(array("company_id"=>$companyId, "status"=>1))->select();
+            }
+        }
+
         foreach ($unAttendanceUsers as $user) {
             $userId = $user["id"];
             $attendance[$userId]['user_id'] = $user["id"];
