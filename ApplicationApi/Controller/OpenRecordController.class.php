@@ -86,10 +86,7 @@ class OpenRecordController extends CommonRestController {
         $userIds = I("search_user_ids");
         if ($userIds) {
             $strIds = explode(',',$userIds);
-            foreach ($strIds as $strId) {
-                $ids[] = substr($strId, 2);
-            }
-            $map["user_id"] = array("in", $ids);
+            $map["user_id"] = array("in", $strIds);
         } else {
             $map["company_id"] = session("user")["company_id"];
         }
