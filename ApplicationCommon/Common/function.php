@@ -91,3 +91,31 @@ function serialNumberToEncoded($serialNumber, $length) {
     }
     return implode("", $resultArray);
 }
+
+function jpush($alert = 'Hello, JPush') {
+    Vendor('jpush-api/autoload', COMMON_PATH . 'Vendor/', '.php');
+    $client = new \JPush\Client(C('jpush_appkey'), C('jpush_secret'));
+    $pusher = $client->push();
+    $pusher->setPlatform('all')
+        ->addAllAudience()
+        ->setNotificationAlert($alert);
+    try {
+        $pusher->send();
+    } catch (\JPush\Exceptions\JPushException $e) {
+        print $e;
+    }
+}
+
+function jpushToUser($rid, $alert = 'Hello, JPush') {
+    Vendor('jpush-api/autoload', COMMON_PATH . 'Vendor/', '.php');
+    $client = new \JPush\Client(C('jpush_appkey'), C('jpush_secret'));
+    $pusher = $client->push();
+    $pusher->setPlatform('all')
+        ->addRegistrationId($rid)
+        ->setNotificationAlert($alert);
+    try {
+        $pusher->send();
+    } catch (\JPush\Exceptions\JPushException $e) {
+        print $e;
+    }
+}

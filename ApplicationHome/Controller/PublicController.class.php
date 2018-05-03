@@ -208,7 +208,7 @@ class PublicController extends CommonController {
         $this->response($result);
     }
 
-    public function alsTest($url = null, $user_id = 0) {//echo APP_PATH;exit;
+    public function alsTest($url = null, $user_id = 0) {//echo C("public_dir");exit;
         if ($url) {
             $params = $this->getKeyValue($url);  //var_dump($params);exit;
             $wenhao = true;
@@ -262,6 +262,10 @@ class PublicController extends CommonController {
             $this->assign('user_id', $user_id);
         }
         $this->display();
+    }
+
+    public function testJpush() {
+        jpush();
     }
 
     public function shareQrcodeToFriend() {
