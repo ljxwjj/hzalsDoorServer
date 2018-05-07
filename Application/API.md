@@ -352,6 +352,28 @@
     
     * 返回值
         * data        array[image_url]
+        
+* 检查版本更新 /AppSetting/checkNewVersion
+    
+    * 参数 
+        * version    当前版本号
+    
+    * 返回值
+        * data        ApkVersion
+
+##系统报修
+
+* 添加报修 /RepairRecord/add
+
+    * 参数
+        * company_name  公司名称
+        * phone         联系电话
+        * address       地址
+        * describe_text 故障描述
+        * image_file    图片
+    
+    * 返回值
+        * data        成功/失败
 
 #sign加密算法
 

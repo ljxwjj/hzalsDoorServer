@@ -1,0 +1,145 @@
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.menu.js" />
+<script type="text/javascript">
+    $(function(){
+        //$("#search_open_time_start").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+        //$("#search_open_time_end").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+
+        var dateFormat = "yy-mm-dd",
+            from = $( "#search_time_start" )
+                .datepicker({
+                    defaultDate: "-3m",
+                    changeMonth: true,
+                    numberOfMonths: 3,
+                    maxDate: new Date(),
+                })
+                .on( "change", function() {
+                    to.datepicker( "option", "minDate", getDate( this ) );
+                }),
+            to = $( "#search_time_end" ).datepicker({
+                defaultDate: "-1m",
+                changeMonth: true,
+                numberOfMonths: 3,
+                maxDate: new Date(),
+            })
+                .on( "change", function() {
+                    from.datepicker( "option", "maxDate", getDate( this ) );
+                });
+
+        function getDate( element ) {
+            var date;
+            try {
+                date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+                date = null;
+            }
+
+            return date;
+        }
+    })
+</script>
+<div class="wrap">
+    <h2>报修记录 &nbsp;
+    </h2>
+
+    <form name="form1" method='POST' action="__SELF__">
+        <!-- 查询区域 -->
+        <div class="tablenav top">
+            <!--单个查询条件-->
+            <assign name="var" value="search_user_nickname" />
+            <div class="alignleft actions">
+                <label>用户</label>
+                <input type="text" usefor="search" name="{$var}" title="用户查询" value="{$search.$var}" />
+            </div>
+            <assign name="var" value="search_company_name" />
+            <div class="alignleft actions">
+                <label>公司</label>
+                <input type="text" usefor="search" name="{$var}" title="公司查询" value="{$search.$var}" />
+            </div>
+
+            <div class="alignleft actions">
+                <assign name="var" value="search_time_start" />
+                <label>报修时间</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="开始时间" value="{$search.$var}" class="medium"  />
+
+                <assign name="var" value="search_time_end" />
+                <label>~</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="截止时间" value="{$search.$var}" class="medium"  />
+            </div>
+
+            <!--单个查询条件结束-->
+            <div class="alignleft actions">
+                <input class="button" type="submit" value="查询" name="btn_search">
+            </div>
+        </div>
+        <br class="clear">
+        <!-- 查询区域结束 -->
+
+        <!-- 列表显示区域  -->
+        <table class="wp-list-table widefat fixed posts">
+            <thead>
+            <tr>
+                <th scope='col'  class='manage-column ' width="3%">编号</th>
+                <th scope='col'  class='manage-column ' width="5%">用户</th>
+                <th scope='col'  class='manage-column ' width="10%">公司名称</th>
+                <th scope='col'  class='manage-column ' width="8%">联系电话</th>
+                <th scope='col'  class='manage-column ' width="10%">联系地址</th>
+                <th scope='col'  class='manage-column ' width="10%">故障描述</th>
+                <th scope='col'  class='manage-column ' width="10%">图片信息</th>
+                <th scope='col'  class='manage-column ' width="10%">上报时间</th>
+                <th scope='col'  class='manage-column ' width="5%">处理情况</th>
+            </tr>
+            </thead>
+            <volist name="list" id="vo" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> >
+                <td class="manage-column" scope="col" >{$vo.id}</td>
+                <td class="manage-column" scope="col">
+                    <a href="__MODULE__/User/view/id/{$vo.user_id}">{$vo.user_nickname}</a>
+                </td>
+                <td class="manage-column" scope="col">{$vo.company_name}</td>
+                <td class="manage-column" scope="col">{$vo.phone}</td>
+                <td class="manage-column" scope="col">{$vo.address}</td>
+                <td class="manage-column" scope="col">{$vo.describe_text}</td>
+                <td class="manage-column" scope="col">
+                    <notempty name="vo.image">
+                    <a href="__PUBLIC__{$vo.image}" target="_blank">图片文件</a>
+                    <else/>
+                        无图片
+                    </notempty>
+                </td>
+                <td class="manage-column" scope="col">{$vo.create_time|toDate='Y-m-d H#i'}</td>
+                <td class="manage-column" scope="col">
+                    <if condition="$vo.status eq 0">
+                        <a href="__CONTROLLER__/handleRepair/id/{$vo.id}">处理</a>
+                    <else/>
+                        已处理
+                    </if>
+                </td>
+                </tr>
+            </volist>
+        </table>
+        <!-- 列表显示区域结束  -->
+
+
+        <!--  分页显示区域 -->
+        <div class="tablenav bottom">
+            <div class="alignleft actions"></div>
+            <div class="tablenav-pages">
+                <div class="page">{$page}</div>
+                <input type="hidden" usefor="search" name="search_p" value="{$nowpage}"  >
+            </div>
+            <br class="clear">
+        </div>
+        <!--  分页显示区域结束 -->
+        <!-- 列表显示区域结束 -->
+    </form>
+
+    <div id="ajax-response"></div>
+    <br class="clear">
+</div>
+<!--wrap-->

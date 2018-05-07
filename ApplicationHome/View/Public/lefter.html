@@ -99,8 +99,8 @@
 	</if>
 
 	<if condition='$_ACCESS_LIST_HOME.COMPANY neq null'>
-		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode,AppSetting))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
-			<a href='__APP__/Company/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode,AppSetting))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode,AppSetting,RepairRecord))' >wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/Company/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='in_array(CONTROLLER_NAME,array(Company,AuthRole,AuthNode,AppSetting,RepairRecord))'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
 				<div class="wp-menu-arrow">
 					<div></div>
 				</div>
@@ -112,6 +112,11 @@
 				<li class='wp-first-item <if condition="CONTROLLER_NAME eq 'Company'">current</if>'>
 					<a href="__APP__/Company/index" class="wp-first-item current">客户管理</a>
 				</li>
+				<notempty name='_ACCESS_LIST_HOME.AUTHNODE'>
+					<li class='<if condition="CONTROLLER_NAME eq 'RepairRecord'">current</if>'>
+					<a href="__APP__/RepairRecord/index" class="current">报修记录</a>
+					</li>
+				</notempty>
 				<notempty name='_ACCESS_LIST_HOME.AUTHNODE'>
 					<li class='<if condition="CONTROLLER_NAME eq 'AuthNode'">current</if>'>
 						<a href="__APP__/AuthNode/index" class="current">权限管理</a>
