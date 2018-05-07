@@ -106,8 +106,12 @@
                 <td class="manage-column" scope="col">{$vo.address}</td>
                 <td class="manage-column" scope="col">{$vo.describe_text}</td>
                 <td class="manage-column" scope="col">
-                    <notempty name="vo.image">
-                    <a href="__PUBLIC__{$vo.image}" target="_blank">图片文件</a>
+
+                    <assign name="images" value="$vo.image" />
+                    <notempty name="images">
+                        <volist name="images" id="image">
+                            <a href="__PUBLIC__{$image}" target="_blank">{$image|getFileName}</a><br/>
+                        </volist>
                     <else/>
                         无图片
                     </notempty>

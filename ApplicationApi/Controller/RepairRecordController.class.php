@@ -16,15 +16,19 @@ class RepairRecordController extends CommonRestController {
                 $upload->rootPath = C('public_dir'); // 设置附件上传根目录
                 $upload->savePath = C('user_image_dir'); // 设置附件上传（子）目录
                 $upload->saveName = array('uniqid', '');
-                $upload->autoSub = false;
+                $upload->autoSub = true;
                 // 上传文件
-                $info = $upload->uploadOne($_FILES['image_file']);
+                $info = $upload->upload();
 
                 if (!$info) {
                     $error = $upload->getError();
                     $result = $this->createResult(0, $error);
                 } else {
-                    $data['image'] = $info['savepath'] . $info['savename'];
+                    $imagesPath = array();
+                    foreach($info as $file) {
+                        $imagesPath[] = $file['savepath'] . $file['savename'];
+                    }
+                    $data['image'] = implode(";", $imagesPath);
                 }
             }
 

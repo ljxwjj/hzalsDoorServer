@@ -1020,4 +1020,9 @@ function checkUserCardsByController($controllerId) {// 当控制器权限发生�
         }
     }
 }
+
+function getFileName($path) {
+    $pathinfo = pathinfo($path);
+    return $pathinfo["basename"];
+}
 ?>

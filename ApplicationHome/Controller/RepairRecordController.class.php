@@ -43,6 +43,12 @@ class RepairRecordController extends CommonController {
         }
 
         $voList = $this->voList;
+        foreach ($voList as $i=>$vo) {
+            $image = $vo["image"];
+            if ($image) {
+                $voList[$i]["image"] = explode(";", $image);
+            }
+        }
         $this->assign('list', $voList);
         $this->display();
     }
