@@ -1,0 +1,99 @@
+<tagLib name="html" />
+<div class="wrap">
+    <h2>APK列表</h2>
+</div>
+<br class="clear">
+
+<div class="formarea">
+    <form method='POST' id="form2" action="{:U('AppSetting/saveSplash')}" enctype="multipart/form-data">
+        <table class="wp-list-table widefat fixed posts">
+            <tr>
+                <th><label style="font-size: large">版本号</label></th>
+                <th><label style="font-size: large">版本说明</label></th>
+                <th><label style="font-size: large">升级等级</label></th>
+                <th scope='col'  class='manage-column ' width="30%">操作</th>
+            </tr>
+
+            <volist name="versions" id="item" mod="2">
+                <tr <eq name="mod" value="0"> class="alternate" </eq> >
+                <td class="manage-column" scope="col">{$item.version_code}</td>
+                <td class="manage-column" scope="col">{$item.version_des}</td>
+                <td class="manage-column" scope="col">
+                    <switch name="item.update_level" >
+                        <case value="0">普通更新</case>
+                        <case value="1">强制更新</case>
+                    </switch>
+                </td>
+                <td class="manage-column" scope="col">
+                    <a href="javascript:del('id','{$item.id}')">删除</a>&nbsp;
+                </td>
+                </tr>
+            </volist>
+        </table>
+    </form>
+</div>
+
+
+<br class="clear">
+
+
+<form method='POST' id="form1" action="{:U('AppSetting/apkVersionSave')}" enctype="multipart/form-data">
+    <div class="formarea">
+        <table class="form-table">
+            <assign name="var" value="apk_file" />
+            <tr>
+                <th><label for="">APK文件：</label></th>
+                <td>
+                    <input type="file" name="{$var}" placeholder="请选择APK文件" value="{$vo.$var}">
+                    <span style="color:red;">*</span>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="version_code" />
+            <tr>
+                <th><label for="">版本号：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" placeholder="请输入版本号">
+                    <span style="color:red;">*</span>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="update_level" />
+            <tr>
+                <th><label for="">升级等级：</label></th>
+                <td>
+                    <select name="{$var}">
+                        <option value="0" <eq name="vo[$var]" value="0">selected</eq>>普通</option>
+                        <option value="1" <eq name="vo[$var]" value="1">selected</eq>>强制</option>
+                    </select>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="version_des" />
+            <tr>
+                <th><label for="">版本说明：</label></th>
+                <td>
+                    <textarea type="text" class="regular-text" name="{$var}" style="width:25em;height:8em;">{$vo.$var}</textarea>
+                    <span style="color:red;">*</span>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="wrap">
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <input name="btn_submit" class="button button-primary button-hero" value="保 存" type="button" onclick="save('form1','apkVersionSave');">
+            </div>
+            <br class="clear">
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
