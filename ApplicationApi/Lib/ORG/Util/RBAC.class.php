@@ -115,8 +115,8 @@ class RBAC {
     }
 
     static function AccessToken() {
-        $user_id = I('user_id');
-        $token = I('token');
+        $user_id = $_REQUEST['user_id'];
+        $token = $_REQUEST['token'];
         if (empty($user_id) || empty($token)) {
             return false;
         }
