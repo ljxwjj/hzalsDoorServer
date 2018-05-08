@@ -62,6 +62,38 @@
                 </td>
             </tr>
 
+            <assign name="var" value="attendance_7" />
+            <tr>
+                <th><label for="">开启打卡提醒：</label></th>
+                <td>
+                    <input type="checkbox" name="{$var}" value="1" <eq name="vo[$var]" value="1">checked</eq>>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_8" />
+            <tr>
+                <th><label for="">上下班打卡提前：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" <empty name="vo['attendance_7']">disabled</empty>>分钟提醒
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_9" />
+            <tr>
+                <th><label for="">开启月度考勤推送：</label></th>
+                <td>
+                    <input type="checkbox" name="{$var}" value="1" <eq name="vo[$var]" value="1">checked</eq>>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="">月度考勤报表在次月：</label></th>
+                <td>
+                    <assign name="var" value="attendance_10" />
+                    <input type="text" class="regular-text" style="width: 8em;" name="{$var}" value="{$vo.$var|substr=0,2|trim}" <empty name="vo['attendance_9']">disabled</empty>>日
+                    <input type="text" class="regular-text" style="width: 15em;" name="attendance_10_" value="{$vo.$var|substr=2|trim}" readonly="readonly" <empty name="vo['attendance_9']">disabled</empty>>发起推送
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+
         </table>
     </div>
 
@@ -90,7 +122,17 @@
         }
     );
 
-
+    $("input[name='attendance_7']").change(function(){
+        var ischecked = $(this).is(":checked");
+        $("input[name='attendance_8']").attr("disabled", !ischecked);
+    });
+    $("input[name='attendance_9']").change(function(){
+        var ischecked = $(this).is(":checked");
+        $("input[name='attendance_10']").attr("disabled", !ischecked);
+        $("input[name='attendance_10_']").attr("disabled", !ischecked);
+    });
+    $("input[name='attendance_10_']").timepicker({
+    });
 </script>
 
 <if condition="$save_success">

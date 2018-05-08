@@ -73,6 +73,11 @@ function dateToTimeLong($date) {
     return $date - $todayTime;
 }
 
+function timeLongToDate($timeLong) {
+    $todayTime = strtotime(date("Y-m-d"));
+    return $todayTime + $timeLong;
+}
+
 function toWorkHours($time) {
     $h = intval($time/60/60);
     $i = intval(($time%(60*60))/60);
@@ -92,13 +97,17 @@ function serialNumberToEncoded($serialNumber, $length) {
     return implode("", $resultArray);
 }
 
-function jpush($alert = 'Hello, JPush') {
+function jpush($alert = 'Hello, JPush', $uri = false) {
     Vendor('jpush-api/autoload', COMMON_PATH . 'Vendor/', '.php');
     $client = new \JPush\Client(C('jpush_appkey'), C('jpush_secret'));
     $pusher = $client->push();
     $pusher->setPlatform('all')
         ->addAllAudience()
         ->setNotificationAlert($alert);
+    if ($uri) {
+        $pusher->androidNotification($alert, array("extras"=>array("uri"=>$uri)));
+        $pusher->iosNotification($alert, array("extras"=>array("uri"=>$uri)));
+    }
     try {
         $pusher->send();
     } catch (\JPush\Exceptions\JPushException $e) {
@@ -106,13 +115,17 @@ function jpush($alert = 'Hello, JPush') {
     }
 }
 
-function jpushToUser($rid, $alert = 'Hello, JPush') {
+function jpushToUser($rid, $alert = 'Hello, JPush', $uri = false) {
     Vendor('jpush-api/autoload', COMMON_PATH . 'Vendor/', '.php');
     $client = new \JPush\Client(C('jpush_appkey'), C('jpush_secret'));
     $pusher = $client->push();
     $pusher->setPlatform('all')
         ->addRegistrationId($rid)
         ->setNotificationAlert($alert);
+    if ($uri) {
+        $pusher->androidNotification($alert, array("extras"=>array("uri"=>$uri)));
+        $pusher->iosNotification($alert, array("extras"=>array("uri"=>$uri)));
+    }
     try {
         $pusher->send();
     } catch (\JPush\Exceptions\JPushException $e) {

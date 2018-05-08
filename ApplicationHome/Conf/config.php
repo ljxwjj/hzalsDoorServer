@@ -23,6 +23,7 @@ return array(
     'PUBLIC_PAGES'              =>  array(         // 免登录页面清单
         'Public' => '*',
         'RequestUse'   => array ('add', 'save'),
+        'WebPage' => array('view'),
     ),
     'GUEST_AUTH_ON'             =>  false,         // 是否开启游客授权访问
     'GUEST_AUTH_ID'             =>  0,             // 游客的用户ID

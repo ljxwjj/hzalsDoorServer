@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html xmlns="http://www.w3.org/1999/xhtml" class="ie8 wp-toolbar"  lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 8) ]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" class="wp-toolbar"  lang="zh-CN">
+<!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="__PUBLIC__/Images/favicon.ico" />
+    <title>{$pagetitle}</title>
+    <script language="JavaScript">
+        <!--
+        //指定当前组模块URL地址
+        var URL = '__URL__';
+        var APP	 =	 '__APP__';
+        var PUBLIC = '__PUBLIC__';
+        //-->
+    </script>
+    <script>
+        var imgs = document.getElementsByTagName('img');
+
+        for(var i in imgs)
+        {
+            var img = imgs[i];
+            img.style.width='100%';
+            img.style.height='auto';
+        }
+    </script>
+
+    <style>
+        html,body{
+            height:100%;
+            width:100%;
+            padding:0;
+            margin:0;
+        }
+        #content{
+            width:90%;
+            height:100%;
+            padding:0;
+            margin:10px auto;
+        }
+    </style>
+</head>
+<div>头</div>
+{__CONTENT__}
+<div>尾</div>
+
+
+</html>

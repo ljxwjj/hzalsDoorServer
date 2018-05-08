@@ -1,0 +1,138 @@
+<tagLib name="html" />
+
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.mouse.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.slider.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.css" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/i18n/jquery-ui-timepicker-addon-i18n.min.js" />
+
+<script charset="utf-8" src="__PUBLIC__/Js/KindEditor/kindeditor-min.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Js/ueditor/ueditor.all.min.js"> </script>
+<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Js/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript">
+    var ue = UE.getEditor('editor');
+
+    $(function(){
+        $("input[name='push_now']").change(function(){
+            var ischecked = $(this).is(":checked");
+            $("input[name='push_time']").attr("disabled", ischecked);
+        });
+        $("input[name='push_time']").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: 'HH:mm:ss',
+        });
+    });
+
+</script>
+<style>
+    .ui-datepicker { z-index:9999 !important}
+</style>
+<div class="wrap">
+    <h2>编辑文章</h2>
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a class="button button-primary button-hero" href="javascript:returnList('__CONTROLLER__/index','','');">返回列表</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>
+<br class="clear">
+
+
+<form method='POST' id="form1" action="{:U('WebPage/save')}">
+    <div class="formarea">
+        <table class="form-table">
+            <assign name="var" value="title" />
+            <tr>
+                <th><label for="">标题：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+                    <span style="color:red;">*</span>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="content" />
+            <tr>
+                <th><label for="">内容：</label></th>
+                <td>
+                    <script id="editor" name="{$var}" type="text/plain" style="width:1024px;height:500px;">{$vo.$var}</script>
+                </td>
+            </tr>
+            <assign name="var" value="push_now" />
+                <tr>
+                    <th><label for="">立即推送：</label></th>
+                <td>
+                    <input type="checkbox" name="{$var}" value="1" <eq name="vo[$var]" value="1">checked</eq>>
+                </td>
+            </tr>
+            <assign name="var" value="push_time" />
+            <tr>
+                <th><label for="">推送时间：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" readonly="readonly" <eq name="vo['push_now']" value="1">disabled</eq>>
+                    <span style="color:red;">*</span>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td class="center">
+                    <!--保持搜索部分-->
+                    <php>
+                        foreach($search as $k=>$v){
+                        echo '<input type="hidden" name="'.$k.'" value="'.$v.'" id="'.$k.'" usefor="search">';
+                        }
+                    </php>
+                    <!--保持搜索部分结束-->
+                    <!--pk-->
+                    <assign name="var" value="id" />
+                    <input type="hidden" name="{$var}" value="{$vo.$var}" >
+                    <assign name="var" value="company_id" />
+                    <input type="hidden" name="{$var}" value="{$vo.$var}" >
+                    <eq name='Think.session.lcsomauthId' value="$vo.id">
+                        <input type="hidden" name="role" value="{$vo.role_id}" >
+                    </eq>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="wrap">
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+                <input name="btn_submit" class="button button-primary button-hero" value="保 存" type="button" onclick="save('form1','save');">
+            </div>
+            <br class="clear">
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

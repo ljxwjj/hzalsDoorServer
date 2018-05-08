@@ -330,6 +330,11 @@ class OpenRecordController extends CommonController {
         $attendance_4 = I("attendance_4", -1, "int");
         $attendance_5 = I("attendance_5", -1, "int");
         $attendance_6 = I("attendance_6", -1, "int");
+        $attendance_7 = I("attendance_7", 0, "int");
+        $attendance_8 = I("attendance_8", 0, "int");
+        $attendance_9 = I("attendance_9", 0, "int");
+        $attendance_10 = I("attendance_10", -1, "int");
+        $attendance_10_ = I("attendance_10_");
         if (strcasecmp($mode, "save") === 0) {
             if (strtotime($attendance_1) === false) {
                 $error["attendance_1"] = "时间格式错误";
@@ -349,6 +354,12 @@ class OpenRecordController extends CommonController {
             if ($attendance_6 < 0) {
                 $error["attendance_6"] = "请输入一个正常数";
             }
+            if ($attendance_9 && ($attendance_10 < 0 || $attendance_10 > 18)) {
+                $error["attendance_10"] = "请输入一个正常数 [1-18]";
+            }
+            if ($attendance_9 && empty($attendance_10_)) {
+                $error["attendance_10"] = "时间格式错误";
+            }
             if ($error) {
                 $this->assign("error", $error);
             } else {
@@ -358,6 +369,11 @@ class OpenRecordController extends CommonController {
                 $this->saveAttendanceConfig("attendance_4", $attendance_4);
                 $this->saveAttendanceConfig("attendance_5", $attendance_5);
                 $this->saveAttendanceConfig("attendance_6", $attendance_6);
+
+                $this->saveAttendanceConfig("attendance_7", $attendance_7);
+                $this->saveAttendanceConfig("attendance_8", $attendance_8);
+                $this->saveAttendanceConfig("attendance_9", $attendance_9);
+                $this->saveAttendanceConfig("attendance_10", $attendance_10." ".$attendance_10_);
                 $this->assign("save_success", true);
             }
         }
@@ -371,6 +387,7 @@ class OpenRecordController extends CommonController {
         $vo = M('AppSetting')->where($map)->getField('code_name,code_value');
         if (empty($vo['attendance_1'])) $vo['attendance_1'] = "09:00";
         if (empty($vo['attendance_2'])) $vo['attendance_2'] = "17:00";
+        if (empty($vo['attendance_10'])) $vo['attendance_10'] = "1 9:00";
         $this->assign('vo', $vo);
     }
 
