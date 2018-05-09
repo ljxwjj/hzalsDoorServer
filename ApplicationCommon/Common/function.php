@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * 解决 strrev 函数中文乱码的问题
+ * @param $str
+ * @return string
+ */
+function utf8_strrev($str){
+    preg_match_all('/./us', $str, $ar);
+    return join('',array_reverse($ar[0]));
+}
+
 function isWorkDay($day) {
     $time = strtotime($day);
     $year = date("Y", $time);

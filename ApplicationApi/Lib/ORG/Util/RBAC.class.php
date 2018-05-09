@@ -137,7 +137,7 @@ class RBAC {
             unset($params[$sign_key]);
             ksort($params);
             $paramsStr = implode("", $params);
-            $paramsStr = strrev($paramsStr);
+            $paramsStr = utf8_strrev($paramsStr);
             $paramsStr =  $paramsStr. C('API_PARAMS_SIGN_VALUE');
             $paramsMd5 = md5($paramsStr);
             return strcasecmp($paramsMd5, $sign) === 0;

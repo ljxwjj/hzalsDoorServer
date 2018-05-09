@@ -237,7 +237,7 @@ class PublicController extends CommonController {
 
             ksort($params);
             $paramsStr = implode("", $params);
-            $paramsStr = strrev($paramsStr);
+            $paramsStr = utf8_strrev($paramsStr);
             $paramsStr = $paramsStr . '8djUK*014kJ';
             $paramsMd5 = md5($paramsStr);
             if ($wenhao) {
