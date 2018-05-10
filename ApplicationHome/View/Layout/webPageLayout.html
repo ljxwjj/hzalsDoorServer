@@ -26,18 +26,27 @@
             padding:0;
             margin:0;
         }
-        #content{
-            width:90%;
-            height:100%;
-            padding:0;
-            margin:10px auto;
+        .rich_media_area_primary {
+            padding:25px 24px 26px;
+        }
+        .rich_media_area_extra {
+            padding:24px 15px 0;
         }
     </style>
 </head>
-<div>头</div>
+<body>
+    <div id="js_article" class="rich_media">
+        <div id="js_top_ad_area" class="top_banner"></div>
+        <div class="rich_media_inner">
+            <div id="page-content" class="rich_media_area_primary">
 {__CONTENT__}
-<div>尾</div>
-
+            </div>
+            <div class="rich_media_area_primary"></div>
+            <div class="rich_media_area_extra"></div>
+        </div>
+        <div></div>
+    </div>
+</body>
 
 <script>
     var imgs = document.getElementsByTagName('img');
