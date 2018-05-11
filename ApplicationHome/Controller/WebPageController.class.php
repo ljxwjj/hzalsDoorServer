@@ -95,7 +95,7 @@ class WebPageController extends CommonController {
      * @param array $map  查询条件
      * @param array $search 搜索数组
      */
-    protected function setMap(&$map,&$search){
+    protected function setMap(&$map, &$search){
 
         foreach ($_REQUEST as $key => $val) {
             if($val == "") {
