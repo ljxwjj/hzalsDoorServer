@@ -1,3 +1,10 @@
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.menu.js" />
 <tagLib name="html" />
 <style>
     .p1label{
@@ -7,26 +14,68 @@
         text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;
     }
 </style>
+<script>
+    $(function(){
+        //$("#search_open_time_start").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+        //$("#search_open_time_end").datepicker({"dateFormat": "yy-mm-dd",'changeMonth':true,'changeYear':true});
+
+        var dateFormat = "yy-mm-dd",
+            from = $( "#search_time_start" )
+                .datepicker({
+                    defaultDate: "-3m",
+                    changeMonth: true,
+                    numberOfMonths: 3,
+                    maxDate: new Date(),
+                })
+                .on( "change", function() {
+                    to.datepicker( "option", "minDate", getDate( this ) );
+                }),
+            to = $( "#search_time_end" ).datepicker({
+                defaultDate: "-1m",
+                changeMonth: true,
+                numberOfMonths: 3,
+                maxDate: new Date(),
+            })
+                .on( "change", function() {
+                    from.datepicker( "option", "maxDate", getDate( this ) );
+                });
+
+        function getDate( element ) {
+            var date;
+            try {
+                date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+                date = null;
+            }
+
+            return date;
+        }
+    })
+</script>
 <div class="wrap">
     <h2>页面列表 &nbsp;<a class="add-new-h2" href="#" onclick="add('','')">新增</a>
     </h2>
 
 
-    <form name="form1" method='POST' action="{:U('User/index')}">
+    <form name="form1" method='POST' action="{:U('WebPage/index')}">
         <!-- 查询区域 -->
         <div class="tablenav top">
             <!--单个查询条件-->
-            <assign name="var" value="search_nickname" />
+            <assign name="var" value="search_title" />
             <div class="alignleft actions">
-                <label>姓名</label>
-                <input type="text" usefor="search" name="{$var}" title="姓名查询" value="{$search.$var}" />
-            </div>
-            <assign name="var" value="search_account" />
-            <div class="alignleft actions">
-                <label>帐号</label>
-                <input type="text" usefor="search" name="{$var}" title="帐号查询" value="{$search.$var}" />
+                <label>标题</label>
+                <input type="text" usefor="search" name="{$var}" title="标题查询" value="{$search.$var}" />
             </div>
 
+            <div class="alignleft actions">
+                <assign name="var" value="search_time_start" />
+                <label>创建时间</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="开始时间" value="{$search.$var}" class="medium"  />
+
+                <assign name="var" value="search_time_end" />
+                <label>~</label>
+                <input type="text" usefor="search" id="{$var}" name="{$var}"  title="截止时间" value="{$search.$var}" class="medium"  />
+            </div>
             <!--单个查询条件结束-->
             <div class="alignleft actions">
                 <input class="button" type="submit" value="查询" name="btn_search">

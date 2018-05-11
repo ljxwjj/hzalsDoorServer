@@ -88,4 +88,40 @@ class WebPageController extends CommonController {
             $this->error("页面未找到");
         }
     }
+
+    /**
+     * 设置查询条件*
+     *
+     * @param array $map  查询条件
+     * @param array $search 搜索数组
+     */
+    protected function setMap(&$map,&$search){
+
+        foreach ($_REQUEST as $key => $val) {
+            if($val == "") {
+                continue;
+            }
+            if (ereg("^search_", $key)) {
+                $field = str_replace('search_','',$key);
+                $search[$key] = $val;
+
+                switch($field){
+                    case 'title':
+                        $map['title'] = array('like',"%$val%");
+                        break;
+                    case 'time_start':
+                        $map["create_time"] = array('egt',strtotime($val));
+                        break;
+                    case 'time_end':
+                        $map["create_time"] = array('lt',strtotime($val)+86400);
+                        break;
+                    default:
+                        $map[$field] = $val;
+                        break;
+                }
+
+            }
+        }
+    }
+
 }
