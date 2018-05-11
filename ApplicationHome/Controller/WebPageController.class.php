@@ -39,8 +39,10 @@ class WebPageController extends CommonController {
                 $data["push_status"] = 0;
             }
             if($id){
+                $data["update_time"] = time();
                 $result = $model->save($data);
             }else{
+                $data["create_time"] = time();
                 $result = $model->add($data);
             }
             if ($result && I("push_now")) {
@@ -110,10 +112,10 @@ class WebPageController extends CommonController {
                         $map['title'] = array('like',"%$val%");
                         break;
                     case 'time_start':
-                        $map["create_time"] = array('egt',strtotime($val));
+                        $map["create_time"][] = array('egt',strtotime($val));
                         break;
                     case 'time_end':
-                        $map["create_time"] = array('lt',strtotime($val)+86400);
+                        $map["create_time"][] = array('lt',strtotime($val)+86400);
                         break;
                     default:
                         $map[$field] = $val;
