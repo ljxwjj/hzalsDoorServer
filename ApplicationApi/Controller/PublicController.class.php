@@ -28,7 +28,7 @@ class PublicController extends CommonRestController {
                 $head_image = getHttpRooDir().'/Public'.$head_image;
             }
             $role_id = M('AuthRoleUser')->where("user_id=$id")->getField('role_id');
-            $data = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company', 'head_image', 'role_id');
+            $data = compact('id', 'token', 'account', 'email', 'mobile', 'nickname', 'sex', 'company_id', 'company', 'head_image', 'role_id');
             $result = $this->createResult(200, '登录成功', $data);
 
             $model = M('UserToken');

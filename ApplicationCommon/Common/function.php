@@ -112,7 +112,8 @@ function jpush($alert = 'Hello, JPush', $uri = false) {
     $client = new \JPush\Client(C('jpush_appkey'), C('jpush_secret'));
     $pusher = $client->push();
     $pusher->setPlatform('all')
-        ->addAllAudience()
+        //->addAllAudience()
+        ->addTag('all')
         ->setNotificationAlert($alert);
     if ($uri) {
         $pusher->androidNotification($alert, array("extras"=>array("uri"=>$uri)));
