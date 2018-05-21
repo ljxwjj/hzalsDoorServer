@@ -4,9 +4,10 @@ use Think\Controller;
 
 class JpushController extends Controller\RestController {
 
-    public function test() {
-        $begin = date("Y-m-d H:i:s", strtotime("+60 seconds"));
-        echo $begin;
+    public function test() {// 裕华测试：1a0018970a8b0d196d8    效果：13165ffa4e258cb8da3      A8:120c83f76009f2fa771
+        //jpushToUser("170976fa8a8a6c38aa2", "通知通知 明天放假");
+        jpush("推送到tag [all], 无参");
+        echo "推送成功";
     }
 
     // 上下班打卡提醒
@@ -32,7 +33,7 @@ class JpushController extends Controller\RestController {
             $CLOSING_TIME = timeToTimeLong($setting['attendance_2']);
             $this->xiaban($companyId, $CLOSING_TIME, $NOW_TIME, $setting['attendance_7']);
         }
-        echo "上下班打卡提醒执行完毕";
+        echo "上下班打卡提醒执行完毕\t\t" . date("m-d H:i:s");
     }
 
     // 月度报表推送
@@ -56,7 +57,7 @@ class JpushController extends Controller\RestController {
                 $this->pushAttendanceByMonth($companyId, $pushTime);
             }
         }
-        echo "月度报表推送执行完毕";
+        echo "月度报表推送执行完毕 \t\t" . date("m-d H:i:s");
     }
 
     // 网页定时推送
@@ -85,7 +86,7 @@ class JpushController extends Controller\RestController {
                 jpush($item["title"], "als://webpage/".$item["id"]);
             }
         }
-        echo "后台手动定时推送执行完毕";
+        echo "后台手动定时推送执行完毕\t\t" . date("m-d H:i:s");
     }
 
     private function shangban($companyId, $workTime, $nowTime, $attendance_7) {
