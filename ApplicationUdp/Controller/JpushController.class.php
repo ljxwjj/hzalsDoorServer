@@ -33,7 +33,7 @@ class JpushController extends Controller\RestController {
             $CLOSING_TIME = timeToTimeLong($setting['attendance_2']);
             $this->xiaban($companyId, $CLOSING_TIME, $NOW_TIME, $setting['attendance_7']);
         }
-        echo "上下班打卡提醒执行完毕\t\t" . date("m-d H:i:s");
+        echo "\n上下班打卡提醒执行完毕\t\t" . date("m-d H:i:s");
     }
 
     // 月度报表推送
@@ -57,7 +57,7 @@ class JpushController extends Controller\RestController {
                 $this->pushAttendanceByMonth($companyId, $pushTime);
             }
         }
-        echo "月度报表推送执行完毕 \t\t" . date("m-d H:i:s");
+        echo "\n月度报表推送执行完毕 \t\t" . date("m-d H:i:s");
     }
 
     // 网页定时推送
@@ -86,7 +86,7 @@ class JpushController extends Controller\RestController {
                 jpush($item["title"], "als://webpage/".$item["id"]);
             }
         }
-        echo "后台手动定时推送执行完毕\t\t" . date("m-d H:i:s");
+        echo "\n后台手动定时推送执行完毕\t\t" . date("m-d H:i:s");
     }
 
     private function shangban($companyId, $workTime, $nowTime, $attendance_7) {
