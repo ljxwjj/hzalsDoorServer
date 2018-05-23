@@ -114,6 +114,7 @@ function jpush($alert = 'Hello, JPush', $uri = false) {
     $pusher->setPlatform('all')
         //->addAllAudience()
         ->addTag('all')
+        ->options(['apns_production'=>true])
         ->setNotificationAlert($alert);
     if ($uri) {
         $pusher->androidNotification($alert, array("extras"=>array("uri"=>$uri)));
