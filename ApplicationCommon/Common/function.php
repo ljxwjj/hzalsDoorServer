@@ -133,6 +133,7 @@ function jpushToUser($rid, $alert = 'Hello, JPush', $uri = false) {
     $pusher = $client->push();
     $pusher->setPlatform('all')
         ->addRegistrationId($rid)
+        ->options(['apns_production'=>true])
         ->setNotificationAlert($alert);
     if ($uri) {
         $pusher->androidNotification($alert, array("extras"=>array("uri"=>$uri)));
