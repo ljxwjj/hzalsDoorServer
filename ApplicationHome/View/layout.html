@@ -88,34 +88,49 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
     	});
     })(jQuery);
 
-	(function(){			
-			//setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟
+	(function(){
 			$('.tab').find('a').click(function() {
 				var _index = $(this).index();
 				$(this).addClass('on').siblings('a').removeClass('on');
 				$('.content').find('div.hidden').eq(_index).show().siblings('div').hide();
 			});
 	 });
-
-    function selectMessageCount(){
-        postUrl= APP+'/Public/messageCount';
-        $.post(postUrl,function(data){
-            var count = data.count;
-            $('#messageCount').html(count);            
-        },'JSON');
-    }
-    
 </script>
-	
+<if condition='$Think.session._ACCESS_LIST.HOME.REQUESTUSE neq null'>
+	<script type="text/javascript">
+		$(function() {
+            setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟
+        });
+
+        function selectMessageCount(){
+            var postUrl= APP+'/Public/messageCount';
+            $.post(postUrl,function(data){
+                if (data.code == 200) {
+                    if (data.request_use_messagecount > 0) {
+                        $('#messageCount').html(data.request_use_messagecount);
+                        $('#wp-admin-bar-comments').show();
+                    }
+                    if (data.repair_record_messagecount > 0) {
+						$('#messageCount2').html(data.repair_record_messagecount);
+                        $('#wp-admin-bar-new-comments').show();
+					}
+				} else {
+                    $('#wp-admin-bar-comments').hide();
+                    $('#wp-admin-bar-new-comments').hide();
+				}
+            },'JSON');
+        }
+	</script>
+</if>
 <div id="wpwrap">
 
 
 	<div id="adminmenuback"></div>
-	
+
 	<!--左侧菜单-->
 	<include file="Public:lefter" />
 	<!--左侧菜单结束-->
-	
+
 	<div id="wpcontent">
 		<div id="wpadminbar" class="nojq nojs" role="navigation">
 			<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="顶部导航工具栏。" tabindex="0">
@@ -138,11 +153,12 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 								<li id="wp-admin-bar-support-forums"><a class="ab-item"  href="#">支持论坛</a></li>
 								<li id="wp-admin-bar-feedback"><a class="ab-item"  href="#">反馈</a></li>
 							</ul>-->
-						</div>		
+						</div>
 					</li>
-					<!--<li id="wp-admin-bar-comments"><a class="ab-item"  href="__APP__/Index/index" title="消息通知"><span class="ab-icon"></span><span id="ab-awaiting-mod" class="ab-label awaiting-mod pending-count count-0">你有<span id="messageCount">{$_SESSION['messageCount']}</span>条消息通知，点击这里查看</span></a></li>-->
+					<li id="wp-admin-bar-comments" <if condition='$Think.session.request_use_messagecount lt 1'>style="display: none;"</if>><a class="ab-item"  href="__APP__/RequestUse/index" title="消息通知"><span class="ab-icon"></span><span id="ab-awaiting-mod" class="ab-label awaiting-mod pending-count count-0">新用户审请有<span id="messageCount">{$_SESSION['request_use_messagecount']}</span>条新消息</span></a></li>
+					<li id="wp-admin-bar-new-comments" <if condition='$Think.session.repair_record_messagecount lt 1'>style="display: none;"</if>><a class="ab-item"  href="__APP__/RepairRecord/index" title="消息通知"><span class="ab-icon"></span><span class="ab-label awaiting-mod pending-count count-0">设备报修有<span id="messageCount2">{$_SESSION['repair_record_messagecount']}</span>条新消息</span></a></li>
 				</ul>
-					
+
 				<ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
 					<li id="wp-admin-bar-my-account" class="menupop with-avatar">
 						<a class="ab-item"  aria-haspopup="true" href="#" title="我的帐户">您好，{$_SESSION['account']}
@@ -161,20 +177,20 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 								<li id="wp-admin-bar-edit-profile"><a class="ab-item"  href="__APP__/Ucenter/modifypwd/id/<php>echo $_SESSION[C('USER_AUTH_KEY')];</php>">修改密码</a></li>
 								<li id="wp-admin-bar-logout"><a class="ab-item"  href="__APP__/Public/logout.html">登出</a></li>
 							</ul>
-						</div>		
+						</div>
 					</li>
-				</ul>			
+				</ul>
 			</div>
 			<a class="screen-reader-shortcut" href="__APP__/Public/logout.html">登出</a>
 		</div>
 
-			
+
 		<div id="wpbody">
 
 			<div id="wpbody-content" aria-label="主内容" tabindex="0">
 				<!-- wrap 结束-->
 				{__CONTENT__}
-				<div class="clear"></div> 				
+				<div class="clear"></div>
 			</div><!-- wpbody-content -->
 			<div class="clear"></div>
 		</div><!-- wpbody -->
@@ -188,7 +204,7 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 			<p id="footer-upgrade" class="alignright">1.0.0版本	</p>
 			<div class="clear"></div>
 	</div>
-	
+
 <script type='text/javascript'>
 /* <![CDATA[ */
 var commonL10n = {"warnDelete":"\u60a8\u5c06\u6c38\u4e45\u5220\u9664\u6240\u9009\u9879\u76ee\u3002\n\u70b9\u51fb\u201c\u53d6\u6d88\u201d\u505c\u6b62\uff0c\u70b9\u51fb\u201c\u786e\u5b9a\u201d\u5220\u9664\u3002"};var heartbeatSettings = {"nonce":"cd3b57b146"};var inlineEditL10n = {"error":"\u4fdd\u5b58\u66f4\u6539\u65f6\u53d1\u751f\u9519\u8bef\u3002","ntdeltitle":"\u4ece\u6279\u91cf\u7f16\u8f91\u4e2d\u79fb\u9664","notitle":"(\u65e0\u6807\u9898)","comma":"\u3001"};var authcheckL10n = {"beforeunload":"\u60a8\u7684\u767b\u5f55\u4f1a\u8bdd\u5df2\u8fc7\u671f\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002","interval":"180"};/* ]]> */

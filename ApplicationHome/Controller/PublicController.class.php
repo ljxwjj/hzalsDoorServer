@@ -297,4 +297,17 @@ class PublicController extends CommonController {
 
         return $result;
     }
+
+    public function messageCount() {
+        $result = array();
+        if (session(C('ADMIN_AUTH_KEY'))) {
+            $result['code'] = 200;
+            $result['request_use_messagecount'] = session('request_use_messagecount');
+            $result['repair_record_messagecount'] = session('repair_record_messagecount');
+        } else {
+            $result['code'] = 0;
+            $result['message'] = "没有该数据的操作权限！";
+        }
+        $this->response($result);
+    }
 }

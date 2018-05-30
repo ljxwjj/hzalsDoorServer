@@ -33,6 +33,13 @@ class CommonController extends Controller {
                 }
             }
         }
+
+        if (session(C('ADMIN_AUTH_KEY'))) {
+            $count1 = M("RequestUse")->where(array('status'=>0))->count('id');
+            $count2 = M("RepairRecord")->where(array('status'=>0))->count('id');
+            session("request_use_messagecount", $count1);
+            session("repair_record_messagecount", $count2);
+        }
     }
 
     /**

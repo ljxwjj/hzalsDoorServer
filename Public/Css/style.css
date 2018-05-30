@@ -904,6 +904,15 @@ content:'\f101';top:3px
 #wpadminbar #wp-admin-bar-comments .count-0{
 opacity:.5
 }
+#wpadminbar #wp-admin-bar-new-comments .ab-icon{
+	margin-right:6px
+}
+#wpadminbar #wp-admin-bar-new-comments .ab-icon:before{
+	content:'\f101';top:3px
+}
+#wpadminbar #wp-admin-bar-new-comments .count-0{
+	opacity:.5
+}
 #wpadminbar #wp-admin-bar-new-content .ab-icon:before{
 content:'\f132';top:4px
 }
