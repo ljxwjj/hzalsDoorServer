@@ -96,7 +96,9 @@ var userSettings = {"url":"\/zachary\/blog\/","uid":"1","time":"1404326885"};/* 
 			});
 	 });
 </script>
-<if condition='$Think.session._ACCESS_LIST.HOME.REQUESTUSE neq null'>
+
+<assign name="_ACCESS_LIST_HOME" value="$Think.session._ACCESS_LIST.HOME" />
+<if condition='$_ACCESS_LIST_HOME.REQUESTUSE neq null'>
 	<script type="text/javascript">
 		$(function() {
             setInterval("selectMessageCount()",60*1000);//1000表示一秒钟,60*1000代表一分钟
