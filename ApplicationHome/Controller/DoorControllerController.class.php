@@ -32,23 +32,26 @@ class DoorControllerController extends CommonController {
      * @param array $search 搜索数组
      */
     protected function setMap(&$map,&$search){
+        $model = M("DoorController");
+        $dbFields = $model->getDbFields();
         foreach ($_REQUEST as $key => $val) {
             if($val == "") {
                 continue;
             }
             if (ereg("^search_", $key)) {
                 $field = str_replace('search_','',$key);
-                $map[$field] = $val;
-                switch($field){
-                    case 'account':
-                    case 'nickname':
-                        $map[$field] = array('like',"%".$val."%");
-                        $search[$key] = $val;
-                        break;
-                    default:
-                        $map[$field] = $val;
-                        $search[$key] = $val;
-                        break;
+
+                if(in_array($field,$dbFields)) {
+                    switch ($field) {
+                        case 'name':
+                            $map[$field] = array('like', "%" . $val . "%");
+                            $search[$key] = $val;
+                            break;
+                        default:
+                            $map[$field] = $val;
+                            $search[$key] = $val;
+                            break;
+                    }
                 }
             }
         }
