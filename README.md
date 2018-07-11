@@ -24,3 +24,11 @@ tail -f ApplicationRuntime/Logs/Udp/17_07_18.log
 
 备份
 cp -avx hzalsDoorServer hzalsDoorServer_backup20171117
+
+// 极光推送 账号 ：hzals  密码：HZals2004
+
+上下班打卡推送 als://checkin
+小知识、文章   als://webpage/111 
+考勤           als://attendance
+首页           als://home 
+网页           http://www.xxx.com

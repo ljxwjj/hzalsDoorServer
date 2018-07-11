@@ -77,6 +77,12 @@ body{
 	background:url(../Images/lock.jpg);
 	float:left;
 	}
+.login_main_1_lc{
+	height:41px;
+	width:49px;
+	background:url(../Images/email.jpg);
+	float:left;
+	}
 .login_main_1_r{
 	width:305px;
 	height:41px;
@@ -131,4 +137,13 @@ body{
 	border-radius:3px;
 	border:1px #000 solid;}
 	
-	
+.find_pwd {
+	height:40px;
+	line-height:40px;
+}
+
+.find_pwd a {
+	color: #666;
+	text-decoration: none;
+	cursor: pointer;
+}
