@@ -69,6 +69,18 @@
     * 返回值
         * image file  stream
 
+* 添加报修 /Public/addRepair
+
+    * 参数
+        * company_name  公司名称
+        * phone         联系电话
+        * address       地址
+        * describe_text 故障描述
+        * image_file    图片
+    
+    * 返回值
+        * data        成功/失败
+        
 #用户授权接口
 公共参数： user_id、 account、 token、sign
 
