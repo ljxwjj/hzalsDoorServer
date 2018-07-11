@@ -89,6 +89,24 @@ class JpushController extends Controller\RestController {
         echo "\n后台手动定时推送执行完毕\t\t" . date("m-d H:i:s");
     }
 
+    // 设备掉线通知
+    public function doorControllerOfflineNotification() {
+        $MDoorController = M('DoorController');
+        $now = time();
+        $map = array(
+            "product_type" => 2,
+            "status" => 0,
+            "company_id" => array("GT", 0),
+            "last_connect_time" => array("between", array($now-60, $now-30)),
+        );
+        $controllerData = $MDoorController->where($map)->select();
+        foreach ($controllerData as $controller) {
+            $message = $this->onControllerOffline($controller);
+            echo $message;
+        }
+        echo "\n后台设备掉线通知推送执行完毕\t\t" . date("m-d H:i:s");
+    }
+
     private function shangban($companyId, $workTime, $nowTime, $attendance_7) {
         $notifiTime = $workTime - ($attendance_7 * 60);
         $notifiDate = timeLongToDate($notifiTime);
@@ -178,5 +196,40 @@ class JpushController extends Controller\RestController {
                 }
             }
         }
+    }
+
+    private function onControllerOffline($controllerData) {
+        $controller_id = $controllerData['id'];
+        $company_id = $controllerData['company_id'];
+        $notifiDate = $controllerData['last_connect_time'];
+        $warningTime = date("Y年m月d日 H时i分s秒", $notifiDate);
+        $pushContent = $controllerData['name']." ".$warningTime."与服务器失去连接，请及时检查设备状态！";
+
+        $MUser = M('User');
+        $map = array();
+        $map['status'] = 1;
+        $map['company_id'] = $company_id;
+        $map["jpush_register_id"] = array('neq','');
+        $map['role_id'] = array("LT", 22);
+        $userData = $MUser->join("auth_role_user on auth_role_user.user_id = user.id")->where($map)->select();
+        $message = "$pushContent 通知以下用户:";
+        foreach ($userData as $user) {
+            $dataMap = array(
+                "user_id" => $user['id'],
+                "push_tag" => "door_offline",
+                "push_time" => $notifiDate,
+            );
+            $pushCount = M('JpushRecord')->where($dataMap)->count();
+
+            if (!$pushCount) {
+                $dataMap["push_content"] = $pushContent;
+                $addResult = M('JpushRecord')->add($dataMap);
+                if ($addResult) {
+                    $message .= $user["id"]."(".$user["nickname"]."),";
+                    jpushToUser($user["jpush_register_id"], $dataMap["push_content"]);
+                }
+            }
+        }
+        return $message;
     }
 }

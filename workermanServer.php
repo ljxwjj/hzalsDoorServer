@@ -184,6 +184,18 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
                         $info = array();
                         exec("php door/udp.php /Index/swingCord3/serial_number/$addr/data/$swingData", $info);
                         _log($info[0]);
+                    } else if ($record['event_name'] == 'a2') { // 0xA2：非法入侵事件
+                        _log('discovered warning invasion');
+                        $swingData = implode("", $record);
+                        $info = array();
+                        exec("php door/udp.php /Index/invasionWarning/serial_number/$addr/data/$swingData", $info);
+                        _log($info[0]);
+                    } else if ($record['event_name'] == 'a5') { // 0xA5: 电锁被撬事件
+                        _log('discovered warning broken');
+                        $swingData = implode("", $record);
+                        $info = array();
+                        exec("php door/udp.php /Index/brokenWarning/serial_number/$addr/data/$swingData", $info);
+                        _log($info[0]);
                     }
                 }
             } else {

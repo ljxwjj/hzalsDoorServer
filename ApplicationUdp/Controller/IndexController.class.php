@@ -43,6 +43,10 @@ class IndexController extends Controller\RestController {
                 $controllerData['ip'] = $ip;
                 $controllerData['port'] = $port;
                 $controllerData['last_connect_time'] = time();
+                if ($command == "0902") {// 心跳
+                    $doorStatusStr = substr($appdata, 6, 2);
+                    $controllerData['door_status'] = sprintf("%08b", hexdec($doorStatusStr));
+                }
                 $MDoorController->save($controllerData);
 
                 if ($command == "0902") {// 心跳
@@ -650,6 +654,158 @@ class IndexController extends Controller\RestController {
         \Think\Log::record("刷卡请求 处理结果：$message");
     }
 
+    /**
+     * 0xA2：非法入侵事件
+     * @param $serial_number
+     * @param $data
+     */
+    public function invasionWarning($serial_number, $data) {
+        \Think\Log::record("收到非法入侵事件：serial number: $serial_number data: $data");
+        $MDoorController = M('DoorController');
+        $map = array();
+        $map['serial_number'] = $serial_number;
+        $map['status'] = 0;
+        $controllerData = $MDoorController->where($map)->find();
+
+        if ($controllerData) {
+            $controller_id = $controllerData['id'];
+            $company_id = $controllerData['company_id'];
+
+            $binData = hex2bin($data);
+
+            $unData = unpack("C*", $binData);
+            $i = 0;
+            $record = array();
+            $dakaResult = sprintf("%02x", $unData[++$i]);
+            $record['swing_card_result'] = substr($dakaResult, 1, 1); // 打卡结果
+            $record['swing_card_flag'] = substr($dakaResult, 0, 1); // 内部标识
+            $record['event_name'] = sprintf("%02x", $unData[++$i]);// 事件名称
+            $record['transaction_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析终端机交易流水号
+            $record['year'] = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);// 解析年份
+            $record['month'] = sprintf("%02x", $unData[++$i]);// 解析月份
+            $record['day'] = sprintf("%02x", $unData[++$i]);// 解析日
+            $record['hour'] = sprintf("%02x", $unData[++$i]);// 解析小时
+            $record['minute'] = sprintf("%02x", $unData[++$i]);// 解析分钟
+            $record['second'] = sprintf("%02x", $unData[++$i]);// 解析秒
+            $record['carad_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析卡号
+            $record['door_number'] = sprintf("%02x", $unData[++$i]);// 解析门编号
+            $record['read_head_number'] = sprintf("%02x", $unData[++$i]);// 解析读头编号
+            $record['in_out_channel_number'] = sprintf("%02x", $unData[++$i]);// 解析输入输出通道编号
+            $record['password_type'] = sprintf("%02x", $unData[++$i]);// 解析密码类型
+            $record['open_password'] = sprintf("%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i]);//解析开门密码
+            $record['door_actual_status'] = sprintf("%02x", $unData[++$i]);//解析门实时状态
+            $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
+            $door_id = intval($record['door_number']);
+
+            $message = $this->doorWarningHandle($record, $controllerData, $door_id);
+        } else {
+            $message = "unfond door contooler serial_number";
+        }
+        echo $message;
+        \Think\Log::record("非法入侵事件 处理结果：$message");
+    }
+
+    /**
+     * 0xA5: 电锁被撬事件
+     * @param $serial_number
+     * @param $data
+     */
+    public function brokenWarning($serial_number, $data) {
+        \Think\Log::record("收到电锁被撬事件：serial number: $serial_number data: $data");
+        $MDoorController = M('DoorController');
+        $map = array();
+        $map['serial_number'] = $serial_number;
+        $map['status'] = 0;
+        $controllerData = $MDoorController->where($map)->find();
+
+        if ($controllerData) {
+            $controller_id = $controllerData['id'];
+            $company_id = $controllerData['company_id'];
+
+            $binData = hex2bin($data);
+
+            $unData = unpack("C*", $binData);
+            $i = 0;
+            $record = array();
+            $dakaResult = sprintf("%02x", $unData[++$i]);
+            $record['swing_card_result'] = substr($dakaResult, 1, 1); // 打卡结果
+            $record['swing_card_flag'] = substr($dakaResult, 0, 1); // 内部标识
+            $record['event_name'] = sprintf("%02x", $unData[++$i]);// 事件名称
+            $record['transaction_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析终端机交易流水号
+            $record['year'] = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);// 解析年份
+            $record['month'] = sprintf("%02x", $unData[++$i]);// 解析月份
+            $record['day'] = sprintf("%02x", $unData[++$i]);// 解析日
+            $record['hour'] = sprintf("%02x", $unData[++$i]);// 解析小时
+            $record['minute'] = sprintf("%02x", $unData[++$i]);// 解析分钟
+            $record['second'] = sprintf("%02x", $unData[++$i]);// 解析秒
+            $record['carad_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析卡号
+            $record['door_number'] = sprintf("%02x", $unData[++$i]);// 解析门编号
+            $record['read_head_number'] = sprintf("%02x", $unData[++$i]);// 解析读头编号
+            $record['in_out_channel_number'] = sprintf("%02x", $unData[++$i]);// 解析输入输出通道编号
+            $record['password_type'] = sprintf("%02x", $unData[++$i]);// 解析密码类型
+            $record['open_password'] = sprintf("%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i]);//解析开门密码
+            $record['door_actual_status'] = sprintf("%02x", $unData[++$i]);//解析门实时状态
+            $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
+            $door_id = intval($record['door_number']);
+
+            $message = $this->doorWarningHandle($record, $controllerData, $door_id);
+        } else {
+            $message = "unfond door contooler serial_number";
+        }
+        echo $message;
+        \Think\Log::record("电锁被撬事件 处理结果：$message");
+    }
+
+    private function doorWarningHandle($record, $controllerData, $door_id) {// 处理警告
+        $record['year'] = hexdec($record['year']);
+        $record['month'] = hexdec($record['month']);
+        $record['day'] = hexdec($record['day']);
+        $record['hour'] = hexdec($record['hour']);
+        $record['minute'] = hexdec($record['minute']);
+        $record['second'] = hexdec($record['second']);
+
+        $controller_id = $controllerData['id'];
+        $company_id = $controllerData['company_id'];
+        $notifiDate = strtotime($record['year']."-".$record['month']."-".$record['day']." ".$record['hour'].":".$record['minute'].":".$record['second']);
+        $warningTime = date("Y年m月d日 H时i分s秒", $notifiDate);
+
+        $doorName = M("Door")->where(array('controller_id'=>$controller_id, 'door_index'=>$door_id))->getField('name');
+        if (!$doorName) {
+            $doorName = $door_id."号门";
+        }
+        if ($record['event_name'] == "a2") {
+            $pushContent = $controllerData['name']." ".$doorName." ".$warningTime."收到非法入侵事件！";
+        } else if ($record['event_name'] == "a5") {
+            $pushContent = $controllerData['name']." ".$doorName." ".$warningTime."收到电锁被撬事件！";
+        }
+
+        $MUser = M('User');
+        $map = array();
+        $map['status'] = 1;
+        $map['company_id'] = $company_id;
+        $map["jpush_register_id"] = array('neq','');
+        $map['role_id'] = array("LT", 22);
+        $userData = $MUser->join("auth_role_user on auth_role_user.user_id = user.id")->where($map)->select();
+        $message = "通知以下用户:";
+        foreach ($userData as $user) {
+            $dataMap = array(
+                "user_id" => $user['id'],
+                "push_tag" => "door_warngin",
+                "push_time" => $notifiDate,
+            );
+            $pushCount = M('JpushRecord')->where($dataMap)->count();
+
+            if (!$pushCount) {
+                $dataMap["push_content"] = $pushContent;
+                $addResult = M('JpushRecord')->add($dataMap);
+                if ($addResult) {
+                    $message .= $user["id"]."(".$user["nickname"]."),";
+                    jpushToUser($user["jpush_register_id"], $dataMap["push_content"]);
+                }
+            }
+        }
+        return $message;
+    }
 
     private function swingUserCard($record, $controllerData, $door_id) {// 记录刷卡数据上报
         $controller_id = $controllerData['id'];
