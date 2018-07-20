@@ -272,6 +272,11 @@ class DoorControllerController extends CommonController {
         $condition = array('id' => $id);
         $vo = $model->where($condition)->find();
         if ($vo) {
+            $doorStatus = array();
+            if ($vo['door_status']) {
+                $doorStatus = str_split($vo['door_status']);
+            }
+
             $doors = M('Door')->where(array('controller_id'=>$id))->select();
             $arrList = array();
             foreach ($doors as $door) {
@@ -288,6 +293,7 @@ class DoorControllerController extends CommonController {
                 } else {
                     $arrList[$i]['camera_count'] = 0;
                 }
+                $arrList[$i]['status'] = $doorStatus[$i]?1:0;
             }
             ksort($arrList);
             $this->assign('vo', $vo);
