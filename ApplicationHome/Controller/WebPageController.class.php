@@ -44,9 +44,10 @@ class WebPageController extends CommonController {
             }else{
                 $data["create_time"] = time();
                 $result = $model->add($data);
+                $id = $result;
             }
             if ($result && I("push_now")) {
-                jpush($data["title"], "als://webpage/$result");
+                jpush($data["title"], "als://webpage/$id");
             }
             if($result){
                 $this->success('数据已保存！',$this->getReturnUrl());
