@@ -276,6 +276,8 @@ class DoorControllerController extends CommonController {
             if ($vo['door_status']) {
                 $doorStatus = str_split($vo['door_status']);
             }
+            $now = time();
+            $vo['connect_status'] = $now - $vo['last_connect_time'] < 30;
 
             $doors = M('Door')->where(array('controller_id'=>$id))->select();
             $arrList = array();

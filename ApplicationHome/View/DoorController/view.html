@@ -58,19 +58,29 @@
             <td>
                 <if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
             </td>
-            <assign name="var" value="last_connect_time" />
-            <th><label for="">最后连接时间：</label></th>
-            <td>
-                <if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
-            </td>
-        </tr>
-        <tr>
             <assign name="var" value="company_name" />
             <th><label for="">所属公司：</label></th>
             <td>
                 <if condition="$vo[$var]">{$vo.$var}</if>
             </td>
         </tr>
+        <tr>
+
+        </tr>
+        <if condition="$vo['product_type'] eq 2">
+            <tr>
+                <assign name="var" value="last_connect_time" />
+                <th><label for="">最后连接时间：</label></th>
+                <td>
+                    <if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
+                </td>
+                <assign name="var" value="connect_status" />
+                <th><label for="">连接状态：</label></th>
+                <td>
+                    {$vo[$var]?"在线":"离线"}
+                </td>
+            </tr>
+        </if>
         <tr>
             <td></td>
             <td class="center">
@@ -98,7 +108,9 @@
         <tr>
             <th class="manage-column" scope="col" width="5%">编号</th>
             <th class="manage-column" scope="col" width="5%">名称</th>
+            <if condition="$vo['product_type'] eq 2">
             <th class="manage-column" scope="col" width="5%">状态</th>
+            </if>
             <th class="manage-column" scope="col" width="5%">摄像头</th>
             <th class="manage-column" scope="col" width="50%">操作</th>
         </tr>
@@ -109,7 +121,9 @@
             <tr <eq name="mod" value="0">class="alternate"</eq> >
             <td class="manage-column" scope="col" >{$door.door_index}</td>
             <td class="manage-column" scope="col" name="door_name" door_index="{$door.door_index}">{$door.name}</td>
+            <if condition="$vo['product_type'] eq 2">
             <td class="manage-column" scope="col">{$door['status']?"开":"关"}</td>
+            </if>
             <td class="manage-column" scope="col">{$door.camera_count}</td>
             <td class="manage-column" scope="col">
                 <a href="javascript:openDoor('{$door.door_index}', '{$door.name}');">开门</a>&nbsp;
