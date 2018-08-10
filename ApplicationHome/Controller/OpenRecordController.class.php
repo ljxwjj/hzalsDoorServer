@@ -324,17 +324,19 @@ class OpenRecordController extends CommonController {
 
     public function attendanceConfig() {
         $mode = I("mode");
-        $attendance_1 = I("attendance_1");
-        $attendance_2 = I("attendance_2");
-        $attendance_3 = I("attendance_3", -1, "int");
-        $attendance_4 = I("attendance_4", -1, "int");
-        $attendance_5 = I("attendance_5", -1, "int");
-        $attendance_6 = I("attendance_6", -1, "int");
-        $attendance_7 = I("attendance_7", 0, "int");
-        $attendance_8 = I("attendance_8", 0, "int");
-        $attendance_9 = I("attendance_9", 0, "int");
-        $attendance_10 = I("attendance_10", -1, "int");
-        $attendance_10_ = I("attendance_10_");
+        $attendance_1 = I("attendance_1");              //上班时间
+        $attendance_2 = I("attendance_2");              //下班时间
+        $attendance_3 = I("attendance_3", -1, "int");   //允许晚到
+        $attendance_4 = I("attendance_4", -1, "int");   //允许提前打卡时间
+        $attendance_5 = I("attendance_5", -1, "int");   //迟到早退超过时间算旷工
+        $attendance_6 = I("attendance_6", -1, "int");   //下班时间推迟多久算加班
+        $attendance_7 = I("attendance_7", 0, "int");    //开启打卡提醒
+        $attendance_8 = I("attendance_8", 0, "int");    //上下班打卡提前提醒
+        $attendance_7_1 = I("attendance_7_1");          //上班提醒文字
+        $attendance_7_2 = I("attendance_7_2");          //下班提醒文字
+        $attendance_9 = I("attendance_9", 0, "int");    //开启月度考勤推送
+        $attendance_10 = I("attendance_10", -1, "int"); //月度考勤报表在次月月份
+        $attendance_10_ = I("attendance_10_");          //月度考勤报表在次月时间
         if (strcasecmp($mode, "save") === 0) {
             if (strtotime($attendance_1) === false) {
                 $error["attendance_1"] = "时间格式错误";
@@ -371,6 +373,8 @@ class OpenRecordController extends CommonController {
                 $this->saveAttendanceConfig("attendance_6", $attendance_6);
 
                 $this->saveAttendanceConfig("attendance_7", $attendance_7);
+                $this->saveAttendanceConfig("attendance_7_1", $attendance_7_1);
+                $this->saveAttendanceConfig("attendance_7_2", $attendance_7_2);
                 $this->saveAttendanceConfig("attendance_8", $attendance_8);
                 $this->saveAttendanceConfig("attendance_9", $attendance_9);
                 $this->saveAttendanceConfig("attendance_10", $attendance_10." ".$attendance_10_);

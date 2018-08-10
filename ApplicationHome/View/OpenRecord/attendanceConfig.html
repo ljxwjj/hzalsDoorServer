@@ -77,6 +77,22 @@
                     <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
                 </td>
             </tr>
+            <assign name="var" value="attendance_7_1" />
+            <tr>
+                <th><label for="">上班打卡提醒文字：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" placeholder='马上就要上班了，记得打卡哦！' <empty name="vo['attendance_7']">disabled</empty>>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
+            <assign name="var" value="attendance_7_2" />
+            <tr>
+                <th><label for="">下班打卡提醒文字：</label></th>
+                <td>
+                    <input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" placeholder='马上就要下班了，记得打卡哦！' <empty name="vo['attendance_7']">disabled</empty>>
+                    <if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+                </td>
+            </tr>
             <assign name="var" value="attendance_9" />
             <tr>
                 <th><label for="">开启月度考勤推送：</label></th>
@@ -125,6 +141,8 @@
     $("input[name='attendance_7']").change(function(){
         var ischecked = $(this).is(":checked");
         $("input[name='attendance_8']").attr("disabled", !ischecked);
+        $("input[name='attendance_7_1']").attr("disabled", !ischecked);
+        $("input[name='attendance_7_2']").attr("disabled", !ischecked);
     });
     $("input[name='attendance_9']").change(function(){
         var ischecked = $(this).is(":checked");
