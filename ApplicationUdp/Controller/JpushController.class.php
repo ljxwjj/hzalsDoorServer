@@ -28,10 +28,10 @@ class JpushController extends Controller\RestController {
             $setting = M('AppSetting')->where($smap)->getField('code_name,code_value');
             // 上班时间
             $WORK_TIME = timeToTimeLong($setting['attendance_1']);
-            $this->shangban($companyId, $WORK_TIME, $NOW_TIME, $setting['attendance_7'], $setting['attendance_7_1']);
+            $this->shangban($companyId, $WORK_TIME, $NOW_TIME, $setting['attendance_8'], $setting['attendance_7_1']);
             // 下班时间
             $CLOSING_TIME = timeToTimeLong($setting['attendance_2']);
-            $this->xiaban($companyId, $CLOSING_TIME, $NOW_TIME, $setting['attendance_7'], $setting['attendance_7_2']);
+            $this->xiaban($companyId, $CLOSING_TIME, $NOW_TIME, $setting['attendance_8'], $setting['attendance_7_2']);
         }
         echo "\n上下班打卡提醒执行完毕\t\t" . date("m-d H:i:s");
     }
@@ -107,8 +107,8 @@ class JpushController extends Controller\RestController {
         echo "\n后台设备掉线通知推送执行完毕\t\t" . date("m-d H:i:s");
     }
 
-    private function shangban($companyId, $workTime, $nowTime, $attendance_7, $pushContent) {
-        $notifiTime = $workTime - ($attendance_7 * 60);
+    private function shangban($companyId, $workTime, $nowTime, $attendance_8, $pushContent) {
+        $notifiTime = $workTime - ($attendance_8 * 60);
         $notifiDate = timeLongToDate($notifiTime);
         if (!$pushContent) {
             $pushContent = "马上就要上班了，记得打卡哦！";
@@ -139,8 +139,8 @@ class JpushController extends Controller\RestController {
         }
     }
 
-    private function xiaban($companyId, $closTime, $nowTime, $attendance_7, $pushContent) {
-        $notifiTime = $closTime - ($attendance_7 * 60);
+    private function xiaban($companyId, $closTime, $nowTime, $attendance_8, $pushContent) {
+        $notifiTime = $closTime - ($attendance_8 * 60);
         $notifiDate = timeLongToDate($notifiTime);
         if (!$pushContent) {
             $pushContent = "马上就要下班了，记得打卡哦！";
