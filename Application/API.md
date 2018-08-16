@@ -373,6 +373,16 @@
     * 返回值
         * data        ApkVersion
 
+##推送消息历史
+
+* 推送列表 /PushRecord/lists
+
+    * 参数
+        * page  页数
+        
+    * 返回值
+        * data  array[PushRecord]
+
 ##系统报修
 
 * 添加报修 /RepairRecord/add

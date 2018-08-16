@@ -72,6 +72,7 @@ class JpushController extends Controller\RestController {
             "push_status" => 0,
         ))->select();
         foreach ($items as $item) {
+            $uri = "als://webpage/".$item["id"];
             $item["push_status"] = 1;
             $updateResult = $model->save($item);
 
@@ -80,10 +81,11 @@ class JpushController extends Controller\RestController {
                 "push_tag" => "webpage",
                 "push_time" => strtotime($item["push_time"]),
                 "push_content" => $item["title"],
+                "uri" => $uri,
             );
             $jpushRecordModel->add($dataMap);
             if ($updateResult) {
-                jpush($item["title"], "als://webpage/".$item["id"]);
+                jpush($item["title"], $uri);
             }
         }
         echo "\n后台手动定时推送执行完毕\t\t" . date("m-d H:i:s");
@@ -195,6 +197,7 @@ class JpushController extends Controller\RestController {
 
                 if (!$pushCount) {
                     $dataMap["push_content"] = "上个月的考勤报表已统计完毕，请注意查收！";
+                    $dataMap["uri"] = "als://attendance";
                     $addResult = M('JpushRecord')->add($dataMap);
                     if ($addResult) {
                         jpushToUser($user["jpush_register_id"], $dataMap["push_content"], "als://attendance");

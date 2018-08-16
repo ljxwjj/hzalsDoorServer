@@ -47,7 +47,16 @@ class WebPageController extends CommonController {
                 $id = $result;
             }
             if ($result && I("push_now")) {
-                jpush($data["title"], "als://webpage/$id");
+                $uri = "als://webpage/$id";
+                $pushData = array(
+                    "user_id" => 0,
+                    "push_tag" => "webpage",
+                    "push_time" => time(),
+                    "push_content" => $data["title"],
+                    "uri" => $uri,
+                );
+                M("JpushRecord")->add($pushData);
+                jpush($data["title"], $uri);
             }
             if($result){
                 $this->success('数据已保存！',$this->getReturnUrl());
