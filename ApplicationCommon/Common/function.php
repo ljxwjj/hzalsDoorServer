@@ -146,7 +146,7 @@ function jpushToUser($rid, $alert = 'Hello, JPush', $uri = false) {
     }
 }
 
-function sendQueryDoorStatCode($ip, $port, $serialNumber, $timeout = 1) {
+function queryDoorStatusByUdp($ip, $port, $serialNumber, $timeout = 1) {
     $starttime = explode(' ', microtime());
     $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
     if( !$handle ){

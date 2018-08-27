@@ -273,7 +273,7 @@ class DoorControllerController extends CommonController {
         $vo = $model->where($condition)->find();
         if ($vo) {
             $doorStatus = array();
-            $door_status = sendQueryDoorStatCode($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
+            $door_status = queryDoorStatusByUdp($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
             if ($door_status) {
                 $doorStatus = str_split($door_status);
             }
