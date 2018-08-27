@@ -756,6 +756,67 @@ class IndexController extends Controller\RestController {
         \Think\Log::record("电锁被撬事件 处理结果：$message");
     }
 
+    /**
+     * 读门当前的开关状态
+     * @param $ip
+     * @param $port
+     * @param $data
+     */
+    public function queryDoorStatusFeedback($ip = '', $port = '', $data = '') {
+        \Think\Log::record("读门当前的开关状态反馈：ip: $ip data: $data");
+
+        $binData = hex2bin($data);
+
+        $unData = unpack("C*", $binData);
+        $i = 0;
+        //dechex($unData[1]) . dechex($unData[2]);
+        $syn = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+        $res = sprintf("%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i]);
+        $ptrol = sprintf("%02x", $unData[++$i]);
+        if ($ptrol === '01') {
+            $addr = sprintf("%02x%02x%02x%02x%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        }
+        $slen = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+        $commondLength = hexdec($slen);
+        $command = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+        $appdata = "";
+        for ($l = 0; $l < $commondLength - 2; $l++) {
+            $appdata .= sprintf("%02x", $unData[++$i]);
+        }
+        $crc16 = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+
+        $crcstr = "";
+        for ($m = 0; $m < count($unData) - 2; $m++) {
+            $crcstr .= chr($unData[$m+1]);
+        }
+        $crcstr = getCRChex($crcstr);
+        if ($crcstr === $crc16) {
+            $doorStatusStr = substr($appdata, 2, 2);
+            $dootStatus = sprintf("%08b", hexdec($doorStatusStr));
+
+            $UdpOperationModel = M('UdpOperation');
+            $map['serial_number'] = $addr;
+            $map['command_key'] = 'queryDoorStatus';
+            $map['create_time'] = array('GT', time()-2);
+            $operation = $UdpOperationModel->where($map)->find();
+            if ($operation) {
+                $operation['result'] = $data;
+                $operation['result_key'] = $dootStatus;
+                $operation['feedback_time'] = time();
+                $UdpOperationModel->save($operation);
+            }
+        } else {
+            $error = "query door status unupdate  ---- CRC ERROIR";
+        }
+        if ($error) {
+            echo $error;
+            \Think\Log::record($error);
+        } else {
+            echo "query door status update ---- CRC right";
+            \Think\Log::record("query door status update ---- CRC right");
+        }
+    }
+
     private function doorWarningHandle($record, $controllerData, $door_id) {// 处理警告
         $record['year'] = hexdec($record['year']);
         $record['month'] = hexdec($record['month']);

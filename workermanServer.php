@@ -216,6 +216,11 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $info = array();
             exec("php door/udp.php /Index/setUserCardFeedback/ip/$ip/port/$port/data/$data", $info);
             _log($info[0]);
+        } else if ($command == "02c3") {
+            _log("query door status success feedback \n");
+            $info = array();
+            exec("php door/udp.php /Index/queryDoorStatusFeedback/ip/$ip/port/$port/data/$data", $info);
+            _log($info[0]);
         } else {
             _log("unknow command !!!\n");
         }
@@ -357,6 +362,34 @@ function paresLocalMessage($data) {
             if ($connection) {
                 $connection->send($msg);
                 _log( "open door cmd sended \n");
+            }
+        } else {
+            _log("door is not on line!!! \n");
+        }
+    } else if (strcmp($command, "0005") === 0) {// 查询门禁状态指令
+        _log( "received query door status command ");
+        $ip = sprintf("%d.%d.%d.%d", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        $port = sprintf("%02x%02x", $unData[++$i], $unData[++$i]);
+        $port = hexdec($port);
+        $ptrol = sprintf("%02x", $unData[++$i]);
+        if ($ptrol === '01') {
+            $addr = sprintf("%02x%02x%02x%02x%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);
+        }
+
+        $cmd = "02C3";// 读门当前的开关状态
+        $msg = "3aa3000000".$ptrol.$addr.sprintf("%04x", strlen($cmd)/2).$cmd;
+
+        _log( "++ serial_number ：$addr  ++ ");
+        $crc = strCRCHex($msg);
+
+        $msg = hex2bin($msg.$crc);
+
+        global $udpConnectionsCache;
+        if (array_key_exists($addr, $udpConnectionsCache)) {
+            $connection = $udpConnectionsCache[$addr];
+            if ($connection) {
+                $connection->send($msg);
+                _log( "query door status cmd sended \n");
             }
         } else {
             _log("door is not on line!!! \n");

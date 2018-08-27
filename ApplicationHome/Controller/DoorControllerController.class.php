@@ -273,8 +273,9 @@ class DoorControllerController extends CommonController {
         $vo = $model->where($condition)->find();
         if ($vo) {
             $doorStatus = array();
-            if ($vo['door_status']) {
-                $doorStatus = str_split($vo['door_status']);
+            $door_status = sendQueryDoorStatCode($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
+            if ($door_status) {
+                $doorStatus = str_split($door_status);
             }
             $now = time();
             $vo['connect_status'] = $now - $vo['last_connect_time'] < 30;

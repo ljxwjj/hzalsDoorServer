@@ -145,3 +145,44 @@ function jpushToUser($rid, $alert = 'Hello, JPush', $uri = false) {
         print $e;
     }
 }
+
+function sendQueryDoorStatCode($ip, $port, $serialNumber, $timeout = 1) {
+    $starttime = explode(' ', microtime());
+    $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
+    if( !$handle ){
+        die("ERROR: {$errno} - {$errstr}\n");
+    }
+    $sendMsg = "30030005"; // 查询门禁状态指令
+    $ips = explode(".", $ip);
+    foreach ($ips as $i) {
+        $sendMsg .= sprintf("%02x", $i);
+    }
+    $sendMsg .= sprintf("%04x", $port);
+    $sendMsg .= "01";
+    $sendMsg .= $serialNumber;
+    $binMsg = hex2bin($sendMsg);
+    fwrite($handle, $binMsg);
+    fclose($handle);
+
+    $UdpOperationModel = M('UdpOperation');
+    $udpOperation['serial_number'] = $serialNumber;
+    $udpOperation['command'] = $sendMsg;
+    $udpOperation['command_key'] = 'queryDoorStatus';
+    $udpOperation['create_time'] = time();
+    $addid = $UdpOperationModel->add($udpOperation);
+
+    if (!$addid) {
+        return false;
+    }
+    do {
+        usleep(0.2 * 1000 * 1000);
+        $data = $UdpOperationModel->getById($addid);
+        if ($data['feedback_time'] > 0) {
+            return $data['result_key'];
+        }
+        $endtime = explode(' ', microtime());
+        $usetime = $endtime[0] + $endtime[1] - $starttime[0] - $starttime[1];
+    } while($usetime < $timeout);
+
+    return false;
+}
