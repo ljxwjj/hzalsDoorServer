@@ -496,13 +496,15 @@ class DoorControllerController extends CommonController {
                     $result['code'] = 1;
                     $result['message'] = '离线';
                 } else {
-                    $doorStatus = array();
                     $door_status = queryDoorStatusByUdp($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
                     if ($door_status) {
                         $doorStatus = str_split($door_status);
+                        $result['code'] = 200;
+                        $result['message'] = $doorStatus;
+                    } else {
+                        $result['code'] = 0;
+                        $result['message'] = "超时";
                     }
-                    $result['code'] = 200;
-                    $result['message'] = $doorStatus;
                 }
             } else {
                 $result['code'] = 0;
