@@ -76,7 +76,7 @@
                 </td>
                 <assign name="var" value="connect_status" />
                 <th><label for="">连接状态：</label></th>
-                <td>
+                <td id="connect_status">
                     {$vo[$var]?"在线":"离线"}
                 </td>
             </tr>
@@ -101,7 +101,7 @@
     </table>
 </div>
 
-<div class="wrap">
+<div class="wrap" id="mainlist">
 
     <table class="wp-list-table widefat fixed posts">
         <thead>
@@ -194,6 +194,34 @@
         tmid = window.setInterval(checkOpenDoorFeedback, 300);
     }
 
+    function setDoorStatusTimer() {
+
+        function checkOpenDoorFeedback() {
+            $.post("__CONTROLLER__/getDoorStatus", {
+                'id': '{$vo.id}'
+            }, function(data){
+                console.log(data)
+                if (data.code == 200) {
+                    console.log($("#mainlist tbody tr").length);
+                    $("#mainlist tbody tr").each(function(index, element){
+                        $(element).find("td:eq(2)").html(data.message[index]?"开":"关");
+                    });
+                    $("#connect_status").html("在线")
+                } else if (data.code == 1) { // 离线
+                    var connectStatus = $("#connect_status").html();
+                    if (connectStatus == "在线") {
+                        $("#connect_status").html("离线")
+                        alert("当前设备已离线");
+                    }
+                } else { // code == 0 错误请求
+
+                }
+            }, 'JSON')
+        }
+
+        window.setInterval(checkOpenDoorFeedback, 5000);
+    }
+
     $(function () {
         //找到所有的学号单元格
         var numId = $("tbody td[name='door_name']");
@@ -253,6 +281,10 @@
                 }
             });
         });
+
+        <if condition="$vo['product_type'] eq 2">
+        setDoorStatusTimer();
+        </if>
     });
 
     function submitForm(door_index, door_name) {

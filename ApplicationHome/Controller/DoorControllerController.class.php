@@ -476,6 +476,43 @@ class DoorControllerController extends CommonController {
         }
     }
 
+    /**
+     * ajax
+     */
+    public function getDoorStatus() {
+        $id = I('id');
+        $result = array();
+        if (!$this->checkDoorControllerAccess($id)) {
+            $result['code'] = 0;
+            $result['message'] = '没有该数据的操作权限！';
+        } else {
+            $model = M('DoorControllerView');
+            $condition = array('id' => $id);
+            $vo = $model->where($condition)->find();
+            if ($vo) {
+                $now = time();
+                $connect_status = $now - $vo['last_connect_time'] < 30;
+                if ($connect_status === false) {
+                    $result['code'] = 1;
+                    $result['message'] = '离线';
+                } else {
+                    $doorStatus = array();
+                    $door_status = queryDoorStatusByUdp($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
+                    if ($door_status) {
+                        $doorStatus = str_split($door_status);
+                    }
+                    $result['code'] = 200;
+                    $result['message'] = $doorStatus;
+                }
+            } else {
+                $result['code'] = 0;
+                $result['message'] = '对象未找到';
+            }
+        }
+
+        $this->response($result);
+    }
+
     protected function sendOpenDoorUdpCode($ip, $port, $serialNumber, $doorId, $wait) {
         $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
         if( !$handle ){
