@@ -41,7 +41,7 @@ class OpenRecordController extends CommonController {
         }
 
         $this->keepSearch();
-        $model = M('OpenRecordView');
+        $model = D('OpenRecordView');
         if (!empty($model)) {
             $this->_list($model, $map, 'id');
         }
@@ -247,7 +247,7 @@ class OpenRecordController extends CommonController {
         }
 
         if (!empty($timeStart) && !empty($timeEnd) && $userId > 0) {
-            $model = M('OpenRecordView');
+            $model = D('OpenRecordView');
             $map = array();
             $map["open_time"][] = array('egt',strtotime($timeStart));
             $map["open_time"][] = array('lt',strtotime($timeEnd)+86400);
