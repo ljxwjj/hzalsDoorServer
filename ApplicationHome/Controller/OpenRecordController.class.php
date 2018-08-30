@@ -64,7 +64,7 @@ class OpenRecordController extends CommonController {
      * @param array $search 搜索数组
      */
     protected function setMap(&$map,&$search){
-        $model = M("OpenRecordView");
+        $model = M('OpenRecordView');
         $dbFields = $model->getDbFields();
         foreach ($_REQUEST as $key => $val) {
             if($val == "") {

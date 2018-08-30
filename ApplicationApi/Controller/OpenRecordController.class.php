@@ -50,7 +50,7 @@ class OpenRecordController extends CommonRestController {
         }
         $this->setMap($map);
 
-        $model = M("OpenRecordView");
+        $model = D('OpenRecordView');
         if ($model) {
             $this->_list($model, $map, 'id');
         }
@@ -226,7 +226,7 @@ class OpenRecordController extends CommonRestController {
             return;
         }
 
-        $model = M('OpenRecordView');
+        $model = D('OpenRecordView');
         $map = array();
         $map["open_time"][] = array('egt',strtotime($timeStart));
         $map["open_time"][] = array('lt',strtotime($timeEnd)+86400);
