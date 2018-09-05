@@ -204,7 +204,7 @@
                 if (data.code == 200) {
                     console.log($("#mainlist tbody tr").length);
                     $("#mainlist tbody tr").each(function(index, element){
-                        $(element).find("td:eq(2)").html(data.message[index]?"开":"关");
+                        $(element).find("td:eq(2)").html(data.message[index]=='1'?"开":"关");
                     });
                     $("#connect_status").html("在线")
                 } else if (data.code == 1) { // 离线
