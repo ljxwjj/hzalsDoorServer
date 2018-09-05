@@ -45,7 +45,8 @@ class IndexController extends Controller\RestController {
                 $controllerData['last_connect_time'] = time();
                 if ($command == "0902") {// 心跳
                     $doorStatusStr = substr($appdata, 6, 2);
-                    $controllerData['door_status'] = sprintf("%08b", hexdec($doorStatusStr));
+                    $doorStatusStr = sprintf("%08b", hexdec($doorStatusStr));
+                    $controllerData['door_status'] = strrev($doorStatusStr);
                 }
                 $MDoorController->save($controllerData);
 
@@ -792,7 +793,8 @@ class IndexController extends Controller\RestController {
         $crcstr = getCRChex($crcstr);
         if ($crcstr === $crc16) {
             $doorStatusStr = substr($appdata, 2, 2);
-            $dootStatus = sprintf("%08b", hexdec($doorStatusStr));
+            $doorStatusStr = sprintf("%08b", hexdec($doorStatusStr));
+            $dootStatus = strrev($doorStatusStr);
 
             $UdpOperationModel = M('UdpOperation');
             $map['serial_number'] = $addr;
