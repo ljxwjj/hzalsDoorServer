@@ -122,7 +122,7 @@
             <td class="manage-column" scope="col" >{$door.door_index}</td>
             <td class="manage-column" scope="col" name="door_name" door_index="{$door.door_index}">{$door.name}</td>
             <if condition="$vo['product_type'] eq 2">
-            <td class="manage-column" scope="col">{$door['status']?"开":"关"}</td>
+            <td class="manage-column" scope="col">{$door.status}</td>
             </if>
             <td class="manage-column" scope="col">{$door.camera_count}</td>
             <td class="manage-column" scope="col">

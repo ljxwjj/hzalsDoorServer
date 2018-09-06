@@ -800,13 +800,14 @@ class IndexController extends Controller\RestController {
             $map['serial_number'] = $addr;
             $map['command_key'] = 'queryDoorStatus';
             $map['create_time'] = array('GT', time()-2);
-            $operation = $UdpOperationModel->where($map)->find();
+            $UdpOperationModel->where($map)->save(array('result'=>$data, 'result_key'=>$dootStatus, 'feedback_time'=>time()));
+            /*$operation = $UdpOperationModel->where($map)->find();
             if ($operation) {
                 $operation['result'] = $data;
                 $operation['result_key'] = $dootStatus;
                 $operation['feedback_time'] = time();
                 $UdpOperationModel->save($operation);
-            }
+            }*/
         } else {
             $error = "query door status unupdate  ---- CRC ERROIR";
         }

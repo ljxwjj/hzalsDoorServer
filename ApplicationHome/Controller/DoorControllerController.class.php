@@ -272,7 +272,7 @@ class DoorControllerController extends CommonController {
         $condition = array('id' => $id);
         $vo = $model->where($condition)->find();
         if ($vo) {
-            $doorStatus = array();
+            $doorStatus = array('-1','-1','-1','-1','-1','-1','-1','-1');
             $door_status = queryDoorStatusByUdp($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
             if ($door_status) {
                 $doorStatus = str_split($door_status);
@@ -296,7 +296,13 @@ class DoorControllerController extends CommonController {
                 } else {
                     $arrList[$i]['camera_count'] = 0;
                 }
-                $arrList[$i]['status'] = $doorStatus[$i]?1:0;
+                if ($doorStatus[$i] == '1') {
+                    $arrList[$i]['status'] = '开';
+                } else if ($doorStatus[$i] == '0') {
+                    $arrList[$i]['status'] = '关';
+                } else {
+                    $arrList[$i]['status'] = '-';
+                }
             }
             ksort($arrList);
             $this->assign('vo', $vo);
