@@ -175,6 +175,46 @@ class DoorControllerController extends CommonRestController {
 
     }
 
+    /**
+     * 查询门状态
+     */
+    public function getDoorStatus() {
+        $user_id = I('user_id');
+        $controller_id = I('controller_id');
+
+        if (!session(C('ADMIN_AUTH_KEY'))) {
+            $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+            if ($role_id > 21) { // > 21即非管理员用户
+                $userDoors = getUserDoors($user_id);
+                if (!$userDoors[$controller_id]) {
+                    $result = $this->createResult(0, "授权失败");
+                    $this->response($result,'json');
+                    exit;
+                }
+            }
+        }
+
+        $data = M('DoorController')->find($controller_id);
+        if ($data) {
+            $now = time();
+            $connect_status = $now - $data['last_connect_time'] < 30;
+            if ($connect_status === false) {
+                $result = $this->createResult(1, "离线");
+            } else {
+                $door_status = queryDoorStatusByUdp($data['ip'], $data['port'], $data['serial_number'], 0.8);
+                if ($door_status) {
+                    $doorStatus = str_split($door_status);
+                    $result = $this->createResult(200, "查询成功", $doorStatus);
+                } else {
+                    $result = $this->createResult(0, "超时");
+                }
+            }
+        } else {
+            $result = $this->createResult(0, "对象未找到");
+        }
+        $this->response($result,'json');
+    }
+
     protected function sendOpenDoorUdpCode($ip, $port, $serialNumber, $doorId, $wait) {
         $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
         if( !$handle ){
