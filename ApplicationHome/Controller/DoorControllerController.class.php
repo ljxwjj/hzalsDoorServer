@@ -273,12 +273,14 @@ class DoorControllerController extends CommonController {
         $vo = $model->where($condition)->find();
         if ($vo) {
             $doorStatus = array('-1','-1','-1','-1','-1','-1','-1','-1');
-            $door_status = queryDoorStatusByUdp($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
-            if ($door_status) {
-                $doorStatus = str_split($door_status);
+            if ($vo['product_type'] == 2) {
+                $door_status = queryDoorStatusByUdp($vo['ip'], $vo['port'], $vo['serial_number'], 0.8);
+                if ($door_status) {
+                    $doorStatus = str_split($door_status);
+                }
+                $now = time();
+                $vo['connect_status'] = $now - $vo['last_connect_time'] < 30;
             }
-            $now = time();
-            $vo['connect_status'] = $now - $vo['last_connect_time'] < 30;
 
             $doors = M('Door')->where(array('controller_id'=>$id))->select();
             $arrList = array();
