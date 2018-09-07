@@ -77,8 +77,14 @@ class OpenRecordController extends CommonController {
                 if(in_array($field,$dbFields)){
                     switch($field){
                         case 'controller_name':
+                            $controllerIds = M('DoorController')->where(array('name'=>array('like', "%$val%")))->getField('id', true);
+                            if (!$controllerIds) $controllerIds = array(0);
+                            $map['controller_id'] = array('in',$controllerIds);
+                            break;
                         case 'user_nickname':
-                            $map[$field] = array('like',"%$val%");
+                            $userIds = M('User')->where(array('nickname'=>array('like', "%$val%")))->getField('id', true);
+                            if (!$userIds) $userIds = array(0);
+                            $map['user_id'] = array('in', $userIds);
                             break;
                         default:
                             $map[$field] = $val;
