@@ -12,7 +12,9 @@ class OpenRecordController extends CommonRestController {
             if ($role_id > 21) { // > 21即非管理员用户
                 $map['user_id'] = $user_id;
             } else {
-                $map['company_id'] = session("user")["company_id"];
+                $where = array('company_id'=>session("user")["company_id"]);
+                $userIds = M('User')->where($where)->getField('id', true);
+                $map['user_id'] = array('in', $userIds);
             }
         }
     }
