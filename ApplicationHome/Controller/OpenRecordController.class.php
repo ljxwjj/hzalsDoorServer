@@ -22,7 +22,9 @@ class OpenRecordController extends CommonController {
                 // 系统管理员不做任何限制
             } else if (in_array($role_id, array(20, 21))) {
                 // 客户管理员
-                $map['company_id'] = session('company_id');
+                $where = array('company_id'=>session('company_id'));
+                $userIds = M('User')->where($where)->getField('id', true);
+                $map['user_id'] = array('in', $userIds);
             } else {
                 // 普通用户
                 $map['user_id'] = $user_id;
