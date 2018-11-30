@@ -153,6 +153,25 @@ class PublicController extends CommonRestController {
                 $this->response($result,'json');
                 return;
             }
+        } else if ('register' === $operation) {
+            $userData = M('User')->where(array('account'=>$mobile, 'status'=>0))->find();
+            if (!$userData) {
+                $result = $this->createResult(0, '用户已注册或非系统用户');
+                $this->response($result,'json');
+                return;
+            }
+        }
+
+        $MSmsCode = M('SmsCode');
+        $map = array();
+        $map["mobile"] = $mobile;
+        $map["use_to"] = $operation;
+        $map["check_time"] = array("EQ", 0);
+        $sms = $MSmsCode->where($map)->order('send_time desc')->find();
+        if ($sms && ($sms["send_time"] + 120) > time()) {
+            $result = $this->createResult(0, '信息发送太频繁!');
+            $this->response($result,'json');
+            return;
         }
 
         $smsCode = generate_code(6);
@@ -171,7 +190,7 @@ class PublicController extends CommonRestController {
             'sms_request_id' => $sendResult->RequestId,
             'sms_biz_id' => $sendResult->BizId,
         );
-        $smsCodeId = M('SmsCode')->data($data)->add();
+        $smsCodeId = $MSmsCode->data($data)->add();
 
         if ($smsCodeId) {
             $result = $this->createResult(200, '发送成功');
