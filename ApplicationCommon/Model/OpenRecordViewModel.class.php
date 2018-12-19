@@ -35,8 +35,14 @@ class OpenRecordViewModel extends CommonModel {
      * @return mixed
      */
     public function select($options=array()) {
-        $sql = parent::select(false);
+//        $sql = parent::select(false);
+        // 分析表达式
+        $options            =  $this->_parseOptions($options);
+        $sql = '( '.$this->db->buildSelectSql($options).' )';
         $sql = "select ord.`id` AS `id`,ord.`controller_id` AS `controller_id`,ord.`door_id` AS `door_id`,`hzals_door`.`door`.`name` AS `door_name`,ord.`open_time` AS `open_time`,ord.`feedback_time` AS `feedback_time`,ord.`user_id` AS `user_id`,ord.`way` AS `way`,ord.`mark` AS `mark`,`hzals_door`.`door_controller`.`name` AS `controller_name`,`hzals_door`.`user`.`nickname` AS `user_nickname`,`hzals_door`.`user`.`company_id` AS `company_id`,`hzals_door`.`company`.`name` AS `company_name` from (((($sql ord left join `hzals_door`.`door_controller` on((`hzals_door`.`door_controller`.`id` = ord.`controller_id`))) left join `hzals_door`.`door` on(((`hzals_door`.`door`.`controller_id` = ord.`controller_id`) and (`hzals_door`.`door`.`door_index` = ord.`door_id`)))) left join `hzals_door`.`user` on((`hzals_door`.`user`.`id` = ord.`user_id`))) left join `hzals_door`.`company` on((`hzals_door`.`company`.`id` = `hzals_door`.`user`.`company_id`)))";
+        if ($options['order']) {
+            $sql .= "ORDER BY ".$options['order'];
+        }
         return $this->query($sql);
     }
 }
