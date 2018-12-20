@@ -185,7 +185,7 @@ class OpenRecordController extends CommonRestController {
                         if (dateToTimeLong($dayInfo['begin']) - $WORK_TIME > $setting['attendance_3'] * 60) {// 迟到
                             $attendance[$userId]['late_day_count'] += 1;
                         }
-                        if ($CLOSING_TIME - dateToTimeLong($dayInfo['end']) > $setting['attendance_5'] * 60) {// 早退
+                        if ($CLOSING_TIME - dateToTimeLong($dayInfo['end']) > $setting['attendance_3'] * 60) {// 早退
                             $attendance[$userId]['leave_day_count'] += 1;
                         }
                     }
@@ -290,7 +290,7 @@ class OpenRecordController extends CommonRestController {
                     if (dateToTimeLong($dayInfo['begin']) - $WORK_TIME > $setting['attendance_3'] * 60) {// 迟到
                         $attendance[$day]['late'] = "迟到";
                     }
-                    if ($CLOSING_TIME - dateToTimeLong($dayInfo['end']) > $setting['attendance_5'] * 60) {// 早退
+                    if ($CLOSING_TIME - dateToTimeLong($dayInfo['end']) > $setting['attendance_3'] * 60) {// 早退
                         $attendance[$day]['leave'] = "早退";
                     }
                 }
