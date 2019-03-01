@@ -112,6 +112,7 @@
             <th class="manage-column" scope="col" width="5%">状态</th>
             </if>
             <th class="manage-column" scope="col" width="5%">摄像头</th>
+            <th class="manage-column" scope="col" width="5%">启用</th>
             <th class="manage-column" scope="col" width="50%">操作</th>
         </tr>
         </thead>
@@ -125,6 +126,9 @@
             <td class="manage-column" scope="col">{$door.status}</td>
             </if>
             <td class="manage-column" scope="col">{$door.camera_count}</td>
+            <td class="manage-column" scope="col">
+                <input name="door_disable" type="checkbox" onchange="disableDoor(this, '{$door.door_index}')" <if condition="$door.disable eq 0">checked</if>>
+            </td>
             <td class="manage-column" scope="col">
                 <a href="javascript:openDoor('{$door.door_index}', '{$door.name}');">开门</a>&nbsp;
                 <a href="__URL__/camera/controller_id/{$door.controller_id}/door_id/{$door.door_index}">管理摄像头</a>&nbsp;
@@ -299,6 +303,18 @@
         }, "json");
     }
 
+    function disableDoor(checkbox, door_index) {
+        var doorDisable = $(checkbox).is(":checked")?"0":"1";
+        $.post("__URL__/disableDoor",{
+            controller_id:"{$vo.id}",
+            door_index: door_index,
+            door_disable: doorDisable,
+        }, function(data){
+            if (data.code == 200) {
+                alert(data.message);
+            }
+        }, "json");
+    }
 </script>
 
 

@@ -526,6 +526,52 @@ class DoorControllerController extends CommonController {
         $this->response($result);
     }
 
+    /*
+     * ajax
+     */
+    public function disableDoor() {
+        $controller_id = I('controller_id');
+        $door_index = I('door_index');
+        $door_disable = I('door_disable');
+        if ($controller_id === null) {
+            $error = "请选择控制器";
+        }
+        if ($door_index === null) {
+            $error = "请选择门";
+        }
+        if ($error) {
+            $result['code'] = 0;
+            $result['message'] = $error;
+            $this->response($result);
+            exit;
+        }
+        if (!$this->checkDoorControllerAccess($controller_id)) {
+            $result['code'] = 0;
+            $result['message'] = "权限校验失败!";
+            $this->response($result);
+            exit;
+        }
+
+        $MDoor = M('Door');
+        $data = $MDoor->where(array('controller_id'=> $controller_id, 'door_index'=>$door_index))->find();
+        if ($data) {
+            $data['disable'] = $door_disable;
+            $result = $MDoor->save($data);
+        } else {
+            $data['controller_id'] = $controller_id;
+            $data['door_index'] = $door_index;
+            $data['name'] = "";
+            $data['disable'] = $door_disable;
+            $result = $MDoor->add($data);
+        }
+        if ($result) {
+            $result = array();
+            $result['code'] = 200;
+            $result['message'] = "保存成功";
+            $this->response($result);
+        }
+    }
+
     protected function sendOpenDoorUdpCode($ip, $port, $serialNumber, $doorId, $wait) {
         $handle = stream_socket_client("udp://127.0.0.1:9998", $errno, $errstr);
         if( !$handle ){

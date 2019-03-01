@@ -102,6 +102,9 @@ class DoorControllerController extends CommonRestController {
                 }
                 $door = $doorMap[$vo['id']][$i];
                 if (is_array($door)) {
+                    if ($door['disable'] == 1) {
+                        continue;
+                    }
                     $door['controller_name'] = $vo['name'];
                     $doorList[] = $door;
                 } else {
