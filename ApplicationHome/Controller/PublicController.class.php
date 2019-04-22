@@ -369,6 +369,22 @@ class PublicController extends CommonController {
         $this->display();
     }
 
+    public function pushTest() {
+        $userName = I("userName");
+        if ($userName) {
+            $rid = M('User')->where(array('account'=>$userName))->getField('jpush_register_id');
+
+            if (I("type1")) jpushToUser($rid, "马上就要上班了，记得打卡哦！");
+            if (I("type2")) jpushToUser($rid, "阿里桑手机门禁 2018年07月31日 19时02分44秒与服务器失去连接，请及时检查设备状态！");
+            if (I("type3")) jpushToUser($rid, "Ver5.1新版预告", "als://webpage/10");
+            if (I("type4")) jpushToUser($rid, "上个月的考勤报表已统计完毕，请注意查收！", "als://attendance");
+            if (I("type5")) jpushToUser($rid, "总机房5号控制器 2F012 2018年08月24日 14时52分48秒收到非法入侵事件！");
+
+            $this->assign("message", "推送成功");
+        }
+        $this->display();
+    }
+
     public function testJpush() {
         jpush();
     }

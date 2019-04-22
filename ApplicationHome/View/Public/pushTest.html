@@ -1,0 +1,24 @@
+{__NOLAYOUT__}
+
+<html>
+<head></head>
+<body>
+
+<form method="post" action="__SELF__">
+    <div>手机号：<input name="userName"/></div>
+    <div>
+        <ul style="list-style:none;">
+            <li><input type="checkbox" name="type1"> 上下班通知</li>
+            <li><input type="checkbox" name="type2"> 控制器报警通知</li>
+            <li><input type="checkbox" name="type3"> 文章推送</li>
+            <li><input type="checkbox" name="type4"> 月度报表</li>
+            <li><input type="checkbox" name="type5"> 非法入侵</li>
+        </ul>
+    </div>
+    <div>
+        <input type="submit" value="提交">
+    </div>
+</form>
+<div>{$message}</div>
+</body>
+</html>
