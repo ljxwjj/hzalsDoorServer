@@ -372,7 +372,7 @@ class PublicController extends CommonController {
     public function pushTest() {
         $userName = I("userName");
         if ($userName) {
-            $rid = M('User')->where(array('account'=>$userName))->getField('jpush_register_id');
+            $rid = M('User')->where(array('account'=>$userName, 'status'=>1))->getField('jpush_register_id');
 
             if (I("type1")) jpushToUser($rid, "马上就要上班了，记得打卡哦！");
             if (I("type2")) jpushToUser($rid, "阿里桑手机门禁 2018年07月31日 19时02分44秒与服务器失去连接，请及时检查设备状态！");
