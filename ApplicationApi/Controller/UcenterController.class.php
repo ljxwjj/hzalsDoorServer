@@ -160,4 +160,18 @@ class UcenterController extends CommonRestController {
         $result = $this->createResult(200, '保存成功！');
         $this->response($result,'json');
     }
+
+    public function logout() {
+        $User = M('User');
+        $user = $User->find($_REQUEST['user_id']);
+        if (!$User) {
+            $result = $this->createResult(0, '用户不存在！');
+            $this->response($result,'json');
+            return;
+        }
+        $user["jpush_register_id"] = '';
+        $User->save($user);
+        $result = $this->createResult(200, '退出成功！');
+        $this->response($result,'json');
+    }
 }

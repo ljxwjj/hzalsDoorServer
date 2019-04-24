@@ -268,10 +268,18 @@
         * data        null
         
 * 注册极光推送 /Ucenter/jpushRegisterId
+
     * 参数
         * register_id 极光推送的用户标识
         * device_type string:"android"|"ios"
+        
+* 退出登录 /Ucenter/logout
 
+    * 参数
+        * null           无
+    * 返回值
+        * data        null
+        
 ##用户管理
 
 * 用户列表 /User/lists
