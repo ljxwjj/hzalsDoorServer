@@ -13,7 +13,7 @@
         var dateFormat = "yy-mm-dd",
             from = $( "#search_open_time_start" )
                 .datepicker({
-                    defaultDate: "-3m",
+                    defaultDate: "-2m",
                     changeMonth: true,
                     numberOfMonths: 3,
                     maxDate: new Date(),
@@ -47,7 +47,7 @@
     <h2>出入记录 &nbsp;
     </h2>
 
-    <form name="form1" method='POST' action="__SELF__">
+    <form name="form1" method='POST' action="{:U('OpenRecord/index')}">
         <!-- 查询区域 -->
         <div class="tablenav top">
             <!--单个查询条件-->
