@@ -11,6 +11,8 @@ https://www.jstree.com/docs/json/
 OneinStack
 https://oneinstack.com/install/
 service httpd {start|restart|stop}
+配置apache
+cd /usr/local/apache/conf/
 
 ssh -l root 139.196.97.237
 php workermanServer.php restart -d
