@@ -220,6 +220,15 @@
         * code        200：查询成功 1：离线  0：获取超时
         * data        array[String]   0：关 1：开
         
+* 获取门状态 /DoorController/getOpenedDoors
+
+    * 参数 
+        * controller\_id   控制器ID
+    * 返回值
+        * code        200：查询成功 1：离线  0：获取超时
+        * data        array[Door]
+        
+                
 ##个人信息 
 
 * 个人信息  /Ucenter/detail
