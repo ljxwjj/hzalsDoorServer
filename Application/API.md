@@ -289,6 +289,13 @@
     * 返回值
         * data        null
         
+* 闪屏页图片 /Ucenter/splashImage
+                    
+    * 参数 无
+    
+    * 返回值
+        * data        image_url
+        
 ##用户管理
 
 * 用户列表 /User/lists

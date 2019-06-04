@@ -1,4 +1,17 @@
 <tagLib name="html" />
+
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.mouse.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.slider.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.css" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/i18n/jquery-ui-timepicker-addon-i18n.min.js" />
+
 <div class="wrap">
 <h2>编辑用户</h2>
 <div class="tablenav top">
@@ -85,6 +98,43 @@
 		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
 	</td>
 </tr>
+
+<if condition="$_SESSION[C('ADMIN_AUTH_KEY')]">
+
+<assign name="var" value="splash_display" />
+<tr>
+	<th><label for="">接收闪屏：</label></th>
+	<td>
+		<input type="checkbox" name="{$var}" value="1" <eq name="vo[$var]" value="1">checked</eq>/>
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+<assign name="var" value="splash_exp" />
+<tr>
+	<th><label for="">闪屏有效期：</label></th>
+	<td>
+		<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" readonly="readonly" <eq name="vo['splash_display']" value="0">disabled</eq>/>
+		<span style="color:red;">*</span>
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
+
+
+	<script type="text/javascript">
+        $(function(){
+            $("input[name='splash_display']").change(function(){
+                var ischecked = $(this).is(":checked");
+                $("input[name='splash_exp']").attr("disabled", !ischecked);
+            });
+            $("input[name='splash_exp']").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                timeFormat: 'HH:mm:ss',
+            });
+        });
+
+	</script>
+
+</if>
 
 <tr>
 	<td></td>

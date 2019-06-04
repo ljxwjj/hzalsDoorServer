@@ -121,7 +121,7 @@ class UcenterController extends CommonRestController {
     public function edit() {
         $User = M('User');
         $user = $User->find($_REQUEST['user_id']);
-        if (!$User) {
+        if (!$user) {
             $result = $this->createResult(0, '用户不存在！');
             $this->response($result,'json');
             return;
@@ -149,7 +149,7 @@ class UcenterController extends CommonRestController {
     public function jpushRegisterId() {
         $User = M('User');
         $user = $User->find($_REQUEST['user_id']);
-        if (!$User) {
+        if (!$user) {
             $result = $this->createResult(0, '用户不存在！');
             $this->response($result,'json');
             return;
@@ -164,7 +164,7 @@ class UcenterController extends CommonRestController {
     public function logout() {
         $User = M('User');
         $user = $User->find($_REQUEST['user_id']);
-        if (!$User) {
+        if (!$user) {
             $result = $this->createResult(0, '用户不存在！');
             $this->response($result,'json');
             return;
@@ -172,6 +172,32 @@ class UcenterController extends CommonRestController {
         $user["jpush_register_id"] = '';
         $User->save($user);
         $result = $this->createResult(200, '退出成功！');
+        $this->response($result,'json');
+    }
+
+    public function splashImage()
+    {
+        $User = M('User');
+        $user = $User->find($_REQUEST['user_id']);
+        if (!$user) {
+            $result = $this->createResult(0, '用户不存在！');
+            $this->response($result, 'json');
+            return;
+        }
+        $expTime = strtotime($user["splash_exp"]);
+        $nowTime = time();
+        if ($user["splash_display"] && $expTime > $nowTime) {
+            $model = M("AppSetting");
+            $splashImage = $model->where(array("code_name" => "splash_image"))->find();
+            if ($splashImage) {
+                $imageUrl = getHttpRooDir() . '/Public' . $splashImage["code_value"];
+                $result = $this->createResult(200, "", $imageUrl);
+            } else {
+                $result = $this->createResult(0, "操作失败");
+            }
+        } else {
+            $result = $this->createResult(1, "闪屏功能未开启");
+        }
         $this->response($result,'json');
     }
 }

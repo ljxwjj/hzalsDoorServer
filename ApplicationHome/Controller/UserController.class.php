@@ -301,7 +301,12 @@ class UserController extends CommonController {
             }
         } else {
             if ($id) {
-                $result = $model->field("account,nickname,sex,email,mobile")->save($data);
+                if ($_SESSION[C('ADMIN_AUTH_KEY')]) {
+                    $editFields = "account,nickname,sex,email,mobile,splash_display,splash_exp";
+                } else {
+                    $editFields = "account,nickname,sex,email,mobile";
+                }
+                $result = $model->field($editFields)->save($data);
             } else {
                 $result = $model->add($data);
                 if ($result) $id = $result;
