@@ -302,6 +302,7 @@ class UserController extends CommonController {
         } else {
             if ($id) {
                 if ($_SESSION[C('ADMIN_AUTH_KEY')]) {
+                    if (!isset($data['splash_display'])) $data['splash_display'] = '0';
                     $editFields = "account,nickname,sex,email,mobile,splash_display,splash_exp";
                 } else {
                     $editFields = "account,nickname,sex,email,mobile";
