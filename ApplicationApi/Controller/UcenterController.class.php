@@ -188,7 +188,7 @@ class UcenterController extends CommonRestController {
         $nowTime = time();
         if ($user["splash_display"] && $expTime > $nowTime) {
             $model = M("AppSetting");
-            $splashImage = $model->where(array("code_name" => "splash_image"))->find();
+            $splashImage = $model->where(array("code_name" => "vip_splash_image"))->find();
             if ($splashImage) {
                 $imageUrl = getHttpRooDir() . '/Public' . $splashImage["code_value"];
                 $result = $this->createResult(200, "", $imageUrl);

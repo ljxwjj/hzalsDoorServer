@@ -26,8 +26,10 @@ class AppSettingController extends CommonController {
         if (!$model) $model = M("AppSetting");
         $splashImage = $model->where(array("code_name"=>"splash_image"))->find();
         $lunboImages = $model->where(array("code_name"=>"lunbo_image"))->order("weight")->select();
+        $vipSplashImage = $model->where(array("code_name"=>"vip_splash_image"))->find();
         $this->assign('splashImage',$splashImage);
         $this->assign('lunboImage',$lunboImages);
+        $this->assign('vipSplashImage',$vipSplashImage);
     }
 
     public function saveSplash() {
@@ -63,6 +65,50 @@ class AppSettingController extends CommonController {
             } else {
                 $splashImage = array(
                     'code_name'  => 'splash_image',
+                    'code_value' => $imagePath,
+                    'create_time' => time(),
+                    'update_time' => time()
+                );
+                $model->add($splashImage);
+            }
+
+            $this->redirect("AppSetting/index");
+        }
+    }
+
+    public function saveVipSplash() {
+        $upload = new \Think\Upload();
+        $upload->maxSize = 3145728 ;// 设置附件上传大小
+        $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+        $upload->rootPath  =     C('public_dir'); // 设置附件上传根目录
+        $upload->savePath  =     C('app_image_dir'); // 设置附件上传（子）目录
+        $upload->saveName  =     array('uniqid','');
+        $upload->autoSub   =     false;
+        // 上传文件
+        $info   =   $upload->uploadOne($_FILES['vip_splash_image']);
+
+        $model = M("AppSetting");
+        $error = array();
+        if(!$info) {// 上传错误提示错误信息
+            $error['vip_splash_image'] = "文件上传失败";
+            $this->assign('error',$error);
+
+            $this->loadListData($model);
+            $this->display("index");
+        }else{// 上传成功
+            $imagePath = $info['savepath'].$info['savename'];
+            $splashImage = $model->where(array("code_name"=>"vip_splash_image"))->find();
+            if ($splashImage) {
+                $oldImagePath = $splashImage['code_value'];
+                $fullPath = C('public_dir').$oldImagePath;
+                @unlink ($fullPath);
+
+                $splashImage['code_value'] = $imagePath;
+                $splashImage['update_time'] = time();
+                $model->save($splashImage);
+            } else {
+                $splashImage = array(
+                    'code_name'  => 'vip_splash_image',
                     'code_value' => $imagePath,
                     'create_time' => time(),
                     'update_time' => time()

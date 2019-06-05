@@ -39,6 +39,36 @@
         </table>
     </form>
     <br class="clear">
+    <form method='POST' id="form4" action="{:U('AppSetting/saveVipSplash')}" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <th><label style="font-size: large">会员闪屏图片</label></th>
+            </tr>
+            <tr>
+                <td>
+                    <img src="__PUBLIC__{$vipSplashImage['code_value']}" width="auto" height="250"/>
+                </td>
+            </tr>
+            <if condition="$error['vip_splash_image']">
+                <tr>
+                    <td>
+                        <span class="description">{$error['splash_image']}</span>
+                    </td>
+                </tr>
+            </if>
+            <tr>
+                <td>
+                    图片：<input type="file" name="vip_splash_image"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input name="btn_submit" class="button" value="提交" type="submit">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <br class="clear">
     <form method='POST' id="form2" action="{:U('AppSetting/saveLunbo')}" enctype="multipart/form-data">
         <table width="500px">
             <tr>
