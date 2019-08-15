@@ -11,6 +11,220 @@
 <load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.js" />
 <load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.css" />
 <load href="__PUBLIC__/Js/jqueryui/timepicker/i18n/jquery-ui-timepicker-addon-i18n.min.js" />
+<load href="__PUBLIC__/Js/jsrender.min.js" />
+<style>
+.clear:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+body .clickButton {
+	text-align: center;
+	border: 1px solid #E1E7EC;
+	-webkit-border-radius: 4px;
+	cursor: pointer;
+	display: inline-block;
+	color: #555555;
+	font-size: 14px;
+}
+.uploadBox {
+	width: 280px;
+}
+.fl {
+	float: left;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox{
+	padding-top: 20px;
+}
+body .editEmployee .edit-upload-photo .previewBox{
+	width:auto;
+}
+body .editEmployee .edit-upload-photo .previewBox .previewPhoto{
+	width: 100px;
+	height:125px;
+	margin-right:10px;
+	position:relative;
+}
+body .editEmployee .edit-upload-photo .previewBox .previewPhoto.default{
+	background:url(__PUBLIC__/Images/employee/default.jpg) no-repeat;
+}
+body .editEmployee .edit-upload-photo .previewBox img{
+	width:100%;
+	height:100%;
+}
+body .editEmployee .edit-upload-photo .previewBox .icon-warning{
+	width:20px;
+	height:20px;
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	background:url(__PUBLIC__/Iimages/employee/triangle-warning.png) no-repeat;
+}
+body .editEmployee .edit-upload-photo .previewBox .deleteBtn{
+	width:10px;
+	height:10px;
+	position:absolute;
+	top:0px;
+	right:0px;
+	cursor:pointer;
+	background:url(__PUBLIC__/Images/employee/x.png) no-repeat;
+
+}
+body .editEmployee .edit-upload-photo .uploadBox{
+	width:280px;
+	font-size:12px;
+}
+body .editEmployee .edit-upload-photo .uploadBox p{
+	width:280px;
+	font-size:12px;
+}
+body .editEmployee .edit-upload-photo .uploadBox .localUpload{
+	width:96px;
+	height:36px;
+	line-height:36px;
+	position:relative;
+	overflow:hidden;
+}
+body .editEmployee .edit-upload-photo .uploadBox .localUpload input{
+	width:200px;
+	height:70px;
+	opacity:0;
+	filter:alpha(opacity=0);
+	position:absolute;
+	top:-30px;
+	left:-100px;
+	z-index:5;
+	cursor:pointer;
+}
+body .editEmployee .edit-basic-information .cardBtn,
+body .editEmployee .edit-upload-photo .uploadBox .takePhotos{
+	font-size:14px;
+	line-height:36px;
+	margin-left:10px;
+	cursor:pointer;
+}
+body .editEmployee .edit-basic-information .cardBtn{
+	padding:5px;
+	border:1px solid #E1E7EC;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+body .editEmployee .edit-basic-information .cardBtn:hover,
+body .editEmployee .edit-upload-photo .uploadBox .localUpload:hover,
+body .editEmployee .edit-upload-photo .uploadBox .takePhotos:hover{
+	color:#0F9EE9;
+}
+body .editEmployee .edit-basic-information .cardBtn:hover,
+body .editEmployee .edit-upload-photo .uploadBox .localUpload:hover{
+	border-color:#0F9EE9;
+}
+body .editEmployee .edit-upload-photo .uploadBox p{
+	color:#999999;
+	line-height:20px;'
+}
+body .uploadBox .preview-standard .standard-box {
+	position: absolute;
+	top: -650px;
+	left: 300px;
+	display: none;
+	border: 1px solid #e5e5e5;
+}
+body .uploadBox .preview-standard .standard-box img{
+	width: 590px;
+	height: 767px;
+}
+body .editEmployee .edit-upload-photo .uploadBox .localUpload:hover{
+	border-color:#0F9EE9;
+}
+body .editEmployee .edit-upload-photo .uploadBox p{
+	color:#999999;
+	line-height:20px;'
+}
+body .editEmployee .edit-upload-photo .uploadBox .preview-standard{
+	position: relative;
+}
+body .editEmployee .edit-upload-photo .uploadBox .preview-standard span{
+	color:#0F9EE9;
+	cursor: pointer;
+}
+body .editEmployee .edit-upload-photo .uploadBox .preview-standard:hover .standard-box{
+	display: block;
+}
+body .editEmployee .edit-upload-photo .uploadBox .preview-standard .standard-box{
+	position: absolute;
+	top: -650px;
+	left: 300px;
+	display: none;
+	border: 1px solid #e5e5e5;
+}
+body .editEmployee .edit-upload-photo .uploadBox .preview-standard .standard-box img{
+	width: 590px;
+	height: 767px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox{
+	width:320px;
+	padding-top:2px;
+	margin-top:5px;
+	position:relative;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up:before{
+	content:"";
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 9px solid #E5E5E5;
+	position:absolute;
+	left:41px;
+	top:-6px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up.left:before{
+	left:42px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up.middle:before{
+	left:152px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up.right:before{
+	left:262px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up.left:after{
+	left:43px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up.middle:after{
+	left:153px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up.right:after{
+	left:263px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .arrow_up:after{
+	content:"";
+	width: 0;
+	height: 0;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 8px solid #F7F7F7;
+	position:absolute;
+	left:43px;
+	top:-2px;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .message_up{
+	background:#F7F7F7;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-o-border-radius: 2px;
+	-moz-border-radius: 2px;
+	padding:10px;
+	border:1px dashed #E5E5E5;
+}
+body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .message_up p{
+	margin:0;
+	font-size: 12px;
+	color: #555555;
+	line-height: 22px;
+}
+</style>
 
 <div class="wrap">
 <h2>编辑用户</h2>
@@ -158,6 +372,40 @@
 </tr>
 </table>
 </div>
+<div class="editEmployee">
+	<div class="edit-upload-photo">
+		<p><b>上传照片</b></p>
+		<div class="employeePhotoBox ">
+			<div class="previewBox clear">
+				<div class="previewPhoto fl default"></div>
+				<div class="fl user">
+
+				</div>
+				<div class="uploadBox fl">
+					<div class="uploadTypeBtnBox clear">
+						<div class="clickButton localUpload fl">本地上传
+							<input type="file">
+						</div>
+						<div class="takePhotos fl">使用设备拍照</div>
+					</div>
+					<p>1.请添加1~3张包含清晰正脸的照片，且足够清晰<br>2.确保所有注册照为同一人员，否则无法成功注册</p>
+					<span class="preview-standard">
+                        <span>查看规范</span>
+                        <div class="standard-box"><img src="http://uniubi-front-end.oss-cn-hangzhou.aliyuncs.com/uniubi-ark-web/static/images/employee/standard.png" alt=""></div>
+                    </span>
+				</div>
+			</div>
+			<div class="photoInfoBox hidden">
+				<div class="arrow_up right"></div>
+				<div class="message_up left">
+					<p class="message-success">授权成功的设备：<span>无</span></p>
+					<p class="message-ing">授权中的设备：<span>无</span></p>
+					<p class="message-fail">授权失败原因：<span>无</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="wrap">
 	<div class="tablenav top">					
 		<div class="alignleft actions">	
@@ -169,6 +417,293 @@
 </div>
 </form>
 
+<script id="user_face" type="text/x-jsrender">
+	<div class="previewPhoto fl" data-guid="{{>guid}}" data-index="0" data-state="true">
+	<img src="{{>faceUrl}}">
+	<div class="icon-warning hidden"></div>
+	<div class="deleteBtn hidden"></div>
+	</div>
+</script>
+
+<script type="text/javascript">
+	$(function(){
+	    $("input[type='file']").change(function(){
+	        if ($(this).val() != "") {
+				fileUpload(this);
+			}
+		});
+		$.post("__CONTROLLER__/getUserFaces", {"user_id": $("input[name='id']").val()}, function(res) {
+            var body = $.parseJSON(res);
+            if(body.code == 200){
+                var html = $("#user_face").render(body.data);
+                $(".user").append(html);
+                addUserPhotoIndex();
+                getUserPhotoInfo();
+                isShowDefaultPhoto();
+            }
+		});
+
+	    // 删除照片
+		$(".employeePhotoBox .user").on("click", ".deleteBtn", function(){
+		    deleteUserPhoto(this);
+		    showUserPhotoInfo($(".user .previewPhoto").eq(0));
+            $(".photoInfoBox .arrow_up").removeClass("middle").removeClass("right").addClass("left");
+		});
+        //鼠标移动到照片显示
+        $(".user").on("mouseover",".previewPhoto",function(){
+            $(this).find(".deleteBtn").removeClass("hidden");
+            showUserPhotoInfo(this);
+            moveBgArrow(this);
+        });
+        $(".user").on("mouseout",".previewPhoto",function(){
+            $(this).find(".deleteBtn").addClass("hidden");
+        });
+        //打开设备拍照
+        $(".uploadBox").on("click",".takePhotos",function(){
+            saveEmployeeBasicInfo();
+            window.localStorage.type = 1;
+            window.location.href = '__CONTROLLER__/employeeRegister/id/{$vo.id}';
+        })
+        $(".createBox").on("click",".cardBtn",function(){
+            saveEmployeeBasicInfo();//记录人员信息，如与初始值有变化则覆盖初始值
+            window.localStorage.type = 2;
+            window.location.href = '/employee/register';
+        })
+	});
+    function fileUpload(ele) {
+        var formData = new FormData();
+        formData.append("img",$(ele)[0].files[0]);
+        formData.append("user_id",$("input[name='id']").val());
+        $.ajax({
+            url:'__CONTROLLER__/ufaceValid', /*接口域名地址*/
+            type:'post',
+            data: formData,
+            contentType: false, // ⑧告诉jQuery不要去处理发送的数据
+            processData: false, // ⑨告诉jQuery不要去设置Content-Type请求头
+            success:function(res){
+                var body = $.parseJSON(res);
+                console.log(body.data);
+                if(body.code == 200){
+                    alert("上传成功！");
+                    var html = $("#user_face").render(body);
+                    $(".user").append(html);
+                    addUserPhotoIndex();
+                    isShowDefaultPhoto();
+                }
+            }
+        });
+    }
+    // 删除照片
+	function deleteUserPhoto(target) {
+        var guid = $(target).parent().attr("data-guid");
+        $.post("__CONTROLLER__/deleteUserFace", {"user_id": $("input[name='id']").val(), "img_guid": guid}, function(res){
+            var body = $.parseJSON(res);
+			if (body.code == 200) {
+				$(target).parent().remove();
+                isShowDefaultPhoto();
+                showUserPhotoInfo($(".user .previewPhoto").eq(0));
+			}
+		});
+	}
+    //照片编号
+    function addUserPhotoIndex(){
+        $(".employeePhotoBox .user").find(".previewPhoto").each(function(){
+            var index = $(this).index();
+            $(this).attr("data-index",index);
+        })
+    }
+    //是否显示上传按钮和默认图
+    function isShowDefaultPhoto(){
+        var num = $(".previewBox .user .previewPhoto").length
+        if(!num){
+            $(".previewPhoto.default").removeClass("hidden");
+            $(".employeePhotoBox .uploadBox").removeClass("hidden");
+        }else if(num && num<3){
+            $(".previewPhoto.default").addClass("hidden");
+            $(".employeePhotoBox .uploadBox").removeClass("hidden");
+        }else{
+            $(".previewPhoto.default").addClass("hidden");
+            $(".employeePhotoBox .uploadBox").addClass("hidden");
+        }
+    }
+    //显示照片信息
+    function showUserPhotoInfo(target){
+        var index = $(target).attr("data-index");
+        if($(".user .previewPhoto").length){
+            $(".employeePhotoBox .photoInfoBox").removeClass("hidden");
+            $("p.message-success").removeClass("hidden").find("span").text(localStorage.getItem("sMsg-"+index)?localStorage.getItem("sMsg-"+index):"无");
+            $("p.message-ing").removeClass("hidden").find("span").text(localStorage.getItem("aMsg-"+index)?localStorage.getItem("aMsg-"+index):"无");
+            $("p.message-fail").removeClass("hidden").find("span").html(localStorage.getItem("fMsg-"+index)?localStorage.getItem("fMsg-"+index):"无");
+        }else{
+            $(".employeePhotoBox .photoInfoBox").addClass("hidden");
+        }
+    }
+    //警告图标显示
+    function showWarningIcon(data){
+        if(data.length){
+            $(".employeePhotoBox .user").find(".previewPhoto").each(function(){
+                var state = $(this).attr("data-state");
+                if(state=="true"){
+                    $(this).find(".icon-warning").addClass("hidden");
+                }else{
+                    $(this).find(".icon-warning").removeClass("hidden");
+                }
+            })
+        }else{
+            $(".previewPhoto").find(".icon-warning").addClass("hidden");
+        }
+    }
+    //获取照片信息
+    function getUserPhotoInfo(){
+        var photoNum = $(".user .previewPhoto").length;
+        var imgGuids = "";
+        for (var i=0; i<photoNum; i++) {
+            imgGuids += $(".user .previewPhoto").eq(i).attr("data-guid");
+            imgGuids += ",";
+		}
+        $.post("__CONTROLLER__/getFaceState", {"user_id": $("input[name='id']").val(), "img_guid": imgGuids}, function(res){
+            var response = $.parseJSON(res);
+			if (response.code == 200) {
+                var data = response.data;
+                for(var i=0;i<photoNum;i++){
+                    var sMsg = '';//授权成功
+                    var aMsg = '';//授权中
+                    var fMsg = '';//授权失败
+                    var photoState = true;
+                    for(var j=0;j<data.length;j++){
+                        if($(".user .previewPhoto").eq(i).attr("data-guid")===data[j].faceGuid){
+                            if(data[j].state===2){
+                                photoState = false;
+                                aMsg += data[j].deviceName+"("+(data[j].deviceStatus == 1?'在线':'离线')+")";
+                            }else if(data[j].state===3){
+                                sMsg += data[j].deviceName+"("+(data[j].deviceStatus == 1?'在线':'离线')+")";
+                            }else if(data[j].state===4){
+                                photoState = false;
+                                var failMsg = '';
+                                switch (data[j].msg) {
+                                    case 'EXP-FACE-0':
+                                        failMsg = "照片格式错误";
+                                        break;
+                                    case 'EXP-FACE-1':
+                                        failMsg = "人脸过小";
+                                        break;
+                                    case 'EXP-FACE-2':
+                                        failMsg = "人脸角度过大";
+                                        break;
+                                    case 'EXP-FACE-3':
+                                        failMsg = "照片中无人脸或不止一个人脸";
+                                        break;
+                                    case 'EXP-FACE-4':
+                                        failMsg = "照片中存在多个人脸";
+                                        break;
+                                    case 'EXP-FACE-5':
+                                        failMsg = "人像超出或过于靠近屏幕边缘";
+                                        break;
+                                    case 'EXP-FACE-6':
+                                        failMsg = "人脸的光照条件不佳";
+                                        break;
+                                    case 'EXP-FACE-7':
+                                        failMsg = "人脸比较模糊";
+                                        break;
+                                    case 'EXP-FACE-8':
+                                        failMsg = "人脸存在阴阳脸";
+                                        break;
+                                    default:
+                                        failMsg = "照片解析异常";
+                                        break;
+                                }
+                                fMsg += "</br>" + data[j].deviceName + "(" + failMsg + ")"
+                            }
+                        }
+                    }
+                    window.localStorage.setItem("sMsg-"+i,sMsg);
+                    window.localStorage.setItem("aMsg-"+i,aMsg);
+                    window.localStorage.setItem("fMsg-"+i,fMsg);
+                    $(".user .previewPhoto").eq(i).attr("data-state",photoState);
+                }
+                showUserPhotoInfo($(".user .previewPhoto").eq(0));
+                showWarningIcon(data);
+			}
+		});
+        /*AjaxPostForGetData("/face/state/list",{appId:appId,personGuid:personGuid},wait,function(response){
+            var data = response.data;
+            for(var i=0;i<photoNum;i++){
+                var sMsg = '';//授权成功
+                var aMsg = '';//授权中
+                var fMsg = '';//授权失败
+                var photoState = true;
+                for(var j=0;j<data.length;j++){
+                    if($(".user .previewPhoto").eq(i).attr("data-guid")===data[j].faceGuid){
+                        if(data[j].state===2){
+                            photoState = false;
+                            aMsg += data[j].deviceName+"("+(data[j].deviceStatus == 1?'在线':'离线')+")";
+                        }else if(data[j].state===3){
+                            sMsg += data[j].deviceName+"("+(data[j].deviceStatus == 1?'在线':'离线')+")";
+                        }else if(data[j].state===4){
+                            photoState = false;
+                            var failMsg = '';
+                            switch (data[j].msg) {
+                                case 'EXP-FACE-0':
+                                    failMsg = "照片格式错误";
+                                    break;
+                                case 'EXP-FACE-1':
+                                    failMsg = "人脸过小";
+                                    break;
+                                case 'EXP-FACE-2':
+                                    failMsg = "人脸角度过大";
+                                    break;
+                                case 'EXP-FACE-3':
+                                    failMsg = "照片中无人脸或不止一个人脸";
+                                    break;
+                                case 'EXP-FACE-4':
+                                    failMsg = "照片中存在多个人脸";
+                                    break;
+                                case 'EXP-FACE-5':
+                                    failMsg = "人像超出或过于靠近屏幕边缘";
+                                    break;
+                                case 'EXP-FACE-6':
+                                    failMsg = "人脸的光照条件不佳";
+                                    break;
+                                case 'EXP-FACE-7':
+                                    failMsg = "人脸比较模糊";
+                                    break;
+                                case 'EXP-FACE-8':
+                                    failMsg = "人脸存在阴阳脸";
+                                    break;
+                                default:
+                                    failMsg = "照片解析异常";
+                                    break;
+                            }
+                            fMsg += "</br>" + data[j].deviceName + "(" + failMsg + ")"
+                        }
+                    }
+                }
+                window.localStorage.setItem("sMsg-"+i,sMsg);
+                window.localStorage.setItem("aMsg-"+i,aMsg);
+                window.localStorage.setItem("fMsg-"+i,fMsg);
+                $(".user .previewPhoto").eq(i).attr("data-state",photoState);
+            }
+            showUserPhotoInfo($(".user .previewPhoto").eq(0));
+            showWarningIcon(data);
+        });*/
+    }
+    function saveEmployeeBasicInfo(){
+        window.localStorage.name = $(".input-edit-name").val();
+        window.localStorage.idNo = $(".input-edit-idNo").val();
+        window.localStorage.phone = $(".input-edit-phone").val();
+        window.localStorage.idcardNo = $(".input-edit-idcardNo").val();
+    }
+    //照片信息背景箭头移动
+    function moveBgArrow(target){
+        if($(target).attr("data-index")==0){
+            $(".photoInfoBox .arrow_up").removeClass("middle").removeClass("right").addClass("left");
+        }else if($(target).attr("data-index")==1){
+            $(".photoInfoBox .arrow_up").removeClass("left").removeClass("right").addClass("middle");
+        }else if($(target).attr("data-index")==2){
+            $(".photoInfoBox .arrow_up").removeClass("left").removeClass("middle").addClass("right");
+        }
+    }
+</script>
 
 
 

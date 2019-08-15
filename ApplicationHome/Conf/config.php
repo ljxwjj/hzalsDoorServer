@@ -29,5 +29,9 @@ return array(
     'GUEST_AUTH_ID'             =>  0,             // 游客的用户ID
     'LIST_ROWS'                 => 20,             // 分页页面每页记录数
     'DEFAULT_FILTER'            => 'trim,strip_tags,htmlspecialchars',
+    'UFACE_APP_ID'              => '55FD1CB09EFD4183AA01388D35667D19',
+    'UFACE_APP_KEY'             => '37078D0AA5B54C2A8E4F178EA8EB731D',
+    'UFACE_APP_SECRET'          => '408B9FE652BF41308ABF9FB64A557FAE',
+    'UFACE_CREATE_TIME'         => '1534918102',
 
 );

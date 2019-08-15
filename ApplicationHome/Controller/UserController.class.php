@@ -344,6 +344,7 @@ class UserController extends CommonController {
         $list = $model->forbid($condition);
         if ($list !== false) {
             checkUserCardsByUser($id);
+            deleteUfaceUser($id);
             $this->success('状态禁用成功',$this->getReturnUrl());
         } else {
             $this->error('状态禁用失败！',$this->getReturnUrl());
@@ -605,5 +606,267 @@ class UserController extends CommonController {
         } else {
             $this->error('数据未保存！', $this->getReturnUrl());
         }
+    }
+
+    public function employeeRegister() {
+        $user_id = I('id', '', 'int');
+        $user = M("User")->where("id=$user_id")->find();
+        $arrList = M("UfaceDevice")->where(array("company_id"=>$user["company_id"]))->select();
+        $this->assign("vo", $user);
+        $this->assign("arrList", $arrList);
+        $this->display();
+    }
+
+    /**
+     * ajax
+     */
+    public function turnonDeviceMode4Web() {
+        $user_id = I('user_id', '', 'int');
+        $device_id = I('device_id', '', 'int');
+
+        $userGuid = D("UfaceUser")->where("user_id=$user_id")->getField("uface_guid");
+        $deviceKey = D("UfaceDevice")->where("id=$device_id")->getField("device_key");
+        $response = ufaceApiAutoParams("post", array(
+            C('UFACE_APP_ID'), "/device/", $deviceKey, "/mode/state"
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'deviceKey'  => $deviceKey,
+            'type'       => 1,
+            'personGuid'=> $userGuid,
+        ));
+        if ($response->result == 1) {
+            $result['code'] = 200;
+            $result['message'] = $response->msg;
+            $result['data'] = $response->data;
+            $this->response($result);
+        } else {
+            $result['code'] = 0;
+            $result['message'] = $response->msg;
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     */
+    public function getRegisteration4Web() {
+        $user_id = I('user_id', '', 'int');
+        $device_id = I('device_id', '', 'int');
+        $task_id = I("task_id");
+        $userGuid = D("UfaceUser")->where("user_id=$user_id")->getField("uface_guid");
+        $deviceKey = D("UfaceDevice")->where("id=$device_id")->getField("device_key");
+        $response = ufaceApiAutoParams("get", array(
+            C('UFACE_APP_ID'), "/person/", $userGuid, "/device/", $deviceKey, "/registeration/state/", $task_id
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'personGuid' => $userGuid,
+            'deviceKey'  => $deviceKey,
+            'taskId'=> $task_id,
+        ));
+        if ($response->result == 1) {
+            $result['code'] = 200;
+            $result['message'] = $response->msg;
+            $result['data'] = $response->data;
+            $this->response($result);
+        } else {
+            $result['code'] = 0;
+            $result['message'] = $response->msg;
+            $result['data'] = 0;
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     */
+    public function getUserFaces() {
+        $user_id = I('user_id', '', 'int');
+        $user = M("User")->where("id=$user_id")->find();
+        if ($user) {
+            $model = M("UfaceUser");
+            $guid = $model->where("user_id=$user_id")->getField("uface_guid");
+            if ($guid) {
+                $response = ufaceApiAutoParams('get', array(
+                    C('UFACE_APP_ID'), "/person/", $guid, "/faces"
+                ), array(
+                    'appId' => C('UFACE_APP_ID'),
+                    'guid'  => $guid,
+                ));
+                if ($response->result == 1) {
+                    $result['code'] = 200;
+                    $result['message'] = "获取成功";
+                    $result['data'] = $response->data;
+                    $this->response($result);
+                    return;
+                }
+            }
+        } else {
+            $result['code'] = 0;
+            $result['message'] = "对象未找到!";
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     */
+    public function ufaceValid() {
+        $user_id = I('user_id', '', 'int');
+        $user = M("User")->where("id=$user_id")->find();
+        if ($user) {
+            $model = M("UfaceUser");
+            $guid = $model->where("user_id=$user_id")->getField("uface_guid");
+            if (!$guid) {
+                $response = ufaceApiAutoParams('post', array(
+                    C('UFACE_APP_ID'), "/person"
+                ), array(
+                    'appId' => C('UFACE_APP_ID'),
+                    'name' => $user['nickname'],
+                    'phone' => $user['account'],
+                    'type'  => $user['id'],
+                ));
+                if ($response->result == 1) {
+                    $guid = $response->data->guid;
+                    $model->add(array(
+                        'user_id' => $user['id'],
+                        'uface_guid' => $guid,
+                    ));
+                } else {
+                    $error = $response->msg;
+                }
+            }
+            if ($guid) {
+                $imgStr = base64EncodeImage($_FILES["img"]["tmp_name"]);
+
+                $response = ufaceApiAutoParams('post', array(
+                    C('UFACE_APP_ID'), "/person/", $guid, "/face/valid"
+                ), array(
+                    'appId' => C('UFACE_APP_ID'),
+                    'guid' => $guid,
+                    'img'  => $imgStr,
+                ));
+
+                if ($response->result == 1) {
+                    $result['code'] = 200;
+                    $result['message'] = "上传成功";
+                    $result['guid'] = $response->data->guid;
+                    $result['personGuid'] = $response->data->personGuid;
+                    $result['faceUrl'] = $response->data->faceUrl;
+                    $this->response($result);
+                    return;
+                } else {
+                    $error = $response->msg;
+                }
+            }
+            $result['code'] = 0;
+            $result['message'] = $error;
+            $this->response($result);
+        } else {
+            $result['code'] = 0;
+            $result['message'] = "对象未找到!";
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     */
+    function deleteUserFace() {
+        $user_id = I('user_id', '', 'int');
+        $img_guid  = I("img_guid");
+        $user = M("User")->where("id=$user_id")->find();
+        if ($user) {
+            $model = M("UfaceUser");
+            $guid = $model->where("user_id=$user_id")->getField("uface_guid");
+            if ($guid) {
+                $response = ufaceApiAutoParams('delete', array(
+                    C('UFACE_APP_ID'), "/person/", $guid, "/face/", $img_guid
+                ), array(
+                    'appId' => C('UFACE_APP_ID'),
+                    'guid'  => $img_guid,
+                    'persionGuid' => $guid,
+                ));
+                if ($response->result == 1) {
+                    $result['code'] = 200;
+                    $result['message'] = "操作成功";
+                    $this->response($result);
+                    return;
+                } else {
+                    $error = $response->msg;
+                }
+            } else {
+                $error = "对象未找到！";
+            }
+            $result['code'] = 0;
+            $result['message'] = $error;
+            $this->response($result);
+        } else {
+            $result['code'] = 0;
+            $result['message'] = "对象未找到!";
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     */
+    function getFaceState() {
+        $user_id = I('user_id', '', 'int');
+        $img_guid  = I("img_guid");
+        $user = M("User")->where("id=$user_id")->find();
+        if ($user) {
+            $model = M("UfaceUser");
+            $guid = $model->where("user_id=$user_id")->getField("uface_guid");
+            if ($guid) {
+                $guids = explode(",", $img_guid);
+                $state_list = array();
+                foreach ($guids as $imgGuid) {
+                    $response = ufaceApiAutoParams('get', array(
+                        C('UFACE_APP_ID'), "/person/", $guid, "/face/", $imgGuid, "/state"
+                    ), array(
+                        'appId' => C('UFACE_APP_ID'),
+                        'persionGuid' => $guid,
+                        'guid'  => $imgGuid,
+                    ));
+                    if ($response->result == 1 && $response->data) {
+                        $faceState = (array)$response->data[0];
+                        $faceState['deviceName'] = $this->getDeviceNameByKey($faceState['deviceKey']);
+                        $faceState['deviceStatus'] = $this->getDeviceStatusByKey($faceState['deviceKey']);
+                        $state_list[] = $faceState;
+                    }
+                }
+                $result['code'] = 200;
+                $result['message'] = "操作成功";
+                $result['data'] = $state_list;
+                $this->response($result);
+                return;
+            } else {
+                $result['code'] = 0;
+                $result['message'] = "对象未找到！";
+                $this->response($result);
+            }
+        } else {
+            $result['code'] = 0;
+            $result['message'] = "对象未找到!";
+            $this->response($result);
+        }
+    }
+
+    private function getDeviceNameByKey($deviceKey) {
+        $deviceName =  D('UfaceDevice')->where(array("device_key"=>$deviceKey))->getField("name");
+        return $deviceName;
+    }
+
+    private function getDeviceStatusByKey($deviceKey) {
+        $response = ufaceApiAutoParams('get', array(
+            C('UFACE_APP_ID'), "/device/", $deviceKey
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'deviceKey' => $deviceKey,
+        ));
+        if ($response->result == 1) {
+            return $response->data->status;
+        }
+        return -1;
     }
 }

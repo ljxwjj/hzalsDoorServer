@@ -1,0 +1,69 @@
+<div class="wrap">
+    <div class="wrap">
+        <h2>人员授权</h2>
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <a class="button button-primary button-hero" href="javascript:returnList('__CONTROLLER__/index', 'company_id', '{$vo.company_id}');">返回列表</a>
+            </div>
+            <br class="clear">
+        </div>
+    </div>
+    <br class="clear">
+
+
+    <div class="formarea">
+        <table class="form-table">
+            <tr>
+                <assign name="var" value="name" />
+                <th><label for="">名称：</label></th>
+                <td>
+                    {$vo.$var}
+                </td>
+                <assign name="var" value="device_key" />
+
+                <th><label for="">序列号：</label></th>
+                <td>
+                    {$vo.$var}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="welcome-panel" class="welcome-panel">
+        <div class="welcome-panel-content">
+            <div style="float:left;width:80%;">
+                <form method='post' id="form1" action="__URL__/saveDeviceAuthorize" name="form1">
+                    <input type="hidden" name="id" value="{$vo.id}">
+                    <volist name="arrList" id="data">
+                        <div>
+                            {$data.cate_namepre}
+                            <input type="checkbox" name="peopleId[]" value="{$data.id}"  <if condition="$data.checked eq true">checked</if> >
+                            {$data.nickname}
+                        </div>
+                    </volist>
+                </form>
+
+            </div>
+            <!-- 列表显示区域  -->
+        </div>
+    </div>
+</div>
+
+
+<div class="wrap">
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a href="javascript:returnIndex();" class="button button-primary button-hero">返回列表</a>
+            <input name="btn_submit" class="button button-primary button-hero" value="保 存" type="button" onclick="save('form1','saveDeviceAuthorize');">
+        </div>
+        <br class="clear">
+    </div>
+</div>
+
+
+
+
+<!--保持搜索部分-->
+<input type="hidden" name="search_pid" value="{$pid}" id="search_pid" usefor="search">
+<!--保持搜索部分结束-->
+

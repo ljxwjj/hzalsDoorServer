@@ -62,6 +62,28 @@
 		</li>
 	</if>
 
+    <if condition="$_ACCESS_LIST_HOME.UFACEMANAGER neq null">
+		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq UfaceManager'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
+			<a href='__APP__/UfaceManager/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq UfaceManager'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class='wp-menu-image dashicons-before dashicons dashicons-camera'><br /></div>
+				<div class='wp-menu-name'>UFACE设备管理</div>
+			</a>
+			<ul class='wp-submenu wp-submenu-wrap'>
+				<li class='wp-submenu-head'>UFACE设备管理</li>
+				<li class="wp-first-item <if condition='(CONTROLLER_NAME eq UfaceManager) and (ACTION_NAME eq index)'>current</if>">
+					<a href="__APP__/UfaceManager/index" class="wp-first-item current">UFACE设备列表</a>
+				</li>
+				<li class="wp-first-item <if condition='(CONTROLLER_NAME eq UfaceManager) and (ACTION_NAME eq add)'>current</if>">
+					<a href="__APP__/UfaceManager/add" class="wp-first-item current">添加UFACE设备</a>
+				</li>
+
+			</ul>
+		</li>
+	</if>
+
 	<if condition='$_ACCESS_LIST_HOME.OPENRECORD neq null'>
 		<li class="wp-has-submenu menu-top menu-icon-media wp-not-current-submenu <if condition='CONTROLLER_NAME eq OpenRecord'>wp-has-current-submenu wp-menu-open open-if-no-js</if>"  >
 			<a href='__APP__/OpenRecord/index' class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media wp-has-submenu <if condition='CONTROLLER_NAME eq OpenRecord'>wp-has-current-submenu wp-menu-open open-if-no-js</if> menu-top menu-icon-post menu-top-first" aria-haspopup="true" >

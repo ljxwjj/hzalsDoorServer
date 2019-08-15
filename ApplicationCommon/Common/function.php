@@ -69,6 +69,7 @@ function showOpenDoorWay($way) {
         case 5: return "刷卡";
         case 6: return "密码";
         case 7: return "代理商授权-关门";
+        case 8: return "UFACE刷脸";
     }
 }
 
@@ -185,4 +186,164 @@ function queryDoorStatusByUdp($ip, $port, $serialNumber, $timeout = 1) {
     } while($usetime < $timeout);
 
     return false;
+}
+
+function base64EncodeImage($filePath) {
+    $image_info = getimagesize($filePath);
+    $image_data = fread(fopen($filePath, 'r'), filesize($filePath));
+    //$base64_image = 'data:' . $image_info['mime'] . ';base64,' . chunk_split(base64_encode($image_data));
+    $base64_image = chunk_split(base64_encode($image_data));
+    return $base64_image;
+}
+
+function callAPI_post($baseUrl, $path, $headers, $data) {
+    Vendor('Requests', COMMON_PATH . 'Vendor/Requests-1.7.0/library/', '.php');
+    Requests::register_autoloader();
+
+    if (is_string($path)) {
+        $url = $baseUrl.$path;
+    } else if (is_array($path)) {
+        $url = $baseUrl.implode("", $path);
+    }
+    if ($url) {
+        $response = Requests::post($url, $headers, $data);
+//        var_dump($response->body);
+        return $response->body;
+    }
+}
+
+function callAPI_delete($baseUrl, $path, $headers, $data) {
+    Vendor('Requests', COMMON_PATH . 'Vendor/Requests-1.7.0/library/', '.php');
+    Requests::register_autoloader();
+
+    $url = $baseUrl;
+    if (is_string($path)) {
+        $url .= $path;
+    } else if (is_array($path)) {
+        $url .= implode("", $path);
+    }
+    if ($data) {
+        $url .= '?'.http_build_query($data);
+    }
+    if ($url) {
+        $response = Requests::delete($url, $headers);
+        return $response->body;
+    }
+}
+
+function callAPI_get($baseUrl, $path, $headers, $data) {
+    Vendor('Requests', COMMON_PATH. "Vendor/Requests-1.7.0/library/", '.php');
+    Requests::register_autoloader();
+
+    $url = $baseUrl;
+    if (is_string($path)) {
+        $url .= $path;
+    } else if (is_array($path)) {
+        $url .= implode("", $path);
+    }
+    if ($data) {
+        $url .= '?'.http_build_query($data);
+    }
+    if ($url) {
+        $response = Requests::get($url, $headers);
+        return $response->body;
+    }
+}
+
+function callAPI_put($baseUrl, $path, $headers, $data) {
+    Vendor('Requests', COMMON_PATH . 'Vendor/Requests-1.7.0/library/', '.php');
+    Requests::register_autoloader();
+
+    if (is_string($path)) {
+        $url = $baseUrl.$path;
+    } else if (is_array($path)) {
+        $url = $baseUrl.implode("", $path);
+    }
+    if ($url) {
+        $response = Requests::put($url, $headers, $data);
+        return $response->body;
+    }
+}
+
+function ufacePostApi($path, $data) {
+    $baseUrl = "http://gs-api.uface.uni-ubi.com/v1/";
+    return callAPI_post($baseUrl, $path, array(), $data);
+}
+
+function ufaceDeleteApi($path, $data) {
+    $baseUrl = "http://gs-api.uface.uni-ubi.com/v1/";
+    return callAPI_delete($baseUrl, $path, array(), $data);
+}
+
+function ufaceGetApi($path, $data) {
+    $baseUrl = "http://gs-api.uface.uni-ubi.com/v1/";
+    return callAPI_get($baseUrl, $path, array(), $data);
+}
+
+function ufacePutApi($path, $data) {
+    $baseUrl = "http://gs-api.uface.uni-ubi.com/v1/";
+    return callAPI_put($baseUrl, $path, array(), $data);
+}
+
+function ufaceApi($method, $path, $data) {
+    $m = "callAPI_$method";
+    $baseUrl = "http://gs-api.uface.uni-ubi.com/v1/";
+    return $m($baseUrl, $path, array(), $data);
+}
+
+function ufaceAuth() {
+    $appId = C('UFACE_APP_ID');
+    $data = array(
+        'appId' => $appId,
+        'appKey' => C('UFACE_APP_KEY'),
+        'timestamp' => C('UFACE_CREATE_TIME'),
+    );
+    $sign = md5($data['appKey'].$data['timestamp'].C('UFACE_APP_SECRET'));
+    $data['sign'] = $sign;
+    $body = ufacePostApi(array($appId, "/auth"), $data);
+    $jsonArray = json_decode($body);
+    if ($jsonArray->result === 1) {
+        $token = $jsonArray->data;
+        S('UFACE_AUTH_TOKEN', $token, 10*60*60);
+    }
+}
+
+function ufaceApiAutoParams($method, $path, $data) {
+    $token = S('UFACE_AUTH_TOKEN');
+    if (!$token) {
+        ufaceAuth();
+        $token = S('UFACE_AUTH_TOKEN');
+    }
+    if (!$data['appId']) {
+        $data['appId'] = C('UFACE_APP_ID');
+    }
+    $data['token'] = $token;
+    $body = ufaceApi($method, $path, $data);
+    $jsonArray = json_decode($body);
+    if ($jsonArray->code == 'GS_EXP-102') {
+        ufaceAuth();
+        $token = S('UFACE_AUTH_TOKEN');
+        $data['token'] = $token;
+        $body = ufaceApi($method, $path, $data);
+        $jsonArray = json_decode($body);
+    }
+    return $jsonArray;
+}
+
+function deleteUfaceUser($userId) {
+    $model = M("UfaceUser");
+    $guid = $model->where("user_id=$userId")->getField("uface_guid");
+    if ($guid) {
+        $response = ufaceApiAutoParams("delete", array(
+            C('UFACE_APP_ID'), "/person/", $guid
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'guid'  => $guid
+        ));
+
+        if ($response->result == 1) {
+            $model->where("user_id=$userId")->delete();
+        }
+    }
+
 }

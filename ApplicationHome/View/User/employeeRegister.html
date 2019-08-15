@@ -1,0 +1,206 @@
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.mouse.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.slider.js" />
+
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.position.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.resizable.js" />
+<style>
+    body .contentRemind {
+        padding: 40px 0 20px 0;
+        margin: 0px;
+        text-align: center;
+    }
+
+    body .contentRemind .countDown {
+        color: #0092DF;
+        margin-left: 10px;
+    }
+</style>
+<div class="wrap">
+    <div class="wrap">
+        <h2>设备拍照注册</h2>
+    </div>
+    <br class="clear">
+
+
+    <div class="formarea">
+        <input type="hidden" name="id" value="{$vo.id}">
+        <table class="form-table">
+            <tr>
+                <assign name="var" value="nickname" />
+                <th><label for="">人员姓名：</label></th>
+                <td>
+                    {$vo.$var}
+                </td>
+                <assign name="var" value="account" />
+
+                <th><label for="">手机号码：</label></th>
+                <td>
+                    {$vo.$var}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- 列表显示区域  -->
+    <table class="wp-list-table widefat fixed posts">
+        <thead>
+        <tr>
+            <th scope='col'  class='manage-column ' width="10%"></th>
+            <th scope='col'  class='manage-column ' width="30%">设备序列号</th>
+            <th scope='col'  class='manage-column ' width="40%">设备名称</th>
+            <th scope='col'  class='manage-column ' width="20%">版本号</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="arrList" id="vo" mod="2">
+            <tr <eq name="mod" value="0"> class="alternate" </eq> >
+            <td class="manage-column" scope="col" ><input type="radio" name="id" value="{$vo.id}"></td>
+            <td class="manage-column" scope="col">{$vo.device_key}</td>
+            <td class="manage-column" scope="col">{$vo.name}</td>
+            <td class="manage-column" scope="col"></td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+    <!-- 列表显示区域结束  -->
+
+</div>
+
+
+<div class="wrap">
+    <div class="tablenav top">
+        <div class="alignleft actions">
+            <a id="ok" class="button button-primary button-hero">确定</a>
+            <a id="cancel" class="button button-primary button-hero">取消</a>
+        </div>
+        <br class="clear">
+    </div>
+</div>
+
+<div id="dialog" title="提示" style="display: none;">
+    <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>
+<div id="photoing_dialog" title="提示" style="display: none;">
+    <div class="contentRemind clear">
+        <div class="tipPhoto">
+            <img src="http://uniubi-front-end.oss-cn-hangzhou.aliyuncs.com/uniubi-ark-web/static/images/device/registerByPhoto.png">
+            <p>进入拍照模式，请站立在设备面前<span class="countDown">60s</span></p>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var taskId = "";
+    var deviceId = "";
+    $(function(){
+        $(".wp-list-table tbody tr").on("click", function(){
+            $(".wp-list-table tbody input").attr("checked", false);
+            $(this).find("input").attr("checked", true);
+        });
+        $(".wp-list-table tbody input").on("click", function(){
+            var c = $(".wp-list-table tbody input:checked");
+            if (c.value() != $(this).value()) {
+                c.attr("checked", false);
+            }
+        });
+        $("#ok").on("click", function() {
+            deviceId = $(".wp-list-table input:checked").val();
+            if (deviceId) {
+                $.post("__CONTROLLER__/turnonDeviceMode4Web", {"user_id": $("input[name='id']").val(), "device_id": deviceId}, function(res){
+                    var response = $.parseJSON(res);
+                    if (response.code == 200) {
+                        taskId = response.data;
+                        showPhotoingView();
+                    } else {
+                        showDialog(response.message);
+                    }
+                });
+            } else {
+                showDialog("请选择设备!");
+            }
+        });
+        $("#cancel").on("click", function() {
+            window.location.href = "__CONTROLLER__/edit/id/" + $("input[name='id']").val();
+        });
+    });
+
+    function showDialog(message) {
+        $("#dialog p").html(message);
+        $("#dialog").dialog({
+            modal: true,
+            buttons : {
+                OK: function(){
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+
+    function showPhotoingView() {
+        $("#photoing_dialog").dialog({
+            width: 600,
+            height: 450,
+        });
+        deviceCirculating();
+        startCountDown();
+    }
+
+    //倒计时
+    var countDowntimer;
+    function startCountDown(){
+        var n = 60;
+        $("span.countDown ").html("60s");
+        countDowntimer = setInterval(function(){
+            n--;
+            $("span.countDown ").html(n+"s");
+            if(n<0){
+                clearTimer();
+                $(".countDownBox span").html("60s");
+                $("#photoing_dialog").dialog("close");
+            }
+        },1000);
+    }
+    //清除定时器
+    function clearTimer(){
+        clearInterval(getRegisterationState);
+        clearInterval(countDowntimer);
+    }
+
+    //设备拍照轮循
+    var getRegisterationState;
+    function deviceCirculating(){
+
+        var param = {user_id: $("input[name='id']").val(), device_id:deviceId, task_id:taskId};
+        var n = 0;
+        getRegisterationState = setInterval(function(){
+            $.post("__CONTROLLER__/getRegisteration4Web", param, function(res){
+                var response = $.parseJSON(res);
+                if(response.data === 4){
+                    clearTimer();
+                    $("#photoing_dialog").dialog("close");
+                    showDialog("拍照任务完成，请确认照片是否注册成功");
+                } else if (response.data === 6) {
+                    $(".photoing_dialog").dialog("close");
+                    showDialog("拍照任务失败，请在设备上查看具体原因");
+                    clearTimer();
+                }
+            });
+            n += 5;
+            if(n==60){
+                $("#photoing_dialog").dialog("close");
+                showDialog("注册失败");
+                clearTimer();
+            }
+        },5000);
+    }
+
+</script>
+
