@@ -113,8 +113,8 @@ function jpush($alert = 'Hello, JPush', $uri = false) {
     $client = new \JPush\Client(C('jpush_appkey'), C('jpush_secret'));
     $pusher = $client->push();
     $pusher->setPlatform('all')
-        //->addAllAudience()
-        ->addTag('all')
+        ->addAllAudience()
+        //->addTag('all')
         ->options(['apns_production'=>true])
         ->setNotificationAlert($alert);
     if ($uri) {
