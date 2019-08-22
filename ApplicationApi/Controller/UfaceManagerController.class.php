@@ -15,6 +15,7 @@ class UfaceManagerController extends RestController {
 
     public function faceSpotCallback() {
         $postBody = file_get_contents("php://input");
+        _log($postBody);
         $json = json_decode($postBody);
 
         $personGuid = $json->personGuid;
@@ -38,8 +39,8 @@ class UfaceManagerController extends RestController {
                 $OpenRecord->create($openRecord);
                 $addid = $OpenRecord->add();
 
-                $currentTime = time();
-                if ($showTime > $currentTime - 10000 && $showTime < $currentTime + 10000) {
+//                $currentTime = time();
+//                if ($showTime > $currentTime - 10000 && $showTime < $currentTime + 10000) {
                     $doorController = A("DoorController");
                     if ($data['product_type'] == 1) {
                         $rv = $doorController->sendOpenDoorHttp($data['ip'], $data['port'], $door_id, $data['password']);
@@ -54,9 +55,9 @@ class UfaceManagerController extends RestController {
                         $doorController->sendOpenDoorUdpCode($data['ip'], $data['port'], $data['serial_number'], $door_id, $wait);
                         $result = $this->createResult(200, "开门成功", array("id"=>$addid));
                     }
-                } else {
-                    $result = $this->createResult(0, "刷脸时间不匹配");
-                }
+//                } else {
+//                    $result = $this->createResult(0, "刷脸时间不匹配");
+//                }
             } else {
                 $result = $this->createResult(0, "开门失败");
             }
@@ -81,4 +82,9 @@ class UfaceManagerController extends RestController {
         $result['data'] = $data;
         return $result;
     }
+}
+
+function _log($msg) {
+    $logfile = APP_PATH .DIRECTORY_SEPARATOR. "uface_callback.log";
+    file_put_contents($logfile, "--------------\n".$msg."\n", FILE_APPEND);
 }
