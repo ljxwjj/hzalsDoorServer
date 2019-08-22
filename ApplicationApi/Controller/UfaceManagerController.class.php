@@ -14,7 +14,7 @@ class UfaceManagerController extends RestController {
     protected $allowType      = array('html','xml','json'); // REST允许请求的资源类型列表
 
     public function _initialize() {
-        echo "_initialize";exit;
+
     }
 
     public function faceSpotCallback() {
