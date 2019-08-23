@@ -611,6 +611,27 @@ class UserController extends CommonController {
     public function employeeRegister() {
         $user_id = I('id', '', 'int');
         $user = M("User")->where("id=$user_id")->find();
+        $model = M("UfaceUser");
+        $guid = $model->where("user_id=$user_id")->getField("uface_guid");
+        if (!$guid) {
+            $response = ufaceApiAutoParams('post', array(
+                C('UFACE_APP_ID'), "/person"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'name' => $user['nickname'],
+                'phone' => $user['account'],
+                'type'  => $user['id'],
+            ));
+            if ($response->result == 1) {
+                $guid = $response->data->guid;
+                $model->add(array(
+                    'user_id' => $user['id'],
+                    'uface_guid' => $guid,
+                ));
+            } else {
+                $error = $response->msg;
+            }
+        }
         $arrList = M("UfaceDevice")->where(array("company_id"=>$user["company_id"]))->select();
         $this->assign("vo", $user);
         $this->assign("arrList", $arrList);
