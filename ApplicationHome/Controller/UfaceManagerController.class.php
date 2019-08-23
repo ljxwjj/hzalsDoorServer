@@ -13,7 +13,7 @@ class UfaceManagerController extends CommonController {
 
     public function _initialize() {
         parent::_initialize();
-        $this->assign('pagetitle',"UFACE设备管理");
+        $this->assign('pagetitle',"人脸设备管理");
     }
 
     /**
