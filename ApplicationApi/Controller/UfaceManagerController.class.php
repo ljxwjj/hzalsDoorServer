@@ -30,10 +30,11 @@ class UfaceManagerController extends RestController {
         $controller_id = $ufaceDevice['controller_id'];
         $door_id = $ufaceDevice['door_id'];
         if ($user_id && $ufaceDevice) {
+            $openRecord = array();
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();
-            $openRecord['user_id'] = session(C('USER_AUTH_KEY'));
+            $openRecord['user_id'] = $user_id;
             $openRecord['way'] = 8;
             $openRecord['mark'] = $postBody;
             $OpenRecord = M('OpenRecord');
