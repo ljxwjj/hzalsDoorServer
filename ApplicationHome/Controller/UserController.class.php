@@ -640,6 +640,38 @@ class UserController extends CommonController {
 
     /**
      * ajax
+     * 注册任务状态变更
+     */
+    public function updateRegisterationState() {
+        $task_id = I('task_id');
+        $user_id = I('user_id', '', 'int');
+        $device_id = I('device_id', '', 'int');
+
+        $userGuid = D("UfaceUser")->where("user_id=$user_id")->getField("uface_guid");
+        $deviceKey = D("UfaceDevice")->where("id=$device_id")->getField("device_key");
+        $response = ufaceApiAutoParams("put", array(
+            C('UFACE_APP_ID'), "/person/", $userGuid, "/device/", $deviceKey, "/registeration/state/", $task_id
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'state' => 5,
+            'personGuid'=> $userGuid,
+            'deviceKey'  => $deviceKey,
+            'taskId'       => $task_id,
+        ));
+        if ($response->result == 1) {
+            $result['code'] = 200;
+            $result['message'] = $response->msg;
+            $this->response($result);
+        } else {
+            $result['code'] = 0;
+            $result['message'] = $response->msg;
+            $this->response($result);
+        }
+    }
+
+    /**
+     * ajax
+     * 开启设备注册模式
      */
     public function turnonDeviceMode4Web() {
         $user_id = I('user_id', '', 'int');
@@ -669,6 +701,7 @@ class UserController extends CommonController {
 
     /**
      * ajax
+     * 注册任务状态查询
      */
     public function getRegisteration4Web() {
         $user_id = I('user_id', '', 'int');
@@ -699,6 +732,7 @@ class UserController extends CommonController {
 
     /**
      * ajax
+     * 获取已上传照片
      */
     public function getUserFaces() {
         $user_id = I('user_id', '', 'int');
@@ -730,6 +764,7 @@ class UserController extends CommonController {
 
     /**
      * ajax
+     * 上传照片
      */
     public function ufaceValid() {
         $user_id = I('user_id', '', 'int');
@@ -791,6 +826,7 @@ class UserController extends CommonController {
 
     /**
      * ajax
+     * 删除照片
      */
     function deleteUserFace() {
         $user_id = I('user_id', '', 'int');
@@ -830,6 +866,7 @@ class UserController extends CommonController {
 
     /**
      * ajax
+     * 获取照片授权状态
      */
     function getFaceState() {
         $user_id = I('user_id', '', 'int');

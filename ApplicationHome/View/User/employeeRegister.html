@@ -148,6 +148,12 @@
         $("#photoing_dialog").dialog({
             width: 600,
             height: 450,
+            close: function(event, ui){
+                clearTimer();
+                if (event.which) { // 用户点击时，取消任务
+                    deviceStateChange();
+                }
+            }
         });
         deviceCirculating();
         startCountDown();
@@ -202,5 +208,23 @@
         },5000);
     }
 
+    // 设备状态变更
+    function deviceStateChange() {
+        deviceId = $(".wp-list-table input:checked").val();
+        if (deviceId) {
+            $.post("__CONTROLLER__/updateRegisterationState", {"user_id": $("input[name='id']").val(),
+                "device_id": deviceId,
+                "task_id": taskId,
+            }, function(res){
+                var response = $.parseJSON(res);
+                if (response.code == 200) {
+                    taskId = response.data;
+                    showPhotoingView();
+                } else {
+                    showDialog(response.message);
+                }
+            });
+        }
+    }
 </script>
 
