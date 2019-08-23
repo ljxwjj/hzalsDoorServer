@@ -94,6 +94,6 @@ class UfaceManagerController extends RestController {
 }
 
 function _log($msg) {
-    $logfile = APP_PATH .DIRECTORY_SEPARATOR. "uface_callback.log";
-    file_put_contents($logfile, "--------------\n".$msg."\n", FILE_APPEND);
+//    $logfile = APP_PATH .DIRECTORY_SEPARATOR. "uface_callback.log";
+//    file_put_contents($logfile, "--------------\n".$msg."\n", FILE_APPEND);
 }
