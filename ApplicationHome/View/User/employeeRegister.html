@@ -217,12 +217,6 @@
                 "task_id": taskId,
             }, function(res){
                 var response = $.parseJSON(res);
-                if (response.code == 200) {
-                    taskId = response.data;
-                    showPhotoingView();
-                } else {
-                    showDialog(response.message);
-                }
             });
         }
     }
