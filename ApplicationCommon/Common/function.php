@@ -1,4 +1,5 @@
 <?php
+require_once 'door_control.php';
 
 /**
  * 解决 strrev 函数中文乱码的问题
