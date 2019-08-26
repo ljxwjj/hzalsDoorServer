@@ -653,7 +653,7 @@ class UserController extends CommonController {
             C('UFACE_APP_ID'), "/person/", $userGuid, "/device/", $deviceKey, "/registeration/state/", $task_id
         ), array(
             'appId' => C('UFACE_APP_ID'),
-            'state' => 5,
+            'state' => 4,
             'personGuid'=> $userGuid,
             'deviceKey'  => $deviceKey,
             'taskId'       => $task_id,
