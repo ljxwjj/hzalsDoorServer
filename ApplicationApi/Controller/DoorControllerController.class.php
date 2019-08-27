@@ -147,6 +147,7 @@ class DoorControllerController extends CommonRestController {
 
         $data = M('DoorController')->find($controller_id);
         if ($data) {
+            $openRecord['company_id'] = $data['company_id'];
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();
@@ -553,6 +554,7 @@ class DoorControllerController extends CommonRestController {
 
         $data = M('DoorController')->find($controller_id);
         if ($data) {
+            $openRecord['company_id'] = $data['company_id'];
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();
@@ -598,6 +600,7 @@ class DoorControllerController extends CommonRestController {
 
         $data = M('DoorController')->find($controller_id);
         if ($data) {
+            $openRecord['company_id'] = $data['company_id'];
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();
