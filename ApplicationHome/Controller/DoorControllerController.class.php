@@ -393,6 +393,7 @@ class DoorControllerController extends CommonController {
         $data = M('DoorController')->find($controller_id);
         if ($data) {
             $OpenRecordModel = M('OpenRecord');
+            $openRecord['company_id'] = $data['company_id'];
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();

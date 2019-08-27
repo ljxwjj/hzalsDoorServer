@@ -227,6 +227,7 @@ class IndexController extends Controller\RestController {
                     }
                 }
 
+                $openRecord['company_id'] = $company_id;
                 $openRecord['controller_id'] = $controller_id;
                 $openRecord['door_id'] = $door_id;
                 $openRecord['open_time'] = time();
@@ -300,6 +301,7 @@ class IndexController extends Controller\RestController {
                 }
             }
 
+            $openRecord['company_id'] = $company_id;
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = time();
@@ -884,6 +886,7 @@ class IndexController extends Controller\RestController {
             $openTime = sprintf("%d-%d-%d %d:%d:%d", hexdec($record['year']), hexdec($record['month']), hexdec($record['day']), hexdec($record['hour']), hexdec($record['minute']), hexdec($record['second']));
             $now = time();
             $user_id = $userData['id'];
+            $openRecord['company_id'] = $company_id;
             $openRecord['controller_id'] = $controller_id;
             $openRecord['door_id'] = $door_id;
             $openRecord['open_time'] = strtotime($openTime);
@@ -906,6 +909,7 @@ class IndexController extends Controller\RestController {
         $company_id = $controllerData['company_id'];
         $openTime = sprintf("%d-%d-%d %d:%d:%d", hexdec($record['year']), hexdec($record['month']), hexdec($record['day']), hexdec($record['hour']), hexdec($record['minute']), hexdec($record['second']));
 
+        $openRecord['company_id'] = $company_id;
         $openRecord['controller_id'] = $controller_id;
         $openRecord['door_id'] = $door_id;
         $openRecord['open_time'] = strtotime($openTime);
