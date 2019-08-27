@@ -108,7 +108,13 @@
                         <a href="javascript:viewDoorController('id','{$vo.controller_id}')">{$vo.controller_name|showDoorController=$vo["controller_ip"]}</a>
                     </eq>
                 </td>
-                <td class="manage-column" scope="col">{$vo.door_name}({$vo.door_id})</td>
+                <td class="manage-column" scope="col">
+                    <if condition="$vo.way eq 8 AND $vo.controller_id eq 0">
+                        人脸机
+                    <else/>
+                        {$vo.door_name}({$vo.door_id})
+                    </if>
+                </td>
                 <td class="manage-column" scope="col">{$vo.open_time|toDate='Y-m-d H#i#s'}</td>
                 <td class="manage-column" scope="col">{$vo.way|showOpenDoorWay}</td>
                 <td class="manage-column" scope="col">{$vo.company_name}</td>
