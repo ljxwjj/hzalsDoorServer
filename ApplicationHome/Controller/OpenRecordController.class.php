@@ -119,7 +119,7 @@ class OpenRecordController extends CommonController {
             $map = array();
             $map["open_time"][] = array('egt',strtotime($timeStart));
             $map["open_time"][] = array('lt',strtotime($timeEnd)+86400);
-            $map["way"] = array('in', "2,5");
+            $map["way"] = array('in', "2,5,8");
             $userIds = I("search_user_ids");
             if ($userIds) {
                 $strIds = explode(',',$userIds);
@@ -259,7 +259,7 @@ class OpenRecordController extends CommonController {
             $map = array();
             $map["open_time"][] = array('egt',strtotime($timeStart));
             $map["open_time"][] = array('lt',strtotime($timeEnd)+86400);
-            $map["way"] = array('in', "2,5");
+            $map["way"] = array('in', "2,5,8");
             $map["user_id"] = $userId;
             $this->_attendance_detail_list($model, $map, $timeStart, $timeEnd);
 

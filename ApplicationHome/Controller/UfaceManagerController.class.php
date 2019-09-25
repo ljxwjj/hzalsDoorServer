@@ -220,11 +220,7 @@ class UfaceManagerController extends CommonController {
         if ($error) {
             $this->assign('vo', $_REQUEST);
             $this->assign('error', $error);
-            if(!$id){
-                $this->display('add');
-            }else{
-                $this->display('edit');
-            }
+            $this->display('edit');
             return;
         }
 
@@ -233,11 +229,7 @@ class UfaceManagerController extends CommonController {
             $error = $model->getError();
             $this->assign('vo',$_REQUEST);
             $this->assign('error',$error);
-            if(!$id){
-                $this->display('add');
-            }else{
-                $this->display('edit');
-            }
+            $this->display('edit');
         }else{
             $data['device_key'] = $deviceKey;
             if($id){
