@@ -386,36 +386,15 @@ class PublicController extends CommonController {
     }
 
     public function testJpush() {
-        Vendor('Requests', MODULE_PATH . 'Vendor/Requests-1.7.0/library/', '.php');
+
+        Vendor('Requests', COMMON_PATH . 'Vendor/Requests-1.7.0/library/', '.php');
         \Requests::register_autoloader();
 
 
-        $url = "http://192.168.0.12/door/api.php/UfaceManager/faceSpotCallback";
+        $url = "http://api.hzals.com/door/index.php/UfaceManager/faceSpotCallback";
+//        $url = "http://192.168.0.12/door/api.php/UfaceManager/faceSpotCallback";
         $headers = array("Content- Type", "application/x-www-form-urlencoded");
-        $data = json_encode(array(
-            "personGuid"=>"STRANGERBABY",
-            "deviceKey"=>"84E0F420013300B4",
-            "photoUrl" => "http://uniubi-device-test.oss-cn-hangzhou.aliyuncs.com/device/spot/photo/84E0F420013300B4/2017-11-16/STRANGERBABY_20171116153434.jpg",
-            "showTime" => "1510817674000",
-            "data"     => "{\"name\":\"宇泛测试\",\"idNo\":\"88888\",\"height\":\"211\",\"width\":\"211\",\"xAxis\":\"474\",\"yAxis\":\"243\"}",
-            "type"     => 2,
-            "recMode"  => 1,
-            "idCardInfo" => array(
-                "name" => "宇泛",
-                "sex"  => "男",
-                "nation" => "汉",
-                "birthday" => "2018-01-01",
-                "idNum" => "330326201801010818",
-                "address" => "浙江省杭州市西湖区文一路",
-                "issuingOrgan" => "西湖区公安局",
-                "photoPath"   => "http://uniubi-device-test.oss-cn-hangzhou.aliyuncs.com/device/spot/photo/84E0F4200D4202FA/2018-04-12/STRANGERBABY_20180412193059_idCardImg.jpg",
-                "usefulLife"  => "2008.09.16-2018.09.16",
-                "compareResult" => false,
-                "id" => 0,
-                "createTime" => 1514822399999,
-                "deviceKey"  => "84E0F4200D4202FA",
-            ),
-        ));
+        $data = "photoUrl=http%3A%2F%2Funiubi-device.oss-cn-hangzhou.aliyuncs.com%2Fdevice%2Fspot%2Fphoto%2F84E0F421716406B2%2F2019-08-23%2FE0D8049966434870989FC2E0D9420BA2_20190823095052_rgb.jpg&personGuid=E0D8049966434870989FC2E0D9420BA2&data=%7B%22yAxis%22%3A%22362%22%2C%22xAxis%22%3A%22387%22%2C%22sex%22%3A%22null%22%2C%22width%22%3A%2294%22%2C%22name%22%3A%22%E5%B4%94%E6%AC%A2%E8%89%B3%22%2C%22age%22%3A%22null%22%2C%22height%22%3A%2295%22%7D&recMode=1&showTime=2019-09-26+11%3a32%3a52&recVideoUrl&appId=55FD1CB09EFD4183AA01388D35667D19&deviceKey=84E0F421321802FA&guid=8610787477841453055&idCardInfo&type=0&userGuid=7AF875C57A9A4E74AE2CD46B8ADD2766";
         $response = \Requests::post($url, $headers, $data);
         echo($response->body);
         exit;

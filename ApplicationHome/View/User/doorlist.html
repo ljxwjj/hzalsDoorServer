@@ -15,6 +15,7 @@
             <div style="float:left;width:80%;">
                 <form method='post' id="form1" action="__URL__/savenodes" name="form1">
                     <input type="hidden" name="id" value="{$user.id}">
+                    <div style="float: left;width: 50%;">
                     <volist name="arrList" id="data">
                         <div>
                             {$data.cate_namepre}
@@ -22,6 +23,16 @@
                             {$data.controller_name}-{$data.name}
                         </div>
                     </volist>
+                    </div>
+                    <div>
+                    <volist name="ufaceList" id="uface">
+                        <div>
+                            <input type="checkbox" name="uface_id[]" value="{$uface.id}"  <if condition="$uface.checked eq 1">checked</if> >
+                            {$uface.name}-{$uface.device_key}
+                        </div>
+                    </volist>
+                    </div>
+                    <div class="clear"></div>
                 </form>
 
             </div>

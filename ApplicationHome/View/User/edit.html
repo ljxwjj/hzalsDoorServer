@@ -285,6 +285,14 @@ body .editEmployee .edit-upload-photo .employeePhotoBox .photoInfoBox .message_u
 	<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>	
 	</td>
 </tr>
+<assign name="var" value="card_number" />
+<tr>
+	<th><label for="">卡号：</label></th>
+	<td>
+		<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
+		<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+	</td>
+</tr>
 <assign name="var" value="role" />
 <tr>
 	<th><label for="">角色：</label></th>

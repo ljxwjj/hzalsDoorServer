@@ -307,6 +307,7 @@ class DepartmentController extends CommonController {
         }
         $DepartmentDoor->addall($data);
 
+        // 针对部门，梳理卡片授权信息
         checkUserCardByDepartment($id);
     }
 

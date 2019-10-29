@@ -303,9 +303,9 @@ class UserController extends CommonController {
             if ($id) {
                 if ($_SESSION[C('ADMIN_AUTH_KEY')]) {
                     if (!isset($data['splash_display'])) $data['splash_display'] = '0';
-                    $editFields = "account,nickname,sex,email,mobile,splash_display,splash_exp";
+                    $editFields = "account,nickname,sex,email,mobile,card_number,splash_display,splash_exp";
                 } else {
-                    $editFields = "account,nickname,sex,email,mobile";
+                    $editFields = "account,nickname,sex,email,mobile,card_number";
                 }
                 $result = $model->field($editFields)->save($data);
             } else {
@@ -322,12 +322,19 @@ class UserController extends CommonController {
             } else {
                 $departmentSaveFlag = true;
             }
-
         }
 
         if ($roleSaveFlag && $departmentSaveFlag && $result) {
             $model->commit();
+            // 针对用户，梳理卡片授权信息
             checkUserCardsByUser($id);
+
+            // 用户信息同步到uface用户
+            $guid = checkUfaceUser($id, $data);
+
+            if ($role < 22) { // 管理员默认授权所有人脸设备
+                $this->defaultUfaceUserDevices($company_id, $guid);
+            }
             $this->success('数据已保存！', $this->getReturnUrl());
         } else {
             $model->rollback();
@@ -366,12 +373,15 @@ class UserController extends CommonController {
 
         $arrList = $this->getDoorByUser($company_id, $id);
         $this->assign('arrList', $arrList);
+        $ufaceList = $this->getUfaceByUser($company_id, $id);//var_dump($ufaceList);exit;
+        $this->assign('ufaceList', $ufaceList);
         $this->display();
     }
 
     public function savenodes($id='') {
         $user_id = $id;
         $node_id = I('node_id');
+        $uface_id = I('uface_id');
 
         $UserDoor = M('UserDoor');
         $map['user_id'] = array('eq',$user_id);
@@ -387,6 +397,7 @@ class UserController extends CommonController {
         } else {
             $result = true;
         }
+        $this->savePersonDevices($user_id, $uface_id);
         if ($result) {
             checkUserCardsByUser($id);
             $this->success('数据已保存！', $this->getReturnUrl());
@@ -457,6 +468,107 @@ class UserController extends CommonController {
         }
         return $arrTree;
     }
+
+    protected function getUfaceByUser($company_id, $id) {
+        $guid = D('UfaceUser')->where("user_id = $id")->getField("uface_guid");
+        //取得所有人脸设备
+        $map = array();
+        $map['company_id'] = $company_id;
+        $ufaces = D('UfaceDevice')->where($map)->select();
+
+        if ($guid) {
+            //取得已分配的权限
+            $response = ufaceApiAutoParams('get', array(
+                C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'guid' => $guid,
+                'idcardNo' => "",
+            ));
+            if ($response->result == 1) {
+                $allDevices = array();
+                foreach ($response->data as $device) {
+                    $allDevices[] = $device["deviceKey"];
+                }
+                foreach ($ufaces as $key => $uface) {
+                    if (in_array($uface["device_key"], $allDevices)) {
+                        $ufaces[$key]["checked"] = 1;
+                    }
+                }
+            } else {
+                $error = $response->msg;
+            }
+        }
+        return $ufaces;
+    }
+
+    protected function savePersonDevices($user_id, $uface_id) {
+        $guid = D('UfaceUser')->where("user_id = $user_id")->getField("uface_guid");
+        if (!$guid) return array();
+
+        //取得已分配的权限
+        $response = ufaceApiAutoParams('get', array(
+            C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'guid' => $guid,
+            'idcardNo' => "",
+        ));
+        $allDevices = array();
+        if ($response->result == 1) {
+            foreach ($response->data as $device) {
+                $allDevices[] = $device["deviceKey"];
+            }
+        } else {
+            $error = $response->msg;
+        }
+
+        $role_id = M('AuthRoleUser')->where(array('user_id'=>$user_id))->getField('role_id');
+
+        if ($role_id < 22) {
+            $company_id = D("User")->where("id=$user_id")->getField("company_id");
+            $map = array("company_id"=>$company_id);
+            $selectedDevices = D("UfaceDevice")->where($map)->getField("device_key", true);
+        } else if ($uface_id) {
+            $company_id = D("User")->where("id=$user_id")->getField("company_id");
+            $map = array("id" => array("in", $uface_id), "company_id"=>$company_id);
+            $selectedDevices = D("UfaceDevice")->where($map)->getField("device_key", true);
+        } else {
+            $selectedDevices = array();
+        }
+        $addDevices = array_diff($selectedDevices, $allDevices); // 计算新增权限
+        $delDevices = array_diff($allDevices, $selectedDevices); // 计算撤销权限
+
+        if ($addDevices) {// 人员授权
+            $response = ufaceApiAutoParams('post', array(
+                C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'guid' => $guid,
+                'deviceKeys' => implode(",", $addDevices),
+            ));
+            if ($response->result == 1) {
+
+            } else {
+                $error = $response->msg;
+            }
+        }
+
+        if ($delDevices) {// 人员销权
+            $response = ufaceApiAutoParams('post', array(
+                C('UFACE_APP_ID'), "/person/", $guid, "/devices/delete"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'guid' => $guid,
+                'deviceKeys' => implode(",", $delDevices),
+            ));
+            if ($response->result == 1) {
+
+            } else {
+                $error = $response->msg;
+            }
+        }
+    }
     /**
      * 默认恢复操作
      *
@@ -490,13 +602,15 @@ class UserController extends CommonController {
         }
         $result = $model->save($data);
         if ($result) {
+            checkUserCardsByUser($id);
+            checkUfaceUser($id, $data);
             $this->success('状态恢复成功！',$this->getReturnUrl());
         } else {
             $this->error('状态恢复失败！',$this->getReturnUrl());
         }
     }
 
-    public function settingCard() {
+    /*public function settingCard() {
         $id = I('id');
 
         if (empty($id)) {
@@ -606,7 +720,7 @@ class UserController extends CommonController {
         } else {
             $this->error('数据未保存！', $this->getReturnUrl());
         }
-    }
+    }*/
 
     public function employeeRegister() {
         $user_id = I('id', '', 'int');
@@ -620,6 +734,7 @@ class UserController extends CommonController {
                 'appId' => C('UFACE_APP_ID'),
                 'name' => $user['nickname'],
                 'phone' => $user['account'],
+                'idNo'  => $user['card_number'],
                 'type'  => $user['id'],
             ));
             if ($response->result == 1) {
@@ -926,5 +1041,41 @@ class UserController extends CommonController {
             return $response->data->status;
         }
         return -1;
+    }
+
+    private function defaultUfaceUserDevices($companyId, $guid) {// 管理员默认授权所有设备
+        $response = ufaceApiAutoParams('get', array(
+            C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'guid' => $guid,
+            'idcardNo' => "",
+        ));
+        $preDevices = array();
+        if ($response->result == 1) {
+            foreach($response->data as $device) {
+                $preDevices[] = $device["deviceKey"];
+            }
+        } else {
+            $error = $response->msg;
+        }
+
+        $willDevices = D("UfaceDevice")->where("company_id = $companyId")->getField("device_key", true);
+        $addDevices = array_diff($willDevices, $preDevices);
+        if ($addDevices) {// 人员授权
+            $response = ufaceApiAutoParams('post', array(
+                C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'guid' => $guid,
+                'deviceKeys' => implode(",", $addDevices),
+            ));
+            if ($response->result == 1) {
+
+            } else {
+                $error = $response->msg;
+            }
+        }
+
     }
 }

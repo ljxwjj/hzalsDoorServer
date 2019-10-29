@@ -254,6 +254,7 @@ class DoorControllerController extends CommonController {
                 $result = $model->where(array('id'=>$id))->save($data);
             }else{
                 $result = $model->add($data);
+                checkUserCardByCompany($data["company_id"]);
             }
             if($result){
                 $this->success('数据已保存！',$this->getReturnUrl());
@@ -339,7 +340,7 @@ class DoorControllerController extends CommonController {
                 $condition = array($pk => array('in', explode(',', $id)));
                 $list = $model->where($condition)->setField('status', -1);
                 if ($list !== false) {
-                    checkUserCardsByController($id);
+                    clearUserCardsByController($id);
                     $this->success('删除成功！');
                 } else {
                     $this->error('删除失败！');

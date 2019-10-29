@@ -236,6 +236,7 @@ class UfaceManagerController extends CommonController {
                 $result = $model->where(array('id'=>$id))->save($data);
             }else{
                 $result = $model->add($data);
+                $this->defaultDevicePeople($data);
             }
             if($result){
                 $this->success('数据已保存！',$this->getReturnUrl());
@@ -448,6 +449,31 @@ class UfaceManagerController extends CommonController {
             }
         }
         return $arrTree;
+    }
+
+    private function defaultDevicePeople($uface) {
+        $company_id = $uface["company_id"];
+        $device_key = $uface["device_key"];
+
+        $map = array("company_id"=> $company_id, "role_id"=> array("lt", 22));
+        $companyUsers = D("UserView")->where($map)->select();
+        $peopleGuids = array();
+        foreach ($companyUsers as $user) {
+            $guid = getUfaceGuidOrCreate($user);
+            $peopleGuids[] = $guid;
+        }
+        $response = ufaceApiAutoParams('post', array(
+            C('UFACE_APP_ID'), "/device/", $device_key, "/people"
+        ), array(
+            'appId' => C('UFACE_APP_ID'),
+            'device_key' => $device_key,
+            'personGuids' => implode(",", $peopleGuids),
+        ));
+        if ($response->result == 1) {
+
+        } else {
+            $error = $response->msg;
+        }
     }
 
 }
