@@ -102,14 +102,14 @@
                     <a href="javascript:viewUser('id','{$vo.user_id}')">{$vo.user_nickname}</a>
                 </td>
                 <td class="manage-column" scope="col">
-                    <eq name="vo.way" value="8">
+                    <if condition="$vo.way eq 8 OR $vo.way eq 9">
                         {$vo.uface_device_name}({$vo.uface_device_key})
                     <else/>
                         <a href="javascript:viewDoorController('id','{$vo.controller_id}')">{$vo.controller_name|showDoorController=$vo["controller_ip"]}</a>
-                    </eq>
+                    </if>
                 </td>
                 <td class="manage-column" scope="col">
-                    <if condition="$vo.way eq 8 AND $vo.controller_id eq 0">
+                    <if condition="($vo.way eq 8 OR $vo.way eq 9) AND $vo.controller_id eq 0">
                         人脸机
                     <else/>
                         {$vo.door_name}({$vo.door_id})
