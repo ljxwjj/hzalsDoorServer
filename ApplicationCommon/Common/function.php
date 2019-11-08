@@ -71,6 +71,7 @@ function showOpenDoorWay($way) {
         case 6: return "密码";
         case 7: return "代理商授权-关门";
         case 8: return "人脸识别";
+        case 9: return "刷卡";
     }
 }
 

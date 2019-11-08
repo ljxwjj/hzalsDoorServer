@@ -23,11 +23,11 @@ class UfaceManagerController extends RestController {
 
         $personGuid = $_POST['personGuid'];
         $deviceKey = $_POST['deviceKey'];
-        $type = $_POST['type']; //识别模式，1:刷脸，2:刷卡，3:双重认证， 4:人证比对
+        $recMode = $_POST['recMode']; //识别模式，1:刷脸，2:刷卡，3:双重认证， 4:人证比对
         $showTime = strtotime($_POST['showTime']);
 
         $way = 8;
-        switch ($type) {
+        switch ($recMode) {
             case 1:
                 $way = 8;
                 break;
