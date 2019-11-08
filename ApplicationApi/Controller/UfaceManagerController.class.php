@@ -23,7 +23,18 @@ class UfaceManagerController extends RestController {
 
         $personGuid = $_POST['personGuid'];
         $deviceKey = $_POST['deviceKey'];
+        $type = $_POST['type']; //识别模式，1:刷脸，2:刷卡，3:双重认证， 4:人证比对
         $showTime = strtotime($_POST['showTime']);
+
+        $way = 8;
+        switch ($type) {
+            case 1:
+                $way = 8;
+                break;
+            case 2:
+                $way = 9;
+                break;
+        }
 
         $user_id = D("UfaceUser")->where(array("uface_guid"=>$personGuid))->getField("user_id");
         $ufaceDevice = D("UfaceDevice")->where(array("device_key"=>$deviceKey))->find();
@@ -38,7 +49,7 @@ class UfaceManagerController extends RestController {
             $openRecord['user_id'] = $user_id;
             $openRecord['uface_device_key'] = $deviceKey;
             $openRecord['uface_device_name'] = $ufaceDevice['name'];
-            $openRecord['way'] = 8;
+            $openRecord['way'] = $way;
             $openRecord['mark'] = $postBody;
             $OpenRecord = M('OpenRecord');
             $OpenRecord->create($openRecord);
