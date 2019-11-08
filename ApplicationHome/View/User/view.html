@@ -59,6 +59,13 @@
 	<eq name="vo[$var]" value="0">未激活</eq>
 	<eq name="vo[$var]" value="-1">禁用</eq>
 	</td>
+
+	<assign name="var" value="card_number" />
+
+	<th><label for="">卡号：</label></th>
+	<td>
+		{$vo.$var}
+	</td>
 </tr>
 
 <tr>

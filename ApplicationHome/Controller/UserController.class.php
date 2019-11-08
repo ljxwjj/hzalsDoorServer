@@ -488,7 +488,7 @@ class UserController extends CommonController {
             if ($response->result == 1) {
                 $allDevices = array();
                 foreach ($response->data as $device) {
-                    $allDevices[] = $device["deviceKey"];
+                    $allDevices[] = $device->deviceKey;
                 }
                 foreach ($ufaces as $key => $uface) {
                     if (in_array($uface["device_key"], $allDevices)) {
@@ -517,7 +517,7 @@ class UserController extends CommonController {
         $allDevices = array();
         if ($response->result == 1) {
             foreach ($response->data as $device) {
-                $allDevices[] = $device["deviceKey"];
+                $allDevices[] = $device->deviceKey;
             }
         } else {
             $error = $response->msg;
@@ -1054,7 +1054,7 @@ class UserController extends CommonController {
         $preDevices = array();
         if ($response->result == 1) {
             foreach($response->data as $device) {
-                $preDevices[] = $device["deviceKey"];
+                $preDevices[] = $device->deviceKey;
             }
         } else {
             $error = $response->msg;
