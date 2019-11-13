@@ -953,7 +953,7 @@ function checkUserCardsByUser($userId) {// 当用户权限发生变化时
                         $result = saveCardItem($cardItem, $model);
                     }
                 } else {
-                    if (!empty($cardItem["doors"])) {// 被删除的权限同步
+                    if (strlen($cardItem["doors"])) {// 被删除的权限同步
                         $cardItem["doors"] = "";
                         $cardItem["last_sync_time"] = 0;
                         $cardItem["status"] = 0;

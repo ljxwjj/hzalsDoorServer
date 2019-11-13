@@ -218,12 +218,23 @@ class UserController extends CommonController {
         $account = I('account');
         $role = (int)I('role');
         $department = (int)I('department');
+        $card_number = I('card_number');
 
         if(empty(I('account'))) {
             $error['account']='账号不能为空！';
         }
         if (!$role){
             $error['role']='角色不能为空！';
+        }
+
+        $model = D('User');
+        if ($card_number) {
+            $map = array('card_number'=>$card_number);
+            if ($id) $map['id'] = array('neq', $id);
+            $numberUser = $model->where($map)->find();
+            if ($numberUser) {
+                $error['card_number']='该卡号已被其他人使用过！';
+            }
         }
 
         if ($id) {
@@ -257,7 +268,6 @@ class UserController extends CommonController {
             return;
         }
 
-        $model = D('User');
 
         if (!$id) {
             $user = $model->where(array('account' => $account, 'status' => array("neq", -1)))->find();
