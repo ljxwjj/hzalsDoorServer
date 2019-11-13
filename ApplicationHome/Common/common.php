@@ -945,7 +945,7 @@ function checkUserCardsByUser($userId) {// 当用户权限发生变化时
 
             if (strcmp($cardItem['card_number'], $cardNumber) === 0) {
                 if (is_array($controllerDoors[$controllerId])) {
-                    $doosStr = implode(",", $controllerDoors[$controllerId]);
+                    $doosStr = makeDoorsStr($controllerDoors[$controllerId]);
                     if (strcmp($doosStr, $cardItem["doors"]) !== 0) {// 权限发生改变的
                         $cardItem["doors"] = $doosStr;
                         $cardItem["last_sync_time"] = 0;
@@ -1091,5 +1091,15 @@ function getUfaceGuidOrCreate($user) {
         }
     }
     return $guid;
+}
+
+function makeDoorsStr($doorArray) {
+    $result = array();
+    foreach ($doorArray as $key=>$value) {
+        if ($value) {
+            $result[] = $key;
+        }
+    }
+    return implode(",", $result);
 }
 ?>
