@@ -974,7 +974,7 @@ function checkUserCardsByUser($userId) {// 当用户权限发生变化时
             if (!empty($cardNumber)) {// 新增名单
                 foreach ($controllerDoors as $controllerId=>$doors) {
                     if (!isset($allCardMap[$cardNumber][$controllerId])) {
-                        $cardItem = array('controller_id'=>$controllerId, 'user_id'=>$userId, 'card_number'=>$cardNumber, 'doors'=>implode(",", $doors));
+                        $cardItem = array('controller_id'=>$controllerId, 'user_id'=>$userId, 'card_number'=>$cardNumber, 'doors'=>makeDoorsStr($doors));
                         $cardItem["last_sync_time"] = 0;
                         $cardItem["status"] = 0;
                         $result = $model->add($cardItem);
