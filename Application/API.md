@@ -81,6 +81,18 @@
     * 返回值
         * data        成功/失败
         
+        
+##提供第三方接口
+
+* 生成开门二维码 /SmartDoor/qrcodeBySecret
+    * 参数
+        * serial_number   门禁序列号
+        * door_id         门编号
+        * secret_key      用户秘钥
+        * validity_time   二维码有效期（秒）
+    * 返回值
+        * image file  stream
+        
 #用户授权接口
 公共参数： user_id、 account、 token、sign
 
