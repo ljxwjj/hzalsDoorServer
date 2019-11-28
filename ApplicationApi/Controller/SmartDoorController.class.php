@@ -53,9 +53,8 @@ class SmartDoorController extends RestController {
         $result = $model->add($data);
 
         if ($result) {
-            $text = hexdec($token);
-            Vendor('phpqrcode/phpqrcode', COMMON_PATH . 'Vendor/', '.php');
-            \QRcode::png($text);
+            $tokenNumber = hexdec($token);
+            $this->response($this->createResult(200, "", $tokenNumber), "json");
         } else {
             $this->response($this->createResult(0, "系统错误"), "json");
         }
