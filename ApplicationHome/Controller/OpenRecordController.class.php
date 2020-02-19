@@ -25,11 +25,88 @@ class OpenRecordController extends CommonController {
                 $where = array('company_id'=>session('company_id'));
                 $userIds = M('User')->where($where)->getField('id', true);
                 $map['user_id'] = array('in', $userIds);
+            } else if ($role_id == 23) {
+                // 客户操作员
+                $userDepartment = M('UserDepartment');
+                $departmentId = $userDepartment->where("user_id=$user_id")->getField('department_id');
+                if ($departmentId) {
+                    $userIds = $this->getDepartmentUserIds($departmentId);
+                } else {
+                    $where = array('company_id'=>session('company_id'));
+                    $userIds = M('User')->where($where)->getField('id', true);
+                }
+                $map['user_id'] = array('in', $userIds);
+
+                $doorControllerMap = M('UserDoor')->where("user_id=$user_id")->getField('controller_id, door_id');
+                $doorWhere = array('_logic'=> 'or');
+                foreach ($doorControllerMap as $contoller_id=>$door_id) {
+                    $where = array(
+                        'controller_id' => $contoller_id,
+                        'door_id' =>$door_id,
+                    );
+                    $doorWhere[] = $where;
+                }
+                $ufaceList = $this->getUfaceByUser($user_id);
+                if ($ufaceList) {
+                    $doorWhere[] = array('uface_device_key' => array('in', $ufaceList));
+                }
+                $map['_complex'] = $doorWhere;
             } else {
                 // 普通用户
                 $map['user_id'] = $user_id;
             }
         }
+    }
+
+    private function getUfaceByUser($id) {
+        $guid = D('UfaceUser')->where("user_id = $id")->getField("uface_guid");
+
+        if ($guid) {
+            //取得已分配的权限
+            $response = ufaceApiAutoParams('get', array(
+                C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'guid' => $guid,
+                'idcardNo' => "",
+            ));
+            if ($response->result == 1) {
+                $allDevices = array();
+                foreach ($response->data as $device) {
+                    $allDevices[] = $device->deviceKey;
+                }
+            } else {
+                $error = $response->msg;
+            }
+        }
+        return $allDevices;
+    }
+
+    private function getDepartmentUserIds($departmentId) {
+        $whereMap = array();
+        $departmentIds = $this->getSubDepartmentIds($departmentId);
+        if ($departmentIds) {
+            $departmentIds[] = $departmentId;
+            $whereMap['department_id'] = array('in', $departmentIds);
+        } else {
+            $whereMap['department_id'] = $departmentId;
+        }
+
+        $userDepartment = M('UserDepartment');
+        $userIds = $userDepartment->where($whereMap)->getField('user_id', true);
+        return $userIds;
+    }
+
+    private function getSubDepartmentIds($departmentId) {
+        $departmentModel = M('Department');
+        $departmentIds = $departmentModel->where("pid=$departmentId")->getField('id', true);
+        if ($departmentIds) {
+            foreach ($departmentIds as $id) {
+                $subDepartmentIds = $this->getSubDepartmentIds($id); // 递归调用，获取子部门
+                $departmentIds = array_merge($departmentIds, $subDepartmentIds);
+            }
+        }
+        return $departmentIds;
     }
 
     public function index(){
