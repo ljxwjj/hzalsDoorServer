@@ -184,6 +184,60 @@ class OpenRecordController extends CommonController {
         }
     }
 
+    protected function _attendance_filter(&$map, $ids) {
+        if (session(C('ADMIN_AUTH_KEY'))) {
+            // 管理员不做任何限制
+
+        } else {
+            // 判断用户角色
+            $user_id = session(C('USER_AUTH_KEY'));
+            $role_id = M('AuthRoleUser')->where(array('user_id'=> $user_id))->getField('role_id');
+            if (in_array($role_id, array(18, 19))) {
+                // 系统管理员不做任何限制
+            } else if (in_array($role_id, array(20, 21))) {
+                // 客户管理员
+                $where = array('company_id'=>session('company_id'));
+                $userIds = M('User')->where($where)->getField('id', true);
+                if ($ids) {
+                    $userIds = array_intersect($userIds, $ids);
+                }
+                $map['user_id'] = array('in', $userIds);
+            } else if ($role_id == 23) {
+                // 客户操作员
+                $userDepartment = M('UserDepartment');
+                $departmentId = $userDepartment->where("user_id=$user_id")->getField('department_id');
+                if ($departmentId) {
+                    $userIds = $this->getDepartmentUserIds($departmentId);
+                } else {
+                    $where = array('company_id'=>session('company_id'));
+                    $userIds = M('User')->where($where)->getField('id', true);
+                }
+                if ($ids) {
+                    $userIds = array_intersect($userIds, $ids);
+                }
+                $map['user_id'] = array('in', $userIds);
+
+                $doorControllerMap = M('UserDoor')->where("user_id=$user_id")->getField('controller_id, door_id');
+                $doorWhere = array('_logic'=> 'or');
+                foreach ($doorControllerMap as $contoller_id=>$door_id) {
+                    $where = array(
+                        'controller_id' => $contoller_id,
+                        'door_id' =>$door_id,
+                    );
+                    $doorWhere[] = $where;
+                }
+                $ufaceList = $this->getUfaceByUser($user_id);
+                if ($ufaceList) {
+                    $doorWhere[] = array('uface_device_key' => array('in', $ufaceList));
+                }
+                $map['_complex'] = $doorWhere;
+            } else {
+                // 普通用户
+                $map['user_id'] = $user_id;
+            }
+        }
+    }
+
     public function attendance() {
 
         $timeStart = I("search_time_start");
@@ -203,10 +257,9 @@ class OpenRecordController extends CommonController {
                 foreach ($strIds as $strId) {
                     $ids[] = substr($strId, 2);
                 }
-                $map["user_id"] = array("in", $ids);
-            } else {
-                $map["company_id"] = session('company_id');
             }
+            $this->_attendance_filter($map, $ids);
+
             $this->_attendance_list($model, $map, $timeStart, $timeEnd);
 
             $voList = $this->voList;
