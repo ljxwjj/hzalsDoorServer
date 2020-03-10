@@ -312,7 +312,7 @@ function paresLocalMessage($data) {
         $cardCount = sprintf("%02x", $unData[++$i]);
         $cardLength = sprintf("%02x", $unData[++$i]);
         $cardContent = "";
-        for ($ii = 0; $ii < $cardCount; $ii++) {
+        for ($ii = 0; $ii < hexdec($cardCount); $ii++) {
             for ($j = 0; $j < 32; $j++) $cardContent .= sprintf("%02x", $unData[++$i]);
         }
 
