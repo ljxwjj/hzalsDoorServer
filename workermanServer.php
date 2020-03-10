@@ -126,11 +126,11 @@ function paresRemoteMessage($connection, $ip, $port, $data) {
             $unData = unpack("C*", $binData);
             $i = 0;
             $transactionNo = sprintf("%02x", $unData[++$i]);// 上传流水号
-            $recordCount = $unData[++$i]; // 返回记录数
+            $recordCount = sprintf("%02x", $unData[++$i]); // 返回记录数
             $recordLength = sprintf("%02x", $unData[++$i]); // 单条记录长度
             if ($recordLength == '1a') {
                 $recodeArray = array();
-                for ($m = 0; $m < $recordCount; $m++) {
+                for ($m = 0; $m < hexdec($recordCount); $m++) {
                     $record = array();
                     $dakaResult = sprintf("%02x", $unData[++$i]);
                     $record['swing_card_result'] = substr($dakaResult, 1, 1); // 打卡结果
