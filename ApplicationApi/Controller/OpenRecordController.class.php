@@ -51,6 +51,30 @@ class OpenRecordController extends CommonRestController {
         }
     }
 
+    private function getUfaceByUser($id) {
+        $guid = D('UfaceUser')->where("user_id = $id")->getField("uface_guid");
+
+        if ($guid) {
+            //取得已分配的权限
+            $response = ufaceApiAutoParams('get', array(
+                C('UFACE_APP_ID'), "/person/", $guid, "/devices"
+            ), array(
+                'appId' => C('UFACE_APP_ID'),
+                'guid' => $guid,
+                'idcardNo' => "",
+            ));
+            if ($response->result == 1) {
+                $allDevices = array();
+                foreach ($response->data as $device) {
+                    $allDevices[] = $device->deviceKey;
+                }
+            } else {
+                $error = $response->msg;
+            }
+        }
+        return $allDevices;
+    }
+
     private function getDepartmentUserIds($departmentId) {
         $whereMap = array();
         $departmentIds = $this->getSubDepartmentIds($departmentId);
