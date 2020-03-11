@@ -51,6 +51,33 @@ class OpenRecordController extends CommonRestController {
         }
     }
 
+    private function getDepartmentUserIds($departmentId) {
+        $whereMap = array();
+        $departmentIds = $this->getSubDepartmentIds($departmentId);
+        if ($departmentIds) {
+            $departmentIds[] = $departmentId;
+            $whereMap['department_id'] = array('in', $departmentIds);
+        } else {
+            $whereMap['department_id'] = $departmentId;
+        }
+
+        $userDepartment = M('UserDepartment');
+        $userIds = $userDepartment->where($whereMap)->getField('user_id', true);
+        return $userIds;
+    }
+
+    private function getSubDepartmentIds($departmentId) {
+        $departmentModel = M('Department');
+        $departmentIds = $departmentModel->where("pid=$departmentId")->getField('id', true);
+        if ($departmentIds) {
+            foreach ($departmentIds as $id) {
+                $subDepartmentIds = $this->getSubDepartmentIds($id); // 递归调用，获取子部门
+                $departmentIds = array_merge($departmentIds, $subDepartmentIds);
+            }
+        }
+        return $departmentIds;
+    }
+
     /**
      * 默认依据url传参，生成搜索条件*
      *
