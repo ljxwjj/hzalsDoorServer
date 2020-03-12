@@ -162,7 +162,7 @@ class OpenRecordController extends CommonRestController {
                 // 系统管理员不做任何限制
             } else if (in_array($role_id, array(20, 21))) {
                 // 客户管理员
-                $where = array('company_id'=>session('company_id'));
+                $where = array('company_id'=>session("user")["company_id"]);
                 $userIds = M('User')->where($where)->getField('id', true);
                 if ($ids) {
                     $userIds = array_intersect($userIds, $ids);
@@ -175,7 +175,7 @@ class OpenRecordController extends CommonRestController {
                 if ($departmentId) {
                     $userIds = $this->getDepartmentUserIds($departmentId);
                 } else {
-                    $where = array('company_id'=>session('company_id'));
+                    $where = array('company_id'=>session("user")["company_id"]);
                     $userIds = M('User')->where($where)->getField('id', true);
                 }
                 if ($ids) {
@@ -199,7 +199,7 @@ class OpenRecordController extends CommonRestController {
                 $map['_complex'] = $doorWhere;
             } else {
                 // 普通用户
-                $map['user_id'] = $user_id;
+                $map['user_id'] = array('in', array($user_id));
             }
         }
     }
@@ -281,7 +281,7 @@ class OpenRecordController extends CommonRestController {
             }
         }
         $userModel = M("User");
-        if (is_array($map["user_id"])) {
+        if (is_array($map["user_id"])) { // 一般情况下user_id对应的都是数组
             if ($attendance) {
                 $attendanceUsers = array_keys($attendance);
                 $attendanceUsers = array_diff($map["user_id"][1], $attendanceUsers);
