@@ -37,14 +37,16 @@ class OpenRecordController extends CommonController {
                 }
                 $map['user_id'] = array('in', $userIds);
 
-                $doorControllerMap = M('UserDoor')->where("user_id=$user_id")->getField('controller_id, door_id');
+                $doorControllerMap = M('UserDoor')->where("user_id=$user_id")->field('controller_id, door_id')->select();
+                if (!is_array($doorControllerMap)) $doorControllerMap = array();
+                if ($departmentId) {
+                    $departmentControllerMap = M('DepartmentDoor')->where("department_id = $departmentId")->field('controller_id, door_id')->select();
+                    if (!is_array($departmentControllerMap)) $departmentControllerMap = array();
+                    $doorControllerMap = array_merge($doorControllerMap, $departmentControllerMap);
+                }
                 $doorWhere = array('_logic'=> 'or');
-                foreach ($doorControllerMap as $contoller_id=>$door_id) {
-                    $where = array(
-                        'controller_id' => $contoller_id,
-                        'door_id' =>$door_id,
-                    );
-                    $doorWhere[] = $where;
+                foreach ($doorControllerMap as $item) {
+                    $doorWhere[] = $item;
                 }
                 $ufaceList = $this->getUfaceByUser($user_id);
                 if ($ufaceList) {
