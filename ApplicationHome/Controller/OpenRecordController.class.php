@@ -553,8 +553,22 @@ class OpenRecordController extends CommonController {
      */
     public function allUserTree() {
         $companyId = session('company_id');
-        $departments = M("Department")->where(array("company_id"=>$companyId, "status"=>1))->getField("id, name");
-        $users = M("User")->where(array("company_id"=>$companyId, "status"=>1))->getField("id, nickname");
+        $user_id = session(C('USER_AUTH_KEY'));
+        $role_id = M('AuthRoleUser')->where(array('user_id'=> $user_id))->getField('role_id');
+        if (in_array($role_id, array(18, 19, 20, 21))) {
+            // 系统管理员不做任何限制
+            $departments = M("Department")->where(array("company_id"=>$companyId, "status"=>array('in', "0,1")))->getField("id, name");
+            $users = M("User")->where(array("company_id"=>$companyId, "status"=>array('in', "0,1")))->getField("id, nickname");
+        } else if ($role_id == 23) {
+            // 客户操作员
+            $userDepartment = M('UserDepartment');
+            $departmentId = $userDepartment->where("user_id=$user_id")->getField('department_id');
+            if ($departmentId) {
+                $departments = M("Department")->where(array("id"=>$departmentId, "status"=>array('in', "0,1")))->getField("id, name");
+                $userIds = $this->getDepartmentUserIds($departmentId);
+                $users = M("User")->where(array("id"=>array('in', $userIds), "status"=>array('in', "0,1")))->getField("id, nickname");
+            }
+        }
 
         $departmentIds = array_keys($departments);
         $departmentUsers = M("UserDepartment")->where(array("department_id"=>array("in", $departmentIds)))->select();
