@@ -9,8 +9,53 @@ class UserController extends CommonRestController {
         if (session(C('ADMIN_AUTH_KEY'))) {
 
         } else {
-            $map['company_id'] = session("user")["company_id"];
+            $company_id = session("user")["company_id"];
+            $user_id = session("user")["id"];
+            $role_id = M('AuthRoleUser')->where(array('user_id'=> $user_id))->getField('role_id');
+
+            if (in_array($role_id, array(18, 19, 20, 21))) {
+                // 系统管理员不做任何限制
+                $map['company_id'] = $company_id;
+            } else if ($role_id == 23) {
+                // 客户操作员
+                $userDepartment = M('UserDepartment');
+                $departmentId = $userDepartment->where("user_id=$user_id")->getField('department_id');
+                if ($departmentId) {
+                    $userIds = $this->getDepartmentUserIds($departmentId);
+                    $map['id'] = array('in', $userIds);
+                } else {
+                    $map['company_id'] = $company_id;
+                }
+            }
+
         }
+    }
+
+    private function getDepartmentUserIds($departmentId) {
+        $whereMap = array();
+        $departmentIds = $this->getSubDepartmentIds($departmentId);
+        if ($departmentIds) {
+            $departmentIds[] = $departmentId;
+            $whereMap['department_id'] = array('in', $departmentIds);
+        } else {
+            $whereMap['department_id'] = $departmentId;
+        }
+
+        $userDepartment = M('UserDepartment');
+        $userIds = $userDepartment->where($whereMap)->getField('user_id', true);
+        return $userIds;
+    }
+
+    private function getSubDepartmentIds($departmentId) {
+        $departmentModel = M('Department');
+        $departmentIds = $departmentModel->where("pid=$departmentId")->getField('id', true);
+        if ($departmentIds) {
+            foreach ($departmentIds as $id) {
+                $subDepartmentIds = $this->getSubDepartmentIds($id); // 递归调用，获取子部门
+                $departmentIds = array_merge($departmentIds, $subDepartmentIds);
+            }
+        }
+        return $departmentIds;
     }
 
     // 用户列表
