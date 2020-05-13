@@ -174,7 +174,7 @@ class IndexController extends Controller\RestController {
             $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
             $door_id = intval($record['door_number']);
 
-            $qrcode = $record['carad_number'];
+            $qrcode = ltrim($record['carad_number'], "0");
             $codeType = hexdec($qrcode)&0b11;
             if ($codeType === 0) {
                 $message = $this->swingQRCode($record, $controllerData, $door_id);
