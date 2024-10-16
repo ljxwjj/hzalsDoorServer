@@ -164,7 +164,7 @@ class IndexController extends Controller\RestController {
             $record['hour'] = sprintf("%02x", $unData[++$i]);// 解析小时
             $record['minute'] = sprintf("%02x", $unData[++$i]);// 解析分钟
             $record['second'] = sprintf("%02x", $unData[++$i]);// 解析秒
-            $record['carad_number'] = sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]);// 解析卡号
+            $record['carad_number'] = ltrim(sprintf("%02x%02x%02x%02x", $unData[++$i], $unData[++$i], $unData[++$i], $unData[++$i]), "0");// 解析卡号
             $record['door_number'] = sprintf("%02x", $unData[++$i]);// 解析门编号
             $record['read_head_number'] = sprintf("%02x", $unData[++$i]);// 解析读头编号
             $record['in_out_channel_number'] = sprintf("%02x", $unData[++$i]);// 解析输入输出通道编号
@@ -174,7 +174,7 @@ class IndexController extends Controller\RestController {
             $record['door_action_status'] = sprintf("%02x", $unData[++$i]);//解析门动作状态
             $door_id = intval($record['door_number']);
 
-            $qrcode = ltrim($record['carad_number'], "0");
+            $qrcode = $record['carad_number'];
             $codeType = hexdec($qrcode)&0b11;
             if ($codeType === 0) {
                 $message = $this->swingQRCode($record, $controllerData, $door_id);
@@ -254,16 +254,19 @@ class IndexController extends Controller\RestController {
 
         $MUser = M('User');
         $map = array();
-        $map['status'] = 1;
         $map['token'] = $record['carad_number'];
         $map['expiry_time'] = array("EGT", time());
-        $tokenData = $MUser
+        $tokenData = M('UserShareQrcode')->where($map)->order('create_time desc')->find();
+        if ($tokenData) {
+            $userData = $MUser->where(array('id'=>$tokenData['user_id'], 'status'=> 1))->find();
+        }
+        /*$tokenData = $MUser
             ->field("user.id AS user_id, user.company_id AS company_id, user.is_admin AS is_admin, user_share_qrcode.controller_id AS controller_id, user_share_qrcode.door_id AS door_id")
             ->join("join user_share_qrcode on user.id = user_share_qrcode.user_id")
-            ->where($map)->find();
-        if ($tokenData) {
+            ->where($map)->find();*/
+        if ($tokenData && $userData) {
             $user_id = $tokenData['user_id'];
-            $user_company = $tokenData['company_id'];
+            $user_company = $userData['company_id'];
 
             if ($tokenData['controller_id'] > -1 && $tokenData['controller_id'] != $controller_id) {
                 // 未对此控制器授权
