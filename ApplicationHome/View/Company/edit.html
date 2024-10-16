@@ -1,5 +1,43 @@
 <tagLib name="html" />
 
+<load href="__PUBLIC__/Js/jqueryui/themes/base/jquery.ui.all.css"/>
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.core.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.widget.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.mouse.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.button.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.datepicker.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.dialog.js" />
+<load href="__PUBLIC__/Js/jqueryui/ui/jquery.ui.slider.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.js" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/jquery-ui-timepicker-addon.css" />
+<load href="__PUBLIC__/Js/jqueryui/timepicker/i18n/jquery-ui-timepicker-addon-i18n.min.js" />
+
+<script type="text/javascript">
+    $(function(){
+        $("input[name='expiration_date']").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+		$("input[name='add1Month']").click(function(){
+			addExpirationDate(1);
+		});
+		$("input[name='addHalfYear']").click(function(){
+			addExpirationDate(6);
+		});
+		$("input[name='add1Year']").click(function(){
+			addExpirationDate(12);
+		});
+
+		function addExpirationDate(month) {
+			var ed = $("input[name='expiration_date']").val();
+			var date = ed?new Date(ed):new Date();
+			date.setMonth(date.getMonth() + month);
+			ed = date.toISOString().substring(0, 10);
+			$("input[name='expiration_date']").val(ed);
+		}
+    });
+
+</script>
+
 <div class="wrap">
 	<h2>编辑用户</h2>
 	<div class="tablenav top">
@@ -31,6 +69,20 @@
 					<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}">
 					<span style="color:red;">*</span>
 					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+				</td>
+			</tr>
+			<assign name="var" value="expiration_date" />
+			<tr>
+				<th><label for="">到期时间：</label></th>
+				<td>
+					<input type="text" class="regular-text" name="{$var}" value="{$vo.$var}" readonly="readonly">
+					<span style="color:red;">*</span>
+					<if condition="$error[$var]"><span class="description">{$error[$var]}</span></if>
+					<div style="margin-top: 5px;">
+					<input name="add1Month" class="button" value="加一月" type="button"/>
+					<input name="addHalfYear" class="button" value="加半年" type="button"/>
+					<input name="add1Year" class="button" value="加一年" type="button"/>
+					</div>
 				</td>
 			</tr>
 			<tr>

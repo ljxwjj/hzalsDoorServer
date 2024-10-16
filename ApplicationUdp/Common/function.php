@@ -107,3 +107,8 @@ function delCardItem($cardItem, $model) {
     $whereMap = getArrayPart($cardItem, array("controller_id","user_id","card_number"));
     return $model->where($whereMap)->delete();
 }
+
+function doSendSms($mobile, $smsCode, $operation) {
+    Vendor('api_sdk/smsUtil', COMMON_PATH . 'Vendor/', '.php');
+    return sendSms($mobile, $smsCode, $operation);
+}

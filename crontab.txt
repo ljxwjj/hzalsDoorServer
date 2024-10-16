@@ -5,6 +5,8 @@
 */1 * * * * cd /data/wwwroot/hzalsDoorServer/ && /usr/local/php/bin/php door/udp.php /Jpush/attendanceReportNotification >> /data/wwwroot/hzalsDoorServer/udp_crontab.log 2>&1
 */1 * * * * cd /data/wwwroot/hzalsDoorServer/ && /usr/local/php/bin/php door/udp.php /Jpush/webpageNotification >> /data/wwwroot/hzalsDoorServer/udp_crontab.log 2>&1
 
+0 9 * * * cd /data/wwwroot/hzalsDoorServer/ && /usr/local/php/bin/php door/udp.php /Payment/paymentTaskByDay >> /data/wwwroot/hzalsDoorServer/log/udp_payment.log 2>&1
+
 * * * * * cd /data/wwwroot/hzalsDoorServer/ && /usr/local/php/bin/php door/udp.php /Jpush/doorControllerOfflineNotification >> /data/wwwroot/hzalsDoorServer/udp_crontab.log 2>&1
 * * * * * sleep 10; cd /data/wwwroot/hzalsDoorServer/ && /usr/local/php/bin/php door/udp.php /Jpush/doorControllerOfflineNotification >> /data/wwwroot/hzalsDoorServer/udp_crontab.log 2>&1
 * * * * * sleep 20; cd /data/wwwroot/hzalsDoorServer/ && /usr/local/php/bin/php door/udp.php /Jpush/doorControllerOfflineNotification >> /data/wwwroot/hzalsDoorServer/udp_crontab.log 2>&1

@@ -40,6 +40,13 @@
 	<if condition="$vo[$var]">{$vo.$var||toDate="Y-m-d H#i#s"}</if>
 	</td>
 </tr>
+<assign name="var" value="expiration_date" />
+<tr>
+	<th><label for="">到期时间：</label></th>
+	<td>
+	<if condition="$vo[$var]">{$vo.$var} {$vo.expiration_status}</if>
+	</td>
+</tr>
 <tr>
 	<td></td>
 	<td class="center">

@@ -157,6 +157,20 @@ class DoorControllerController extends CommonRestController {
             $OpenRecord->create($openRecord);
             $addid = $OpenRecord->add();
 
+            $companyData = M('Company')->find($data['company_id']);
+            $expirationed = false;
+            if ($companyData['expiration_date']) {
+                $expirationDate = date($companyData['expiration_date']);
+                $expirationed = $expirationDate < date('Y-m-d');
+            } else {
+                $expirationed = true;
+            }
+            if ($expirationed) {
+                $result = $this->createResult(0, "服务到期，请联系运营商！");
+                $this->response($result,'json');
+                exit;
+            }
+
             if ($data['product_type'] == 1) {
                 $rv = $this->sendOpenDoorHttp($data['ip'], $data['port'], $door_id, $data['password']);
                 if ($rv) {

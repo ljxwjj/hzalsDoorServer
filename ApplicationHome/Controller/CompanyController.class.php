@@ -183,7 +183,10 @@ class CompanyController extends CommonController {
 //                "LEFT JOIN auth_role_user on user.id = auth_role_user.user_id ".
 //                "LEFT JOIN auth_role on auth_role_user.role_id = auth_role.id where user.company_id = %d";
 //            $arrList = M('User')->query($sql, $id);
-
+            if ($vo['expiration_date']) {
+                $expirationDate = date($vo['expiration_date']);
+                $vo['expiration_status'] = $expirationDate < date('Y-m-d')?"已过期":"";
+            }
             $this->assign('vo', $vo);
 //            $this->assign('arrList', $arrList);
             $this->display();
