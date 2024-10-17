@@ -444,4 +444,12 @@ class PublicController extends CommonController {
         }
         $this->response($result);
     }
+
+    public function mailTest() {
+        load ( "Common.sendMail" );
+        $html = $this->fetch('testMail');
+		$result = send_mail("455211759@qq.com", "阿里山门禁系统通知", $html,'');
+        echo $result;
+        //$this->display('alsTest');
+    }
 }
